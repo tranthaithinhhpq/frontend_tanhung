@@ -1,0 +1,42 @@
+.modal-user {
+    .content-body {
+        .red {
+            color: red;
+            border: none;
+        }
+    }
+}
+
+
+.manage-users-container {
+    i {
+        padding-right: 7px;
+    }
+
+    .actions {
+        .refresh {
+            margin-right: 10px;
+        }
+    }
+
+    .user-body {
+        max-width: 100%;
+
+        .edit {
+            color: orange;
+            cursor: pointer;
+            padding-right: 10px;
+            margin-block-end: 3px;
+        }
+
+
+
+        .delete {
+            color: red;
+            cursor: pointer;
+        }
+
+
+
+    }
+}
