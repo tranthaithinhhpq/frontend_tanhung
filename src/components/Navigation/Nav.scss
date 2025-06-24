@@ -1,78 +1,86 @@
-.nav-header {
-    .navbar {
-        .navbar-toggler {
-            margin-inline-end: 2rem; // tương đương me-3
-        }
+// Giao diện LỚN: từ 1400px trở lên
+@media screen and (min-width: 1200px) {
 
-        .brand-link {
-            text-decoration: none;
-            color: inherit;
 
-            .brand-text {
-                display: flex;
-                flex-direction: column; // đảm bảo xuống dòng
-                align-items: flex-start; // căn trái
-                line-height: 1.2;
-                cursor: pointer;
-
-                // giãn dòng vừa phải
-                .brand-name-1 {
-                    color: #61dafb;
-                }
-
-                .brand-name-2 {
-                    color: black; // đổi từ white -> black
-                }
-            }
-        }
-
-        display: flex;
-        align-items: center;
+    .navbar-brand {
+        margin-right: 0 !important;
     }
 
-    .bg-header {
-        background-color: white;
+    .brand-link {
+        text-decoration: none;
+        color: inherit;
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; // Căn trái logo
+            line-height: 1.2;
+            cursor: pointer;
+
+            .brand-name-1 {
+                color: #61dafb;
+            }
+
+            .brand-name-2 {
+                color: white;
+                font-size: 0.875rem;
+            }
+        }
+    }
+
+    .navbar .dropdown {
+        .dropdown-menu {
+            display: none;
+        }
+
+        &:hover {
+            .dropdown-menu {
+                display: block !important;
+                margin-top: 0;
+            }
+
+            .dropdown-toggle::after {
+                border-top: 0;
+                border-bottom: 0.3em solid;
+            }
+        }
     }
 }
 
-.navbar-nav {
-    display: flex;
-    align-items: center;
+// Giao diện NHỎ: từ 1400px trở xuống
+@media screen and (max-width: 1200px) {
 
-    .nav-link {
-        position: relative;
-        padding: 0 1rem;
-        color: black !important; // đổi từ white -> black
 
-        &:hover {
-            color: #61dafb !important;
-        }
 
-        &.active {
-            color: #61dafb !important;
-            border-bottom: 2px solid;
-        }
+    .navbar-brand {
+        margin-right: 0 !important;
+    }
 
-        &:not(:last-child):not(.dropdown-toggle)::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 25%;
-            height: 50%;
-            width: 1px;
-            background-color: #ccc;
+    .brand-link {
+        text-decoration: none;
+        color: inherit;
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center; // căn giữa khi thu nhỏ
+            line-height: 1.2;
+            cursor: pointer;
+
+            .brand-name-1 {
+                color: #61dafb;
+            }
+
+            .brand-name-2 {
+                color: white;
+                font-size: 0.875rem;
+            }
         }
     }
 
-    .dropdown-menu {
-        background-color: white;
-
-        .dropdown-item {
-            color: black !important;
-
-            &:hover {
-                color: #61dafb !important;
-            }
-        }
+    // Cho phép dropdown hiển thị khi nhấn (Bootstrap xử lý)
+    .dropdown-toggle.show::after {
+        border-top: 0;
+        border-bottom: 0.3em solid;
     }
 }
