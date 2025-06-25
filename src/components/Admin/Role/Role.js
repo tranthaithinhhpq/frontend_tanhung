@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
-import { createRoles } from "../../services/roleService";
+import { createRoles } from "../../../services/roleService";
 import TableRole from './TableRole'
 
 const Role = (props) => {

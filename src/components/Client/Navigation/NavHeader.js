@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './Nav.scss';
 import { Link, useLocation, useHistory } from 'react-router-dom';
-import { UserContext } from "../../context/UserContext";
 import { Navbar } from 'react-bootstrap';
-import logo from '../../logo.png';
-import { logoutUser } from '../../services/userService';
+import logo from '../../../logo.png';
+import { logoutUser } from '../../../services/userService';
 import { toast } from 'react-toastify';
+import { UserContext } from '../../../context/UserContext';
 
-const NavHeader = () => {
+
+const NavHeaderClient = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const { user, logoutContext } = useContext(UserContext);
     const location = useLocation();
@@ -19,21 +20,9 @@ const NavHeader = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const handleLogout = async () => {
-        let data = await logoutUser();
-        localStorage.removeItem("jwt");
-        logoutContext();
 
-        if (data && +data.EC === 0) {
-            toast.success('Log out succeeds...');
-            history.push('/login');
-        } else {
-            toast.error(data.EM);
-        }
-    };
 
-    const isHiddenPage = location.pathname === '/login' || location.pathname === '/register';
-    if (isHiddenPage) return <></>;
+
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark custom-navbar">
@@ -163,4 +152,4 @@ const NavHeader = () => {
     );
 };
 
-export default NavHeader;
+export default NavHeaderClient;

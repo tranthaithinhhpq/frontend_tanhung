@@ -3,8 +3,8 @@ import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { registerNewUser } from '../../services/userService'
-import { UserContext } from "../../context/UserContext"
+import { registerNewUser } from '../../../services/userService'
+import { UserContext } from "../../../context/UserContext"
 import 'react-toastify/dist/ReactToastify.css';
 const Register = (props) => {
     const { user } = useContext(UserContext);
@@ -23,7 +23,7 @@ const Register = (props) => {
     });
     let history = useHistory();
     const handleLogin = () => {
-        history.push("/login");
+        history.push("/admin/login");
     }
 
 
@@ -85,7 +85,7 @@ const Register = (props) => {
             let serverData = response;
             if (+serverData.EC === 0) {
                 toast.success(serverData.EM)
-                history.push("/login");
+                history.push("/admin/login");
             } else {
                 toast.error(serverData.EM);
             }

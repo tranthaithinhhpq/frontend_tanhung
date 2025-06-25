@@ -3,8 +3,8 @@ import './Login.scss'
 import { useHistory, Link } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { loginUser } from '../../services/userService'
-import { UserContext } from "../../context/UserContext"
+import { loginUser } from '../../../services/userService'
+import { UserContext } from "../../../context/UserContext"
 const Login = (props) => {
     const { user, loginContext } = useContext(UserContext);
 
@@ -18,7 +18,7 @@ const Login = (props) => {
     }
     const [objValidInput, setObjValidInput] = useState(defaultObjValidInput)
     const handleCreateNewAccount = () => {
-        history.push("/register");
+        history.push("/admin/register");
     }
     const handleLogin = async () => {
         if (!valueLogin) {
@@ -46,7 +46,7 @@ const Login = (props) => {
 
             localStorage.setItem('jwt', token)
             loginContext(data);
-            history.push('/users');
+            history.push('admin/users');
             //window.location.reload();
             //redux
         }
@@ -65,7 +65,7 @@ const Login = (props) => {
     }
     useEffect(() => {
         if (user && user.isAuthenticated) {
-            history.push('/');
+            history.push('/admin');
         }
     }, [user, history]);
 

@@ -1,15 +1,17 @@
 import { Switch, Route, Redirect } from "react-router-dom";
-import Login from "../components/Login/Login";
-import Register from "../components/Register/Register";
-import Users from "../components/ManageUsers/Users";
+import Login from "../components/Admin/Login/Login";
+import Register from "../components/Admin/Register/Register";
+import Users from "../components/Admin/ManageUsers/Users";
 import PrivateRoutes from "./PrivateRoutes";
-import Role from "../components/Role/Role";
+import Role from "../components/Admin/Role/Role";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import GroupRole from "../components/GroupRole/GroupRole";
-import Home from "../components/Home/Home";
-import About from "../components/About/About";
-import Doctor from "../components/Doctor/Doctor";
+import GroupRole from "../components/Admin/GroupRole/GroupRole";
+import Home from "../components/Admin/Home/Home";
+import HomeClient from "../components/Client/Home/Home";
+import About from "../components/Admin/About/About";
+import Doctor from "../components/Client/Doctor/Doctor";
+
 
 
 
@@ -29,25 +31,24 @@ const AppRoutes = () => {
 
     return (
         <Switch>
-            <PrivateRoutes path="/users" component={Users} />
-            <PrivateRoutes path="/projects" component={Project} />
-            <PrivateRoutes path="/roles" component={Role} />
-            <PrivateRoutes path="/group-role" component={GroupRole} />
+            {/* Admin - bảo vệ bằng PrivateRoutes */}
+            <PrivateRoutes path="/admin/users" component={Users} />
+            <PrivateRoutes path="/admin/projects" component={Project} />
+            <PrivateRoutes path="/admin/roles" component={Role} />
+            <PrivateRoutes path="/admin/group-role" component={GroupRole} />
+            <PrivateRoutes path="/admin" exact component={Home} />
+            <PrivateRoutes path="/admin" exact component={About} />
 
-            <Route path="/login">
-                <Login />
-            </Route>
-            <Route path="/register">
-                <Register />
-            </Route>
-            <Route path="/doctor">
-                <Doctor />
-            </Route>
+            {/* Public Admin */}
+            <Route path="/admin/login" component={Login} />
+            <Route path="/admin/register" component={Register} />
 
-            <Route path="/" exact>
-                <Home />
-            </Route>
 
+            {/* Client */}
+            <Route path="/" exact component={HomeClient} />
+            <Route path="/doctor" exact component={Doctor} />
+
+            {/* 404 fallback */}
             <Route path="*">
                 <div className="container">404 not found...</div>
             </Route>

@@ -1,7 +1,7 @@
 import './GroupRole.scss';
 import { useState, useEffect } from 'react';
-import { fetchGroup } from '../../services/userService';
-import { fetchAllRole, fetchRolesByGroup, assignRolesToGroup } from '../../services/roleService';
+import { fetchGroup } from '../../../services/userService';
+import { fetchAllRole, fetchRolesByGroup, assignRolesToGroup } from '../../../services/roleService';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 

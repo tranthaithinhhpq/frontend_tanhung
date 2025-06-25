@@ -2,19 +2,25 @@ import { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
-const PrivateRoutes = (props) => {
+const PrivateRoutes = ({ component: Component, ...rest }) => {
     const { user } = useContext(UserContext);
 
-    // Đợi xác thực xong mới render
-    if (user && user.isLoading === true) {
-        return <div>Loading...</div>; // hoặc spinner
+    if (user.isLoading) {
+        return <div>Loading...</div>;
     }
 
-    if (user && user.isAuthenticated === true) {
-        return <Route path={props.path} component={props.component} />;
-    } else {
-        return <Redirect to="/login" />;
-    }
+    return (
+        <Route
+            {...rest}
+            render={(props) =>
+                user.isAuthenticated ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect to="/admin/login" />
+                )
+            }
+        />
+    );
 };
 
 export default PrivateRoutes;

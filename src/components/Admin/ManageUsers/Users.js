@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import './Users.scss';
-import { fetchAllUser, deleteUser } from "../../services/userService"
+import { fetchAllUser, deleteUser } from "../../../services/userService"
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
@@ -143,6 +143,7 @@ const Users = (props) => {
                                     <tr>
                                         <th scope="col">No</th>
                                         <th scope="col">Id</th>
+                                        <th scope="col">Image</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Username</th>
                                         <th scope="col">Group</th>
@@ -157,6 +158,7 @@ const Users = (props) => {
                                                     <tr key={`row-${index}`}>
                                                         <td>{(currentPage - 1) * currentLimit + index + 1}</td>
                                                         <td>{item.id}</td>
+                                                        <td>{item.image}</td>
                                                         <td>{item.email}</td>
                                                         <td>{item.username}</td>
                                                         <td>{item.Group ? item.Group.name : ""}</td>

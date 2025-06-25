@@ -1,53 +1,44 @@
 import './App.scss';
-import NavHeader from './components/Navigation/NavHeader';
+import AppRoutes from './routes/AppRoutes';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect, useState, useContext } from 'react';
-import AppRoutes from './routes/AppRoutes';
-import { Rings } from 'react-loader-spinner';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from './context/UserContext';
+import { Rings } from 'react-loader-spinner';
 import Scrollbars from 'react-custom-scrollbars';
+import NavHeader from './components/Admin/Navigation/NavHeader';
+import NavHeaderClient from './components/Client/Navigation/NavHeader';
+import { useLocation } from 'react-router-dom';
 
-
-
-const App = () => {
+const Layout = () => {
   const { user } = useContext(UserContext);
-  const [scrollHeight, setScrollHeight] = useState(0);
+  const location = useLocation();
+  const [scrollHeight, setScrollHeight] = useState(window.innerHeight);
 
   useEffect(() => {
-    let windowHeight = window.innerHeight;
-    setScrollHeight(windowHeight);
+    setScrollHeight(window.innerHeight);
   }, [user]);
+
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
     <Scrollbars autoHide style={{ height: scrollHeight }}>
-      <Router>
-        {user && user.isLoading ? (
-          <div className="loading-container">
-            <Rings
-              height="100"
-              width="100"
-              color="#1877f2"
-              ariaLabel="loading"
-            />
-            <div>Loading data...</div>
+      {user && user.isLoading ? (
+        <div className="loading-container">
+          <Rings height="100" width="100" color="#1877f2" ariaLabel="loading" />
+          <div>Loading data...</div>
+        </div>
+      ) : (
+        <>
+          <div className="app-header">
+            {isAdminRoute ? <NavHeader /> : <NavHeaderClient />}
           </div>
-        ) : (
-          <>
-
-
-            <div className="app-header">
-              <NavHeader />
-            </div>
-
-
-            <div className="app-container">
-              <AppRoutes />
-            </div>
-          </>
-        )}
-      </Router>
+          <div className="app-container">
+            <AppRoutes />
+          </div>
+        </>
+      )}
 
       <ToastContainer
         position="top-right"
@@ -63,6 +54,14 @@ const App = () => {
       />
     </Scrollbars>
   );
-}
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Layout />
+    </Router>
+  );
+};
 
 export default App;
