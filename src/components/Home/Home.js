@@ -3,7 +3,7 @@ const Home = () => {
     return (
         <div>
             Home page
-            <div>
+            {/* <div>
                 <iframe
                     // width="640" 
                     // height="360" 
@@ -13,7 +13,7 @@ const Home = () => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     // referrerpolicy="strict-origin-when-cross-origin" 
                     allowfullscreen></iframe>
-            </div>
+            </div> */}
         </div>
     )
 }

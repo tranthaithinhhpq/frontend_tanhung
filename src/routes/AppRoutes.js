@@ -9,6 +9,7 @@ import { UserContext } from "../context/UserContext";
 import GroupRole from "../components/GroupRole/GroupRole";
 import Home from "../components/Home/Home";
 import About from "../components/About/About";
+import Doctor from "../components/Doctor/Doctor";
 
 
 
@@ -36,12 +37,11 @@ const AppRoutes = () => {
             <Route path="/login">
                 <Login />
             </Route>
-
             <Route path="/register">
                 <Register />
             </Route>
-            <Route path="/about">
-                <About />
+            <Route path="/doctor">
+                <Doctor />
             </Route>
 
             <Route path="/" exact>
