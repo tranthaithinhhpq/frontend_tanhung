@@ -39,10 +39,16 @@ const createNewUser = (formData) => {
     });
 };
 
-const updateCurrentUser = (userData) => {
-    return axios.put("/api/v1/user/update", { ...userData });
+// UPDATE gửi multipart nếu có file, else gửi JSON
+const updateCurrentUser = (formDataOrJson, hasFile) => {
+    if (hasFile) {
+        return axios.put('/api/v1/user/update', formDataOrJson, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    }
+    return axios.put('/api/v1/user/update', formDataOrJson);
+};
 
-}
 
 const getUserAccount = () => {
     return axios.get('/api/v1/account');

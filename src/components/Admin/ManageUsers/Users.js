@@ -160,10 +160,11 @@ const Users = (props) => {
                                                         <td>{item.id}</td>
                                                         <td>
                                                             {item.image
-                                                                ? <img src={`http://localhost:8080${item.image}`} style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
-                                                                : 'N/A'
-                                                            }
+                                                                ? <img src={`http://localhost:8080${item.image}`}
+                                                                    style={{ width: 40, height: 40, objectFit: 'cover' }} />
+                                                                : 'N/A'}
                                                         </td>
+
                                                         <td>{item.email}</td>
                                                         <td>{item.username}</td>
                                                         <td>{item.Group ? item.Group.name : ""}</td>

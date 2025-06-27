@@ -1,15 +1,36 @@
-import { Modal } from "react-bootstrap";
-import { Button } from 'react-bootstrap';
-import { useState, useEffect } from "react";
-import { fetchGroup, createNewUser, updateCurrentUser } from '../../../services/userService';
-import { toast } from "react-toastify";
-import _ from "lodash";
+// src/components/Admin/ManageUsers/ModalUser.js
+import { useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import _ from 'lodash';
 
-const ModalUser = (props) => {
-    const { action, dataModalUser } = props;
-    const [selectedImageFile, setSelectedImageFile] = useState(null);
+import {
+    fetchGroup,
+    createNewUser,
+    updateCurrentUser
+} from '../../../services/userService';
 
-    const defaultUserData = {
+/* --------------------------------------------------
+   Helpers
+-------------------------------------------------- */
+
+const BACKEND_URL =
+    process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+
+const buildImgSrc = (raw) => {
+    if (!raw) return '';
+    if (raw.startsWith('blob:') || raw.startsWith('http')) return raw;
+    return `${BACKEND_URL}${raw}`;               // /images/…
+};
+
+/* --------------------------------------------------
+   Component
+-------------------------------------------------- */
+
+const ModalUser = ({ action, dataModalUser, onHide, show }) => {
+    /* ---------- state ---------- */
+    const defaultUser = {
+        id: '',
         email: '',
         phone: '',
         username: '',
@@ -20,216 +41,192 @@ const ModalUser = (props) => {
         image: ''
     };
 
-    const validInputDefault = {
-        email: true,
-        phone: true,
-        username: true,
-        password: true,
-        address: true,
-        sex: true,
-        group: true,
-    };
+    const [userData, setUserData] = useState(defaultUser);
+    const [groupList, setGroupList] = useState([]);
+    const [previewImg, setPreviewImg] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imageChanged, setImageChanged] = useState(false);
+    const [showFull, setShowFull] = useState(false);
 
-    const [userData, setUserData] = useState(defaultUserData);
-    const [validInput, setValidInput] = useState(validInputDefault);
-    const [userGroup, setUserGroup] = useState([]);
-    const [previewImage, setPreviewImage] = useState('');
-    const [showFullImage, setShowFullImage] = useState(false);
+    const [invalid, setInvalid] = useState({
+        email: false, phone: false, password: false, group: false
+    });
 
+    /* ---------- load nhóm ---------- */
     useEffect(() => {
-        getGroups();
-    }, []);
-
-    useEffect(() => {
-        if (action === 'UPDATE') {
-            setUserData({
-                ...dataModalUser,
-                group: dataModalUser.Group ? dataModalUser.Group.id : '',
-                image: dataModalUser.image || ''
-            });
-            setPreviewImage(dataModalUser.image || '');
-        }
-    }, [dataModalUser]);
-
-    useEffect(() => {
-        if (action === 'CREATE') {
-            if (userGroup.length > 0) {
-                setUserData(prev => ({ ...prev, group: userGroup[0].id }));
-            }
-        }
+        (async () => {
+            const res = await fetchGroup();
+            if (res?.EC === 0) {
+                setGroupList(res.DT);
+                if (res.DT.length && action === 'CREATE')
+                    setUserData((u) => ({ ...u, group: res.DT[0].id }));
+            } else toast.error(res?.EM);
+        })();
     }, [action]);
 
-
-
-    const getGroups = async () => {
-        let res = await fetchGroup();
-        if (res && res.EC === 0) {
-            setUserGroup(res.DT);
-            if (res.DT.length > 0) {
-                setUserData(prev => ({ ...prev, group: res.DT[0].id }));
-            }
-        } else {
-            toast.error(res.EM);
+    /* ---------- tải dữ liệu khi EDIT ---------- */
+    useEffect(() => {
+        if (action === 'UPDATE' && dataModalUser) {
+            setUserData({
+                ...dataModalUser,
+                group: dataModalUser.Group?.id || '',
+                image: dataModalUser.image || ''
+            });
+            setPreviewImg(dataModalUser.image || '');
         }
+    }, [action, dataModalUser]);
+
+    /* ---------- đổi input ---------- */
+    const updateField = (val, key) =>
+        setUserData((prev) => ({ ...prev, [key]: val }));
+
+    /* ---------- chọn file ---------- */
+    const handleFile = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setSelectedFile(file);
+        setImageChanged(true);
+        setPreviewImg(URL.createObjectURL(file));
     };
 
-    const handleOnchangeInput = (value, name) => {
-        let _userData = _.cloneDeep(userData);
-        _userData[name] = value;
-        setUserData(_userData);
-    };
-
-    const checkValidateInputs = () => {
+    /* ---------- validate ---------- */
+    const valid = () => {
         if (action === 'UPDATE') return true;
-        setValidInput(validInputDefault);
+        const required = ['email', 'phone', 'password', 'group'];
+        const next = { email: false, phone: false, password: false, group: false };
 
-        let arr = ['email', 'phone', 'password', 'group'];
-        for (let key of arr) {
-            if (!userData[key]) {
-                let _validInputs = _.cloneDeep(validInputDefault);
-                _validInputs[key] = false;
-                setValidInput(_validInputs);
-                toast.error(`Empty input ${key}`);
-                return false;
-            }
-        }
-        return true;
+        for (const k of required)
+            if (!userData[k]) { next[k] = true; toast.error(`Empty ${k}`); }
+
+        setInvalid(next);
+        return !Object.values(next).some(Boolean);
     };
 
-    const handleConfirmUser = async () => {
-        let isValid = checkValidateInputs();
-        if (!isValid) return;
+    /* ---------- submit ---------- */
+    const handleSubmit = async () => {
+        if (!valid()) return;
 
         try {
-            const formData = new FormData();
+            let res;
+            /* === gửi multipart khi CREATE hoặc EDIT có file === */
+            if (action === 'CREATE' || imageChanged) {
+                const fd = new FormData();
+                const key = ['id', 'email', 'phone', 'username', 'address', 'sex'];
+                key.forEach((k) => userData[k] && fd.append(k, userData[k]));
+                fd.append('groupId', userData.group);
+                if (action === 'CREATE') fd.append('password', userData.password);
+                if (selectedFile) fd.append('image', selectedFile);
 
-            // Thêm dữ liệu người dùng vào formData
-            formData.append('email', userData.email);
-            formData.append('phone', userData.phone);
-            formData.append('username', userData.username);
-            formData.append('address', userData.address);
-            formData.append('sex', userData.sex);
-            formData.append('groupId', userData.group);
-            if (action === 'CREATE') {
-                formData.append('password', userData.password);
+                res = action === 'CREATE'
+                    ? await createNewUser(fd)
+                    : await updateCurrentUser(fd, true);
+            } else {
+                /* === EDIT không đổi ảnh === */
+                res = await updateCurrentUser(
+                    { ...userData, groupId: userData.group },
+                    false
+                );
             }
 
-            // Nếu có ảnh được chọn thì thêm vào formData
-            if (selectedImageFile) {
-                formData.append('image', selectedImageFile);
-            }
-
-            // Gửi yêu cầu tới server
-            let res = action === 'CREATE'
-                ? await createNewUser(formData)
-                : await updateCurrentUser(formData);
-
-            // Xử lý phản hồi từ server
-            if (res && res.EC === 0) {
-                props.onHide();
-                setUserData({
-                    ...defaultUserData,
-                    group: userGroup.length > 0 ? userGroup[0].id : ''
-                });
-                setPreviewImage('');
-                setSelectedImageFile(null);
+            if (res?.EC === 0) {
                 toast.success(res.EM);
+                onHide();
+                reset();
             } else {
                 toast.error(res.EM);
-                if (res.DT) {
-                    let _validInputs = _.cloneDeep(validInputDefault);
-                    _validInputs[res.DT] = false;
-                    setValidInput(_validInputs);
-                }
+                if (res.DT) setInvalid((v) => ({ ...v, [res.DT]: true }));
             }
-        } catch (error) {
-            console.error("Error in handleConfirmUser:", error);
-            toast.error("An unexpected error occurred.");
+        } catch (e) {
+            console.error(e);
+            toast.error('Unexpected error!');
         }
     };
 
-
-    const handleCloseModalUser = () => {
-        props.onHide();
-        setUserData(defaultUserData);
-        setPreviewImage('');
-        setValidInput(validInputDefault);
+    /* ---------- reset form ---------- */
+    const reset = () => {
+        setUserData({ ...defaultUser, group: groupList[0]?.id || '' });
+        setPreviewImg('');
+        setSelectedFile(null);
+        setImageChanged(false);
+        setInvalid({ email: false, phone: false, password: false, group: false });
     };
 
-    const handleUploadImage = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedImageFile(file);
-            const objectUrl = URL.createObjectURL(file);
-            setPreviewImage(objectUrl);
-        }
+    /* ---------- close ---------- */
+    const closeModal = () => {
+        onHide();
+        reset();
     };
 
+    /* ---------- render ---------- */
     return (
         <>
-            <Modal size="lg" show={props.show} className="modal-user" onHide={handleCloseModalUser}>
+            <Modal show={show} size="lg" onHide={closeModal} className="modal-user">
                 <Modal.Header closeButton>
-                    <Modal.Title>
-                        {action === 'CREATE' ? 'Create new user' : 'Edit a user'}
-                    </Modal.Title>
+                    <Modal.Title>{action === 'CREATE' ? 'Create new user' : 'Edit a user'}</Modal.Title>
                 </Modal.Header>
+
                 <Modal.Body>
-                    <div className="content-body row">
-                        <div className="col-12 col-sm-6 form-group">
+                    {/* ---------- FORM ---------- */}
+                    <div className="row content-body">
+                        {/* email & phone */}
+                        <div className="col-sm-6 form-group">
                             <label>Email address <span className="red">*</span></label>
                             <input
                                 disabled={action === 'UPDATE'}
-                                className={validInput.email ? 'form-control' : 'form-control is-invalid'}
-                                type="email"
+                                className={invalid.email ? 'form-control is-invalid' : 'form-control'}
                                 value={userData.email}
-                                onChange={(e) => handleOnchangeInput(e.target.value, "email")}
+                                onChange={(e) => updateField(e.target.value, 'email')}
                             />
                         </div>
-                        <div className="col-12 col-sm-6 form-group">
+
+                        <div className="col-sm-6 form-group">
                             <label>Phone number <span className="red">*</span></label>
                             <input
                                 disabled={action === 'UPDATE'}
-                                className={validInput.phone ? 'form-control' : 'form-control is-invalid'}
-                                type="text"
+                                className={invalid.phone ? 'form-control is-invalid' : 'form-control'}
                                 value={userData.phone}
-                                onChange={(e) => handleOnchangeInput(e.target.value, "phone")}
+                                onChange={(e) => updateField(e.target.value, 'phone')}
                             />
                         </div>
-                        <div className="col-12 col-sm-6 form-group">
+
+                        {/* username & password */}
+                        <div className="col-sm-6 form-group">
                             <label>Username</label>
                             <input
                                 className="form-control"
-                                type="text"
                                 value={userData.username}
-                                onChange={(e) => handleOnchangeInput(e.target.value, "username")}
+                                onChange={(e) => updateField(e.target.value, 'username')}
                             />
                         </div>
-                        {action === 'CREATE' &&
-                            <div className="col-12 col-sm-6 form-group">
+
+                        {action === 'CREATE' && (
+                            <div className="col-sm-6 form-group">
                                 <label>Password <span className="red">*</span></label>
                                 <input
-                                    className={validInput.password ? 'form-control' : 'form-control is-invalid'}
                                     type="password"
+                                    className={invalid.password ? 'form-control is-invalid' : 'form-control'}
                                     value={userData.password}
-                                    onChange={(e) => handleOnchangeInput(e.target.value, "password")}
+                                    onChange={(e) => updateField(e.target.value, 'password')}
                                 />
                             </div>
-                        }
-                        <div className="col-12 col-sm-6 form-group">
+                        )}
+
+                        {/* address & sex */}
+                        <div className="col-sm-6 form-group">
                             <label>Address</label>
                             <input
                                 className="form-control"
-                                type="text"
                                 value={userData.address}
-                                onChange={(e) => handleOnchangeInput(e.target.value, "address")}
+                                onChange={(e) => updateField(e.target.value, 'address')}
                             />
                         </div>
-                        <div className="col-12 col-sm-6 form-group">
+
+                        <div className="col-sm-6 form-group">
                             <label>Gender</label>
                             <select
                                 className="form-select"
                                 value={userData.sex}
-                                onChange={(e) => handleOnchangeInput(e.target.value, "sex")}
+                                onChange={(e) => updateField(e.target.value, 'sex')}
                             >
                                 <option value="">Select gender</option>
                                 <option value="Male">Male</option>
@@ -237,76 +234,68 @@ const ModalUser = (props) => {
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-                        <div className="col-12 col-sm-6 form-group">
+
+                        {/* group */}
+                        <div className="col-sm-6 form-group">
                             <label>Group <span className="red">*</span></label>
                             <select
-                                className={validInput.group ? 'form-select' : 'form-select is-invalid'}
+                                className={invalid.group ? 'form-select is-invalid' : 'form-select'}
                                 value={userData.group}
-                                onChange={(e) => handleOnchangeInput(e.target.value, "group")}
+                                onChange={(e) => updateField(e.target.value, 'group')}
                             >
-                                {userGroup.map((item, idx) => (
-                                    <option key={`group-${idx}`} value={item.id}>{item.name}</option>
+                                {groupList.map((g) => (
+                                    <option key={g.id} value={g.id}>{g.name}</option>
                                 ))}
                             </select>
                         </div>
 
-                        <div className="col-12 col-sm-6 form-group">
+                        {/* image */}
+                        <div className="col-sm-6 form-group">
                             <label>Upload Image</label>
-                            <input
-                                type="file"
-                                className="form-control"
-                                accept="image/*"
-                                onChange={handleUploadImage}
-                            />
-                            {(userData.image || previewImage) && (
+                            <input type="file" className="form-control" accept="image/*" onChange={handleFile} />
+
+                            {(previewImg || userData.image) && (
                                 <div className="mt-2">
                                     <img
-                                        src={previewImage || userData.image}
+                                        src={buildImgSrc(previewImg || userData.image)}
                                         alt="preview"
                                         style={{
-                                            width: "100px",
-                                            height: "100px",
-                                            objectFit: "cover",
-                                            border: "1px solid #ccc",
-                                            cursor: "pointer"
+                                            maxWidth: 120,
+                                            maxHeight: 120,
+                                            objectFit: 'cover',
+                                            border: '1px solid #ccc',
+                                            cursor: 'pointer'
                                         }}
-                                        onClick={() => setShowFullImage(true)}
+                                        onClick={() => setShowFull(true)}
                                     />
                                 </div>
                             )}
                         </div>
                     </div>
                 </Modal.Body>
+
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModalUser}>Close</Button>
-                    <Button variant="primary" onClick={handleConfirmUser}>
+                    <Button variant="secondary" onClick={closeModal}>Close</Button>
+                    <Button variant="primary" onClick={handleSubmit}>
                         {action === 'CREATE' ? 'Save' : 'Update'}
                     </Button>
                 </Modal.Footer>
             </Modal>
 
-            {showFullImage && (
+            {/* ---------- FULL IMAGE ---------- */}
+            {showFull && (
                 <div
+                    onClick={() => setShowFull(false)}
                     style={{
-                        position: 'fixed',
-                        top: 0, left: 0, width: '100vw', height: '100vh',
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: 9999
+                        position: 'fixed', inset: 0, zIndex: 9999,
+                        background: 'rgba(0,0,0,0.8)', display: 'flex',
+                        justifyContent: 'center', alignItems: 'center'
                     }}
-                    onClick={() => setShowFullImage(false)}
                 >
                     <img
-                        src={previewImage || userData.image}
+                        src={buildImgSrc(previewImg || userData.image)}
                         alt="full"
-                        style={{
-                            maxWidth: '90%',
-                            maxHeight: '90%',
-                            border: '4px solid white',
-                            borderRadius: '8px'
-                        }}
+                        style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }}
                     />
                 </div>
             )}
