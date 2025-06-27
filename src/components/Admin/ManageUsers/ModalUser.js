@@ -7,6 +7,7 @@ import _ from "lodash";
 
 const ModalUser = (props) => {
     const { action, dataModalUser } = props;
+    const [selectedImageFile, setSelectedImageFile] = useState(null);
 
     const defaultUserData = {
         email: '',
@@ -58,6 +59,8 @@ const ModalUser = (props) => {
         }
     }, [action]);
 
+
+
     const getGroups = async () => {
         let res = await fetchGroup();
         if (res && res.EC === 0) {
@@ -97,29 +100,54 @@ const ModalUser = (props) => {
         let isValid = checkValidateInputs();
         if (!isValid) return;
 
-        let payload = { ...userData, groupId: userData.group };
+        try {
+            const formData = new FormData();
 
-        let res = action === 'CREATE'
-            ? await createNewUser(payload)
-            : await updateCurrentUser(payload);
-
-        if (res && res.EC === 0) {
-            props.onHide();
-            setUserData({
-                ...defaultUserData,
-                group: userGroup.length > 0 ? userGroup[0].id : ''
-            });
-            setPreviewImage('');
-            toast.success(res.EM);
-        } else {
-            toast.error(res.EM);
-            if (res.DT) {
-                let _validInputs = _.cloneDeep(validInputDefault);
-                _validInputs[res.DT] = false;
-                setValidInput(_validInputs);
+            // Thêm dữ liệu người dùng vào formData
+            formData.append('email', userData.email);
+            formData.append('phone', userData.phone);
+            formData.append('username', userData.username);
+            formData.append('address', userData.address);
+            formData.append('sex', userData.sex);
+            formData.append('groupId', userData.group);
+            if (action === 'CREATE') {
+                formData.append('password', userData.password);
             }
+
+            // Nếu có ảnh được chọn thì thêm vào formData
+            if (selectedImageFile) {
+                formData.append('image', selectedImageFile);
+            }
+
+            // Gửi yêu cầu tới server
+            let res = action === 'CREATE'
+                ? await createNewUser(formData)
+                : await updateCurrentUser(formData);
+
+            // Xử lý phản hồi từ server
+            if (res && res.EC === 0) {
+                props.onHide();
+                setUserData({
+                    ...defaultUserData,
+                    group: userGroup.length > 0 ? userGroup[0].id : ''
+                });
+                setPreviewImage('');
+                setSelectedImageFile(null);
+                toast.success(res.EM);
+            } else {
+                toast.error(res.EM);
+                if (res.DT) {
+                    let _validInputs = _.cloneDeep(validInputDefault);
+                    _validInputs[res.DT] = false;
+                    setValidInput(_validInputs);
+                }
+            }
+        } catch (error) {
+            console.error("Error in handleConfirmUser:", error);
+            toast.error("An unexpected error occurred.");
         }
     };
+
 
     const handleCloseModalUser = () => {
         props.onHide();
@@ -131,9 +159,9 @@ const ModalUser = (props) => {
     const handleUploadImage = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setSelectedImageFile(file);
             const objectUrl = URL.createObjectURL(file);
             setPreviewImage(objectUrl);
-            setUserData(prev => ({ ...prev, image: objectUrl }));
         }
     };
 

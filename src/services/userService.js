@@ -31,10 +31,13 @@ const fetchGroup = () => {
 
 }
 
-const createNewUser = (userData) => {
-    return axios.post("/api/v1/user/create", { ...userData });
-
-}
+const createNewUser = (formData) => {
+    return axios.post("/api/v1/user/create", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+};
 
 const updateCurrentUser = (userData) => {
     return axios.put("/api/v1/user/update", { ...userData });
