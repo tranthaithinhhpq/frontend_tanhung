@@ -58,29 +58,37 @@ const Users = (props) => {
         setCurrentPage(+event.selected + 1);
     };
 
-    const handleDeleteUser = async (user) => {
+    const handleDeleteUser = (user) => {
         setDataModal(user);
         setIsShowModalDelete(true);
-    }
+    };
     const handleClose = () => {
         setIsShowModalDelete(false);
         setDataModal({});
     }
     const confirmDeleteUser = async () => {
         try {
-            let response = await deleteUser(dataModal);
-            if (response && response.EC === 0) {
-                toast.success(response.EM);
-                await fetchUsers();
+            const res = await deleteUser(dataModal.id);   // 👉 gửi id
+            if (res && res.EC === 0) {
+                toast.success(res.EM);
+
+                /* Giảm page nếu vừa xoá dòng cuối */
+                const pageAfterDelete =
+                    listUsers.length === 1 && currentPage > 1
+                        ? currentPage - 1
+                        : currentPage;
+
+                setCurrentPage(pageAfterDelete);
+                await fetchUsers();          // reload danh sách
                 setIsShowModalDelete(false);
             } else {
-                toast.error(response.EM);
+                toast.error(res.EM || 'Delete failed');
             }
-        } catch (error) {
-            console.error("Error deleting user: ", error);
-            toast.error("An error occurred while deleting user.");
+        } catch (err) {
+            console.error(err);
+            toast.error('An error occurred while deleting user.');
         }
-    }
+    };
 
     const onHideModalUser = async () => {
         try {

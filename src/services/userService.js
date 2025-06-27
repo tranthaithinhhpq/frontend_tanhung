@@ -21,10 +21,10 @@ const fetchAllUser = (page, limit) => {
 
 // })
 
-const deleteUser = (user) => {
-    return axios.delete("/api/v1/user/delete", { data: { id: user.id } });
-
-}
+const deleteUser = (id) => {
+    // axios 0.27+ phải ghi rõ { data: { ... } }
+    return axios.delete('/api/v1/user/delete', { data: { id } });
+};
 
 const fetchGroup = () => {
     return axios.get("/api/v1/group/read");
@@ -58,7 +58,8 @@ const logoutUser = () => {
     return axios.post("/api/v1/logout");
 }
 
+
 export {
     registerNewUser, loginUser, fetchAllUser, deleteUser, fetchGroup, createNewUser, updateCurrentUser, getUserAccount,
-    logoutUser
+    logoutUser,
 };
