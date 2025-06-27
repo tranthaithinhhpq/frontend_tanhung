@@ -4,12 +4,13 @@ import { fetchGroup } from '../../../services/userService';
 import { fetchAllRole, fetchRolesByGroup, assignRolesToGroup } from '../../../services/roleService';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
-
+import { UserContext } from '../../../context/UserContext';
 const GroupRole = () => {
     const [userGroups, setUserGroups] = useState([]);
     const [listRoles, setListRoles] = useState([]);
     const [selectGroup, setSelectGroup] = useState("");
     const [assignRolesByGroup, setAssignRolesByGroup] = useState([]);
+    const { user, loginContext } = useContext(UserContext);
 
     useEffect(() => {
         getGroups();
@@ -42,14 +43,28 @@ const GroupRole = () => {
     };
 
     const handleSave = async () => {
-        const data = buildDataToSave();
-        let res = await assignRolesToGroup(data);
+        const res = await assignRolesToGroup(buildDataToSave());
+
         if (res && res.EC === 0) {
             toast.success(res.EM);
-        } else {
-            toast.error(res?.EM || "Something went wrong!");
-        }
+
+            if (res.access_token) {
+                // 1. Lưu vào localStorage
+                localStorage.setItem('jwt', res.access_token);
+
+                // 2. Cập nhật context để app re-render
+                loginContext({
+                    isAuthenticated: true,
+                    token: res.access_token,
+                    account: {
+                        ...user.account,
+                        groupWithRoles: res.DT        // roles mới
+                    }
+                });
+            }
+        } else toast.error(res?.EM || 'Save failed');
     };
+
 
 
 

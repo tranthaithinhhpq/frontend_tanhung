@@ -8,16 +8,28 @@ const instance = axios.create({
 });
 
 // ✅ Gắn token vào mọi request (Interceptor Request)
-instance.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('jwt');
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+// instance.interceptors.request.use(
+//     (config) => {
+//         const token = localStorage.getItem('jwt');
+//         if (token) {
+//             config.headers['Authorization'] = `Bearer ${token}`;
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
+
+
+
+instance.interceptors.request.use(config => {
+    const token = localStorage.getItem('jwt');   // luôn lấy giá trị mới
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+});
+
+
+
+
 
 // ✅ Xử lý lỗi response (Interceptor Response)
 instance.interceptors.response.use(
