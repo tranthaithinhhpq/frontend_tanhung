@@ -11,6 +11,7 @@ import Home from "../components/Admin/Home/Home";
 import HomeClient from "../components/Client/Home/Home";
 import About from "../components/Admin/About/About";
 import DoctorClient from "../components/Client/Doctor/DoctorClient";
+import Doctor from "../components/Admin/Doctor/Doctor";
 
 
 
@@ -39,7 +40,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/roles" component={Role} />
             <PrivateRoutes path="/admin/group-role" component={GroupRole} />
             <PrivateRoutes path="/admin" exact component={Home} />
-            <PrivateRoutes path="/admin" exact component={About} />
+            <PrivateRoutes path="/admin/doctor" exact component={Doctor} />
 
 
             {/* Public Admin */}
