@@ -10,7 +10,9 @@ import GroupRole from "../components/Admin/GroupRole/GroupRole";
 import Home from "../components/Admin/Home/Home";
 import HomeClient from "../components/Client/Home/Home";
 import About from "../components/Admin/About/About";
-import Doctor from "../components/Client/Doctor/Doctor";
+import DoctorClient from "../components/Client/Doctor/DoctorClient";
+
+
 
 
 
@@ -39,6 +41,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin" exact component={Home} />
             <PrivateRoutes path="/admin" exact component={About} />
 
+
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             <Route path="/admin/register" component={Register} />
@@ -46,7 +49,7 @@ const AppRoutes = () => {
 
             {/* Client */}
             <Route path="/" exact component={HomeClient} />
-            <Route path="/doctor" exact component={Doctor} />
+            <Route path="/doctor" exact component={DoctorClient} />
 
             {/* 404 fallback */}
             <Route path="*">

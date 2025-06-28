@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './Nav.scss';
 import { Link, useLocation, useHistory } from 'react-router-dom';
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import logo from '../../../logo.png';
 import { logoutUser } from '../../../services/userService';
 import { toast } from 'react-toastify';
@@ -27,13 +27,14 @@ const NavHeaderClient = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark custom-navbar">
             <div className="container-fluid">
+                {/* Logo */}
                 <Link className="navbar-brand fw-bold logo" to="/">
                     <Navbar.Brand as={Link} to="/">
                         <img src={logo} width="30" height="30" alt="React logo" />
                     </Navbar.Brand>
                 </Link>
 
-                {/* Ẩn brand chữ nếu kích thước 992–1200 */}
+                {/* Brand text (ẩn 992–1200) */}
                 {!(windowWidth >= 992 && windowWidth <= 1200) && (
                     <Link to="/" className="brand-link ms-1 me-1">
                         <div className="brand-text">
@@ -43,6 +44,7 @@ const NavHeaderClient = () => {
                     </Link>
                 )}
 
+                {/* Toggler */}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -57,15 +59,17 @@ const NavHeaderClient = () => {
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
-
-                        {/* Dropdown: Giới thiệu */}
+                        {/* === Giới thiệu === */}
                         <li className="nav-item dropdown">
-                            <div className="d-flex align-items-center gap-0">
-                                <Link className="nav-link" to="/gioi-thieu">Giới thiệu</Link>
-                                <a className="nav-link dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </a>
-                            </div>
+                            <a
+                                href="#" // không điều hướng
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Giới thiệu
+                            </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/tam-nhin">Tầm nhìn & Sứ mệnh</Link></li>
                                 <li><Link className="dropdown-item" to="/doctor">Đội ngũ bác sĩ</Link></li>
@@ -75,14 +79,17 @@ const NavHeaderClient = () => {
                             </ul>
                         </li>
 
-                        {/* Dropdown: Khách hàng */}
+                        {/* === Khách hàng === */}
                         <li className="nav-item dropdown">
-                            <div className="d-flex align-items-center gap-0">
-                                <Link className="nav-link" to="/gioi-thieu">Khách hàng</Link>
-                                <a className="nav-link dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </a>
-                            </div>
+                            <a
+                                href="#"
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Khách hàng
+                            </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/tam-nhin">Hướng dẫn</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>
@@ -90,14 +97,17 @@ const NavHeaderClient = () => {
                             </ul>
                         </li>
 
-                        {/* Dropdown: Tin tức */}
+                        {/* === Tin tức === */}
                         <li className="nav-item dropdown">
-                            <div className="d-flex align-items-center gap-0">
-                                <Link className="nav-link" to="/gioi-thieu">Tin tức</Link>
-                                <a className="nav-link dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </a>
-                            </div>
+                            <a
+                                href="#"
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Tin tức
+                            </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/tam-nhin">Tin tức & Sự kiện</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Thông báo</Link></li>
@@ -107,33 +117,39 @@ const NavHeaderClient = () => {
                             </ul>
                         </li>
 
-                        {/* Đặt lịch khám */}
-                        <li className="nav-item">
+                        {/* === Đặt lịch khám (link đơn) === */}
+                        <li className="nav-item ">
                             <Link className="nav-link" to="/link">Đặt lịch khám</Link>
                         </li>
 
-                        {/* Dropdown: Tuyển dụng */}
+                        {/* === Tuyển dụng === */}
                         <li className="nav-item dropdown">
-                            <div className="d-flex align-items-center gap-0">
-                                <Link className="nav-link" to="/gioi-thieu">Tuyển dụng</Link>
-                                <a className="nav-link dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </a>
-                            </div>
+                            <a
+                                href="#"
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Tuyển dụng
+                            </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/tam-nhin">Thông tin tuyển dụng</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Đăng ký tuyển dụng</Link></li>
                             </ul>
                         </li>
 
-                        {/* Dropdown: Bảng giá */}
+                        {/* === Bảng giá === */}
                         <li className="nav-item dropdown">
-                            <div className="d-flex align-items-center gap-0">
-                                <Link className="nav-link" to="/gioi-thieu">Bảng giá</Link>
-                                <a className="nav-link dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown">
-                                    <span className="visually-hidden">Toggle Dropdown</span>
-                                </a>
-                            </div>
+                            <a
+                                href="#"
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Bảng giá
+                            </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/tam-nhin">Hướng dẫn</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>

@@ -1,7 +1,38 @@
-// Giao diện LỚN: từ 1400px trở lên
+// Nav.scss (v6 – uniform opacity + hover white)
+// --------------------------------------------------
+// • Mặc định TẤT CẢ .nav-link ở màu trắng 55% (rgba 255,255,255,.55)
+// • Khi hover / focus: chuyển sang #fff đậm
+// --------------------------------------------------
+
+// === Global overrides ===
+.navbar {
+
+
+
+    // Link mặc định mờ 55%
+    .nav-link {
+        color: rgba(255, 255, 255, 0.55) !important;
+        transition: color 0.15s ease-in-out;
+
+
+        &:hover,
+        &:focus {
+            color: #fff !important; // sáng khi hover
+        }
+    }
+
+    // “Welcome …” nằm trong span – dùng cùng quy tắc kế thừa nav-link
+
+    // Tiêu đề dropdown “Settings” – giữ caret cùng màu khi hover
+    .dropdown-toggle::after {
+        border-top-color: currentColor !important;
+    }
+}
+
+// --------------------------------------------------
+// Desktop ≥1200px
+// --------------------------------------------------
 @media screen and (min-width: 1200px) {
-
-
     .navbar-brand {
         margin-right: 0 !important;
     }
@@ -13,7 +44,7 @@
         .brand-text {
             display: flex;
             flex-direction: column;
-            align-items: flex-start; // Căn trái logo
+            align-items: flex-start;
             line-height: 1.2;
             cursor: pointer;
 
@@ -22,7 +53,7 @@
             }
 
             .brand-name-2 {
-                color: white;
+                color: #fff;
                 font-size: 0.875rem;
             }
         }
@@ -33,7 +64,11 @@
             display: none;
         }
 
-        &:hover {
+        .dropdown-menu.show {
+            display: block !important;
+        }
+
+        &:not(.no-hover):hover {
             .dropdown-menu {
                 display: block !important;
                 margin-top: 0;
@@ -47,11 +82,10 @@
     }
 }
 
-// Giao diện NHỎ: từ 1400px trở xuống
+// --------------------------------------------------
+// Mobile/Tablet <1200px
+// --------------------------------------------------
 @media screen and (max-width: 1200px) {
-
-
-
     .navbar-brand {
         margin-right: 0 !important;
     }
@@ -63,7 +97,7 @@
         .brand-text {
             display: flex;
             flex-direction: column;
-            align-items: center; // căn giữa khi thu nhỏ
+            align-items: center;
             line-height: 1.2;
             cursor: pointer;
 
@@ -72,15 +106,19 @@
             }
 
             .brand-name-2 {
-                color: white;
+                color: #fff;
                 font-size: 0.875rem;
             }
         }
     }
 
-    // Cho phép dropdown hiển thị khi nhấn (Bootstrap xử lý)
     .dropdown-toggle.show::after {
         border-top: 0;
         border-bottom: 0.3em solid;
+    }
+
+    .navbar .dropdown-menu {
+        position: static;
+        float: none;
     }
 }
