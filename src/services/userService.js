@@ -59,7 +59,14 @@ const logoutUser = () => {
 }
 
 
+const getDoctor = () => {
+    return axios.get(`/api/v1/user/read-doctor`); // template string
+
+}
+
+
+
 export {
     registerNewUser, loginUser, fetchAllUser, deleteUser, fetchGroup, createNewUser, updateCurrentUser, getUserAccount,
-    logoutUser,
+    logoutUser, getDoctor,
 };
