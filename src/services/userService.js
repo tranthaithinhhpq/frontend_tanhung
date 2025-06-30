@@ -64,9 +64,13 @@ const getDoctor = () => {
 
 }
 
+const getDoctorInfoByUserId = (userId) => {
+    return axios.get(`/api/v1/doctor-info/${userId}`);
+};
+
 
 
 export {
     registerNewUser, loginUser, fetchAllUser, deleteUser, fetchGroup, createNewUser, updateCurrentUser, getUserAccount,
-    logoutUser, getDoctor,
+    logoutUser, getDoctor, getDoctorInfoByUserId
 };
