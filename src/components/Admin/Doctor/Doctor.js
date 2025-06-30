@@ -3,11 +3,12 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import Select from "react-select";
-import { getDoctor } from "../../../services/userService";
+import { getDoctor, getDoctorInfoByUserId } from "../../../services/userService";
 import { getSpecialty } from "../../../services/specialtyService";
-import { getDoctorInfoByUserId } from "../../../services/userService";
-import { toast } from 'react-toastify';
-
+import { getDegree } from "../../../services/degreeService";
+import { getPosition } from "../../../services/positionService";
+import { toast } from "react-toastify";
+import { createDoctorInfo, updateDoctorInfo } from "../../../services/doctorService";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -23,10 +24,13 @@ const Doctor = () => {
     const [previewMode, setPreviewMode] = useState(false);
     const [doctorOptions, setDoctorOptions] = useState([]);
     const [specialtyOptions, setSpecialtyOptions] = useState([]);
+    const [degreeOptions, setDegreeOptions] = useState([]);
+    const [positionOptions, setPositionOptions] = useState([]);
+
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [selectedSpecialty, setSelectedSpecialty] = useState(null);
-    const [specialtyDisabled, setSpecialtyDisabled] = useState(false);
-
+    const [selectedDegree, setSelectedDegree] = useState(null);
+    const [selectedPosition, setSelectedPosition] = useState(null);
     const [showFullImg, setShowFullImg] = useState(false);
 
     const modules = {
@@ -49,65 +53,211 @@ const Doctor = () => {
     ];
 
     useEffect(() => {
-        const fetchDoctors = async () => {
+        const fetchInitData = async () => {
             try {
-                const res = await getDoctor();
-                let users = [];
-                if (Array.isArray(res.DT)) {
-                    users = res.DT;
-                } else if (res.DT && res.DT.users) {
-                    users = res.DT.users;
+                const [doctorRes, specialtyRes, degreeRes, positionRes] = await Promise.all([
+                    getDoctor(),
+                    getSpecialty(),
+                    getDegree(),
+                    getPosition()
+                ]);
+
+                // Doctor options
+                let users = Array.isArray(doctorRes.DT) ? doctorRes.DT : (doctorRes.DT.users || []);
+                setDoctorOptions(users
+                    .filter(u => u.Group?.name === "Doctor")
+                    .map(u => ({
+                        value: u.id,
+                        label: u.username,
+                        image: u.image || ''
+                    }))
+                );
+
+                // Specialty options
+                if (specialtyRes?.EC === 0) {
+                    setSpecialtyOptions(specialtyRes.DT.map(sp => ({
+                        value: sp.id,
+                        label: sp.name
+                    })));
                 }
 
-                const doctors = users
-                    .filter(user => user.Group && user.Group.name === "Doctor")
-                    .map(doc => ({
-                        value: doc.id,
-                        label: doc.username,
-                        image: doc.image || ''
-                    }));
+                // Degree options
+                if (degreeRes?.EC === 0) {
+                    setDegreeOptions(degreeRes.DT.map(dg => ({
+                        value: dg.id,
+                        label: dg.name
+                    })));
+                }
 
-                setDoctorOptions(doctors);
+                // Position options
+                if (positionRes?.EC === 0) {
+                    setPositionOptions(positionRes.DT.map(pos => ({
+                        value: pos.id,
+                        label: pos.name
+                    })));
+                }
+
             } catch (err) {
-                console.error("API error (doctor):", err);
-                toast.error("Không thể tải danh sách bác sĩ");
+                console.error(err);
+                toast.error("Lỗi tải dữ liệu!");
             }
         };
 
-        const fetchSpecialties = async () => {
+        fetchInitData();
+    }, []);
+
+
+    // const handleDoctorChange = async (doctor) => {
+    //     setSelectedDoctor(doctor);
+
+    //     if (doctor?.value) {
+    //         try {
+    //             const res = await getDoctorInfoByUserId(doctor.value);
+
+    //             if (res.EC === 0) {
+    //                 const info = res.DT.doctorInfo;
+
+    //                 // Map specialties cho Select
+    //                 const specialtiesMapped = res.DT.specialties.map(sp => ({
+    //                     value: sp.id,
+    //                     label: sp.name
+    //                 }));
+    //                 setSpecialtyOptions(specialtiesMapped);
+
+    //                 // Auto điền nếu có specialty
+    //                 if (info?.Specialty) {
+    //                     setSelectedSpecialty({
+    //                         value: info.Specialty.id,
+    //                         label: info.Specialty.name
+    //                     });
+    //                 } else {
+    //                     setSelectedSpecialty(null);
+    //                 }
+    //             }
+    //         } catch (err) {
+    //             console.error("Fetch doctor info error", err);
+    //             setSpecialtyOptions([]);
+    //             setSelectedSpecialty(null);
+    //         }
+    //     } else {
+    //         setSpecialtyOptions([]);
+    //         setSelectedSpecialty(null);
+    //     }
+    // };
+
+
+
+    const handleDoctorChange = async (doctor) => {
+        setSelectedDoctor(doctor);
+
+        if (doctor?.value) {
             try {
-                const res = await getSpecialty();
-                if (res?.EC === 0 && Array.isArray(res.DT)) {
-                    const specialties = res.DT.map(sp => ({
+                const res = await getDoctorInfoByUserId(doctor.value);
+
+                if (res.EC === 0) {
+                    const info = res.DT.doctorInfo;
+
+                    // Specialty
+                    const specialtiesMapped = res.DT.specialties.map(sp => ({
                         value: sp.id,
                         label: sp.name
                     }));
-                    setSpecialtyOptions(specialties);
+                    setSpecialtyOptions(specialtiesMapped);
+
+                    if (info?.Specialty) {
+                        setSelectedSpecialty({
+                            value: info.Specialty.id,
+                            label: info.Specialty.name
+                        });
+                    } else {
+                        setSelectedSpecialty(null);
+                    }
+
+                    // Degree
+                    if (info?.Degree) {
+                        setSelectedDegree({
+                            value: info.Degree.id,
+                            label: info.Degree.name
+                        });
+                    } else {
+                        setSelectedDegree(null);
+                    }
+
+                    // Position
+                    if (info?.Position) {
+                        setSelectedPosition({
+                            value: info.Position.id,
+                            label: info.Position.name
+                        });
+                    } else {
+                        setSelectedPosition(null);
+                    }
+
+                } else {
+                    setSelectedSpecialty(null);
+                    setSelectedDegree(null);
+                    setSelectedPosition(null);
                 }
+
             } catch (err) {
-                console.error("API error (specialty):", err);
-                alert("Không thể tải danh sách chuyên khoa");
+                console.error("Fetch doctor info error", err);
+                toast.error("Không thể tải thông tin bác sĩ");
+                setSelectedSpecialty(null);
+                setSelectedDegree(null);
+                setSelectedPosition(null);
             }
+        } else {
+            setSelectedSpecialty(null);
+            setSelectedDegree(null);
+            setSelectedPosition(null);
+        }
+    };
+
+
+
+    const handlePublish = async () => {
+        if (!selectedDoctor || !selectedSpecialty || !selectedDegree || !selectedPosition) {
+            toast.error("Vui lòng chọn đầy đủ bác sĩ, chuyên khoa, học vị, chức vụ");
+            return;
+        }
+
+        const payload = {
+            userId: selectedDoctor.value,
+            specialtyId: selectedSpecialty.value,
+            degreeId: selectedDegree.value,
+            positionId: selectedPosition.value,
+            markdownContent: content
         };
 
-        fetchDoctors();
-        fetchSpecialties();
-    }, []);
+        try {
+            // Giả định: nếu bác sĩ đã có doctorInfo → update, chưa có → create
+            const resInfo = await getDoctorInfoByUserId(selectedDoctor.value);
+            let res;
 
-    const handlePublish = () => {
-        console.log({
-            title,
-            content,
-            doctor: selectedDoctor ? selectedDoctor.label : "Chưa chọn bác sĩ",
-            specialty: selectedSpecialty ? selectedSpecialty.label : "Chưa chọn chuyên khoa"
-        });
-        alert("Đã gửi bài viết lên console – tích hợp API sau!");
+            if (resInfo?.EC === 0 && resInfo.DT?.doctorInfo) {
+                // Update
+                res = await updateDoctorInfo(selectedDoctor.value, payload);
+            } else {
+                // Create
+                res = await createDoctorInfo(payload);
+            }
+
+            if (res.EC === 0) {
+                toast.success(res.EM || "Lưu thông tin thành công");
+            } else {
+                toast.error(res.EM || "Có lỗi khi lưu thông tin");
+            }
+        } catch (err) {
+            console.error("Publish error", err);
+            toast.error("Lỗi khi gửi dữ liệu");
+        }
     };
 
     return (
         <div className="container py-4">
             <h1 className="h4 mb-3">Đăng bài viết</h1>
             <Row>
+                <label>Tiêu đề:</label>
                 <Col md={previewMode ? 6 : 12} className="mb-4">
                     <input
                         type="text"
@@ -116,55 +266,29 @@ const Doctor = () => {
                         onChange={(e) => setTitle(e.target.value)}
                         className="form-control mb-3"
                     />
-
-                    {selectedDoctor && selectedDoctor.image && (
-                        <div className="mb-3">
-                            <img
-                                src={buildImgSrc(selectedDoctor.image)}
-                                alt="Doctor"
-                                style={{ maxWidth: 150, maxHeight: 150, objectFit: 'cover', cursor: 'pointer', border: '1px solid #ccc' }}
-                                onClick={() => setShowFullImg(true)}
-                            />
-                        </div>
-                    )}
-
+                    <label>Bác sĩ:</label>
                     <Select
                         options={doctorOptions}
                         value={selectedDoctor}
-                        onChange={async (doctor) => {
-                            setSelectedDoctor(doctor);
-                            if (doctor?.value) {
-                                try {
-                                    const res = await getDoctorInfoByUserId(doctor.value);
-                                    if (res.EC === 0) {
-                                        // Set all specialties
-                                        const allSpecialties = res.DT.specialties.map(sp => ({
-                                            value: sp.id,
-                                            label: sp.name
-                                        }));
-                                        setSpecialtyOptions(allSpecialties);
-
-                                        // Nếu doctor có specialty -> auto select
-                                        if (res.DT.doctorInfo?.Specialty) {
-                                            setSelectedSpecialty({
-                                                value: res.DT.doctorInfo.Specialty.id,
-                                                label: res.DT.doctorInfo.Specialty.name
-                                            });
-                                        } else {
-                                            setSelectedSpecialty(null);
-                                        }
-                                    }
-                                } catch (err) {
-                                    console.error("Error fetching doctor info + specialties", err);
-                                    setSpecialtyOptions([]);
-                                    setSelectedSpecialty(null);
-                                }
-                            }
-                        }}
-
+                        onChange={handleDoctorChange}
                         placeholder="Chọn bác sĩ"
                         className="mb-3"
                     />
+
+                    {selectedDoctor?.image && (
+                        <>
+                            <div className="mb-3">
+                                <img
+                                    src={buildImgSrc(selectedDoctor.image)}
+                                    alt="Doctor"
+                                    style={{ maxWidth: 150, maxHeight: 150, objectFit: 'cover', cursor: 'pointer', border: '1px solid #ccc' }}
+                                    onClick={() => setShowFullImg(true)}
+                                />
+                            </div>
+                        </>
+
+                    )}
+                    <label>Chuyên khoa:</label>
 
                     <Select
                         options={specialtyOptions}
@@ -173,10 +297,23 @@ const Doctor = () => {
                         placeholder="Chọn chuyên khoa"
                         className="mb-3"
                     />
+                    <label>Học vị:</label>
 
-
-
-
+                    <Select
+                        options={degreeOptions}
+                        value={selectedDegree}
+                        onChange={setSelectedDegree}
+                        placeholder="Chọn học vị"
+                        className="mb-3"
+                    />
+                    <label>Chức vụ:</label>
+                    <Select
+                        options={positionOptions}
+                        value={selectedPosition}
+                        onChange={setSelectedPosition}
+                        placeholder="Chọn chức vụ"
+                        className="mb-3"
+                    />
 
                     <ReactQuill
                         theme="snow"
@@ -205,10 +342,12 @@ const Doctor = () => {
                         <Card className="h-100 overflow-auto">
                             <Card.Body>
                                 <h2>{title || "(Tiêu đề xem trước)"}</h2>
-                                <p><strong>Bác sĩ:</strong> {selectedDoctor ? selectedDoctor.label : "(Chưa chọn)"}</p>
-                                <p><strong>Chuyên khoa:</strong> {selectedSpecialty ? selectedSpecialty.label : "(Chưa chọn)"}</p>
+                                <p><strong>Bác sĩ:</strong> {selectedDoctor?.label || "(Chưa chọn)"}</p>
+                                <p><strong>Chuyên khoa:</strong> {selectedSpecialty?.label || "(Chưa chọn)"}</p>
+                                <p><strong>Học vị:</strong> {selectedDegree?.label || "(Chưa chọn)"}</p>
+                                <p><strong>Chức vụ:</strong> {selectedPosition?.label || "(Chưa chọn)"}</p>
 
-                                {selectedDoctor && selectedDoctor.image && (
+                                {selectedDoctor?.image && (
                                     <div className="mb-3">
                                         <img
                                             src={buildImgSrc(selectedDoctor.image)}
