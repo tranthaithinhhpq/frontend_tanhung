@@ -40,6 +40,7 @@ instance.interceptors.response.use(
 
         const publicPaths = [
             '/',
+            '/doctors',
             '/admin/login',
             '/admin/register'
         ];

@@ -7,7 +7,6 @@
     }
 }
 
-
 .manage-users-container {
     i {
         padding-right: 7px;
@@ -29,14 +28,22 @@
             margin-block-end: 3px;
         }
 
-
-
         .delete {
             color: red;
             cursor: pointer;
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
 
-
+            thead.sticky-header th {
+                position: sticky;
+                top: 0;
+                background: #fff;
+                z-index: 10;
+                border-bottom: 2px solid #dee2e6;
+            }
+        }
     }
 }
