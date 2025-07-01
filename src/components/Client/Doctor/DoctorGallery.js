@@ -41,15 +41,15 @@ const DoctorGallery = () => {
     };
 
     return (
-        <div className="container py-4">
+        <div className="container py-4 doctor-gallery">
             <Row>
                 {doctors.map((doc) => (
-                    <Col key={doc.id} md={4} className="mb-4">
-                        <Card>
+                    <Col key={doc.id} lg={3} md={4} sm={6} xs={12} className="mb-4">
+                        <Card className="h-100">
                             <Card.Img
                                 variant="top"
                                 src={buildImgSrc(doc.image)}
-                                className="card-img-top"
+                                className="doctor-card-img"
                             />
                             <Card.Body>
                                 <Card.Title>{doc.username}</Card.Title>

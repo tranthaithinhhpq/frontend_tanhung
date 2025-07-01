@@ -95,9 +95,9 @@ const Register = (props) => {
 
     useEffect(() => {
         if (user && user.isAuthenticated) {
-            history.push('/');
+            history.push('/admin');
         }
-    }, []);
+    }, [user, history]);
 
 
     return (

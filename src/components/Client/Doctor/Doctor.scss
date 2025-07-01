@@ -1,6 +1,54 @@
-.card-img-top {
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-    object-position: top;
-    width: 100%;
+.doctor-detail-page {
+    .doctor-img {
+        width: 100%;
+        max-width: 225px;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+    }
+
+    ul {
+        padding-left: 20px;
+        list-style-type: disc;
+
+        li {
+            margin-bottom: 5px;
+        }
+    }
+
+    .other-doctors {
+        .card {
+            .card-img-top {
+                aspect-ratio: 3 / 4;
+                object-fit: cover;
+            }
+
+            .btn {
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    .text-center {
+        button {
+            min-width: 150px;
+        }
+    }
 }
