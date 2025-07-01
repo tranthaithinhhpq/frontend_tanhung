@@ -61,7 +61,7 @@ const DoctorGallery = () => {
                                 </Card.Text>
                                 <Button
                                     variant="primary"
-                                    onClick={() => history.push(`/doctor/${doc.id}`)}
+                                    onClick={() => history.push(`/doctor/detail/${doc.id}`)}
                                 >
                                     Xem chi tiết
                                 </Button>

@@ -51,7 +51,7 @@ const AppRoutes = () => {
             {/* Client */}
             <Route path="/" exact component={HomeClient} />
             <Route path="/doctors" exact component={DoctorGallery} />
-            <Route path="/doctor/:id" component={DoctorDetailPage} />
+            <Route path="/doctor/detail/:userId" component={DoctorDetailPage} />
 
             {/* 404 fallback */}
             <Route path="*">
