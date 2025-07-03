@@ -119,7 +119,7 @@ const NavHeaderClient = () => {
 
                         {/* === Đặt lịch khám (link đơn) === */}
                         <li className="nav-item ">
-                            <Link className="nav-link" to="/link">Đặt lịch khám</Link>
+                            <Link className="nav-link" to="/booking">Đặt lịch khám</Link>
                         </li>
 
                         {/* === Tuyển dụng === */}

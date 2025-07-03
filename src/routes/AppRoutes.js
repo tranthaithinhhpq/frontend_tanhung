@@ -12,9 +12,8 @@ import HomeClient from "../components/Client/Home/Home";
 import About from "../components/Admin/About/About";
 import DoctorGallery from "../components/Client/Doctor/DoctorGallery";
 import Doctor from "../components/Admin/Doctor/Doctor";
-
+import AppointmentForm from "../components/Client/Appointment/AppointmentForm";
 import DoctorDetailPage from "../components/Client/Doctor/DoctorDetailPage";
-
 
 
 
@@ -52,6 +51,7 @@ const AppRoutes = () => {
             <Route path="/" exact component={HomeClient} />
             <Route path="/doctors" exact component={DoctorGallery} />
             <Route path="/doctor/detail/:userId" component={DoctorDetailPage} />
+            <Route path="/booking" component={AppointmentForm} />
 
             {/* 404 fallback */}
             <Route path="*">

@@ -89,7 +89,7 @@ const DoctorDetailPage = () => {
 
             <div className="card p-4 shadow-sm mb-5">
 
-                <div dangerouslySetInnerHTML={{ __html: info.markdownContent || 'Không có nội dung' }} />
+                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: info.markdownContent || 'Không có nội dung' }} />
 
 
             </div>
