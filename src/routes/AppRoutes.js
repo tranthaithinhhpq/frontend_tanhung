@@ -14,9 +14,8 @@ import Doctor from "../components/Admin/Doctor/Doctor";
 import AppointmentForm from "../components/Client/Appointment/AppointmentForm";
 import DoctorDetailPage from "../components/Client/Doctor/DoctorDetailPage";
 import NewsForm from "../components/Admin/News/NewsForm";
-
-
-
+import NewsList from "../components/Client/News/NewsList";
+import NewsDetail from "../components/Client/News/NewsDetail";
 
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
@@ -44,6 +43,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/news" exact component={NewsForm} />
 
 
+
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             <Route path="/admin/register" component={Register} />
@@ -54,6 +54,9 @@ const AppRoutes = () => {
             <Route path="/doctors" exact component={DoctorGallery} />
             <Route path="/doctor/detail/:userId" component={DoctorDetailPage} />
             <Route path="/booking" component={AppointmentForm} />
+            <Route path="/news" exact component={NewsList} />
+            <Route path="/news/:id" component={NewsDetail} />
+
 
             {/* 404 fallback */}
             <Route path="*">
