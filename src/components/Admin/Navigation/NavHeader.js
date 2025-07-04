@@ -125,7 +125,7 @@ const NavHeader = () => {
                                 Tin tức
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/tam-nhin">Tin tức & Sự kiện</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/news">Tin tức & Sự kiện</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Thông báo</Link></li>
                                 <li><Link className="dropdown-item" to="/chuyen-khoa">Hoạt động</Link></li>
                                 <li><Link className="dropdown-item" to="/chuyen-khoa">Các bệnh</Link></li>

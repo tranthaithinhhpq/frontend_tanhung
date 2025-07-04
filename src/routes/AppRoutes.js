@@ -9,11 +9,12 @@ import { UserContext } from "../context/UserContext";
 import GroupRole from "../components/Admin/GroupRole/GroupRole";
 import Home from "../components/Admin/Home/Home";
 import HomeClient from "../components/Client/Home/Home";
-import About from "../components/Admin/About/About";
 import DoctorGallery from "../components/Client/Doctor/DoctorGallery";
 import Doctor from "../components/Admin/Doctor/Doctor";
 import AppointmentForm from "../components/Client/Appointment/AppointmentForm";
 import DoctorDetailPage from "../components/Client/Doctor/DoctorDetailPage";
+import NewsForm from "../components/Admin/News/NewsForm";
+
 
 
 
@@ -40,6 +41,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/group-role" component={GroupRole} />
             <PrivateRoutes path="/admin" exact component={Home} />
             <PrivateRoutes path="/admin/doctor" exact component={Doctor} />
+            <PrivateRoutes path="/admin/news" exact component={NewsForm} />
 
 
             {/* Public Admin */}
