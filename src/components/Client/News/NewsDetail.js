@@ -22,12 +22,19 @@ const NewsDetail = () => {
         fetchDetail();
     }, [id]);
 
+    const buildImageUrl = (imagePath) => {
+        if (!imagePath) return '/default-news.jpg';
+        return `${process.env.REACT_APP_BACKEND_URL}/${imagePath
+            .replace(/^src[\\/]+public[\\/]+/, '')
+            .replace(/\\/g, '/')}`;
+    };
+
     if (!news) return <div className="container my-4">Đang tải...</div>;
 
     return (
         <div className="container my-4">
             <Card>
-                <Card.Img variant="top" src={`${process.env.REACT_APP_BACKEND_URL}/${news.image}`} />
+                <Card.Img variant="top" src={buildImageUrl(news.image)} />
                 <Card.Body>
                     <Card.Title>{news.title}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">

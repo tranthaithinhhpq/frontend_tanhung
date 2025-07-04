@@ -98,13 +98,13 @@ const NewsList = () => {
                 {news.map(item => (
                     <Col md={4} key={item.id} className="mb-4">
                         <Card>
-                            {/* <Card.Img variant="top" src={`${process.env.REACT_APP_BACKEND_URL}/${item.image}`} /> */}
-                            {/* <Card.Img variant="top" src={`${process.env.REACT_APP_BACKEND_URL}/${item.image.replace('src/public/', '').replace(/\\/g, '/')}`}/> */}
                             <Card.Img
                                 variant="top"
                                 src={
                                     item.image
-                                        ? `${process.env.REACT_APP_BACKEND_URL}/${item.image.replace('src/public/', '').replace(/\\/g, '/')}`
+                                        ? `${process.env.REACT_APP_BACKEND_URL}/${item.image
+                                            .replace(/^src[\\/]+public[\\/]+/, '')  // Xóa src/public hoặc src\public\
+                                            .replace(/\\/g, '/')}`                  // Đổi \ thành /
                                         : '/default-news.jpg'
                                 }
                             />
