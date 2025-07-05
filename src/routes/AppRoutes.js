@@ -16,6 +16,8 @@ import DoctorDetailPage from "../components/Client/Doctor/DoctorDetailPage";
 import NewsForm from "../components/Admin/News/NewsForm";
 import NewsList from "../components/Client/News/NewsList";
 import NewsDetail from "../components/Client/News/NewsDetail";
+import DoctorTable from "../components/Admin/Doctor/DoctorTable";
+import DoctorEdit from "../components/Admin/Doctor/DoctorEdit";
 
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
@@ -39,10 +41,10 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/roles" component={Role} />
             <PrivateRoutes path="/admin/group-role" component={GroupRole} />
             <PrivateRoutes path="/admin" exact component={Home} />
-            <PrivateRoutes path="/admin/doctor" exact component={Doctor} />
+            <PrivateRoutes path="/admin/doctor" exact component={DoctorTable} />
+            <PrivateRoutes path="/admin/doctor/new" exact component={Doctor} />
+            <PrivateRoutes path="/admin/doctor/edit/:userId" component={DoctorEdit} />
             <PrivateRoutes path="/admin/news" exact component={NewsForm} />
-
-
 
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
