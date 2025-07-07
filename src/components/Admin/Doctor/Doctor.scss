@@ -1,8 +1,16 @@
-.preview-content {
-    overflow: auto;
+.doctor-table-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
 }
 
-.preview-content img {
-    display: block;
-    margin-bottom: 0.5rem;
+.edit {
+    color: orange;
+    cursor: pointer;
+    padding-right: 10px;
+}
+
+.delete {
+    color: red;
+    cursor: pointer;
 }

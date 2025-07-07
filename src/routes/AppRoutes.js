@@ -10,7 +10,6 @@ import GroupRole from "../components/Admin/GroupRole/GroupRole";
 import Home from "../components/Admin/Home/Home";
 import HomeClient from "../components/Client/Home/Home";
 import DoctorGallery from "../components/Client/Doctor/DoctorGallery";
-import Doctor from "../components/Admin/Doctor/Doctor";
 import AppointmentForm from "../components/Client/Appointment/AppointmentForm";
 import DoctorDetailPage from "../components/Client/Doctor/DoctorDetailPage";
 import NewsForm from "../components/Admin/News/NewsForm";
@@ -18,6 +17,7 @@ import NewsList from "../components/Client/News/NewsList";
 import NewsDetail from "../components/Client/News/NewsDetail";
 import DoctorTable from "../components/Admin/Doctor/DoctorTable";
 import DoctorEdit from "../components/Admin/Doctor/DoctorEdit";
+import DoctorCreate from "../components/Admin/Doctor/DoctorCreate";
 
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
@@ -42,7 +42,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/group-role" component={GroupRole} />
             <PrivateRoutes path="/admin" exact component={Home} />
             <PrivateRoutes path="/admin/doctor" exact component={DoctorTable} />
-            <PrivateRoutes path="/admin/doctor/new" exact component={Doctor} />
+            <PrivateRoutes path="/admin/doctor/new" exact component={DoctorCreate} />
             <PrivateRoutes path="/admin/doctor/edit/:userId" component={DoctorEdit} />
             <PrivateRoutes path="/admin/news" exact component={NewsForm} />
 

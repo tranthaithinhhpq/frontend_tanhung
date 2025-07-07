@@ -1,9 +1,7 @@
 import axios from '../setup/axios';
-const getSpecialty = (data) => {
-    return axios.post('/api/v1/role/assign-to-group', { data });
+
+const getSpecialty = () => {
+    return axios.get('/api/v1/specialty/read');
 };
 
-
-
-// Export để dùng ở nơi khác
 export { getSpecialty };
