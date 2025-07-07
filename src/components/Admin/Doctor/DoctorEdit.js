@@ -6,11 +6,10 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
-import { getDoctorInfoByUserId, getDoctor } from "../../../services/userService";
+import { getDoctorDetail, updateDoctorInfo } from "../../../services/doctorService";
 import { getSpecialty } from "../../../services/specialtyService";
 import { getDegree } from "../../../services/degreeService";
 import { getPosition } from "../../../services/positionService";
-import { updateDoctorInfo } from "../../../services/doctorService";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
@@ -21,15 +20,14 @@ const buildImgSrc = (raw) => {
 };
 
 const DoctorEdit = () => {
-    const { userId } = useParams();
+    const { doctorId } = useParams();  // Đồng bộ với AppRoutes.js
 
     const [content, setContent] = useState("");
-    const [doctorOptions, setDoctorOptions] = useState([]);
+    const [doctorName, setDoctorName] = useState("");
     const [specialtyOptions, setSpecialtyOptions] = useState([]);
     const [degreeOptions, setDegreeOptions] = useState([]);
     const [positionOptions, setPositionOptions] = useState([]);
 
-    const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [selectedSpecialty, setSelectedSpecialty] = useState(null);
     const [selectedDegree, setSelectedDegree] = useState(null);
     const [selectedPosition, setSelectedPosition] = useState(null);
@@ -40,25 +38,19 @@ const DoctorEdit = () => {
     const [previewImg, setPreviewImg] = useState("");
 
     useEffect(() => {
+        if (!doctorId) {
+            toast.error("Thiếu thông tin bác sĩ");
+            return;
+        }
+
         const fetchData = async () => {
             try {
-                const [doctorRes, specialtyRes, degreeRes, positionRes, infoRes] = await Promise.all([
-                    getDoctor(),
+                const [specialtyRes, degreeRes, positionRes, doctorRes] = await Promise.all([
                     getSpecialty(),
                     getDegree(),
                     getPosition(),
-                    getDoctorInfoByUserId(userId)
+                    getDoctorDetail(doctorId)
                 ]);
-
-                const users = Array.isArray(doctorRes.DT) ? doctorRes.DT : doctorRes.DT.users || [];
-                setDoctorOptions(users
-                    .filter(u => u.Group?.name === "Doctor")
-                    .map(u => ({
-                        value: u.id,
-                        label: u.username,
-                        image: u.image || ""
-                    }))
-                );
 
                 if (specialtyRes?.EC === 0) {
                     setSpecialtyOptions(specialtyRes.DT.map(sp => ({ value: sp.id, label: sp.name })));
@@ -70,18 +62,24 @@ const DoctorEdit = () => {
                     setPositionOptions(positionRes.DT.map(pos => ({ value: pos.id, label: pos.name })));
                 }
 
-                if (infoRes?.EC === 0) {
-                    const info = infoRes.DT.doctorInfo;
-                    const doctor = users.find(d => d.id === +userId);
-                    setSelectedDoctor(doctor ? { value: doctor.id, label: doctor.username, image: doctor.image } : null);
-                    setContent(info.markdownContent || "");
-                    if (info.Specialty) setSelectedSpecialty({ value: info.Specialty.id, label: info.Specialty.name });
-                    if (info.Degree) setSelectedDegree({ value: info.Degree.id, label: info.Degree.name });
-                    if (info.Position) setSelectedPosition({ value: info.Position.id, label: info.Position.name });
-                } else {
-                    toast.error(infoRes.EM || "Không tìm thấy thông tin bác sĩ");
-                }
+                if (doctorRes?.EC === 0 && doctorRes.DT) {
+                    const doc = doctorRes.DT;
+                    setDoctorName(doc.doctorName || "");
+                    setContent(doc.markdownContent || "");
+                    setPreviewImg(buildImgSrc(doc.image));
 
+                    if (doc.Specialty) {
+                        setSelectedSpecialty({ value: doc.Specialty.id, label: doc.Specialty.name });
+                    }
+                    if (doc.Degree) {
+                        setSelectedDegree({ value: doc.Degree.id, label: doc.Degree.name });
+                    }
+                    if (doc.Position) {
+                        setSelectedPosition({ value: doc.Position.id, label: doc.Position.name });
+                    }
+                } else {
+                    toast.error(doctorRes?.EM || "Không tìm thấy bác sĩ");
+                }
             } catch (err) {
                 console.error("❌ Lỗi fetchData:", err);
                 toast.error("Lỗi tải dữ liệu!");
@@ -89,7 +87,7 @@ const DoctorEdit = () => {
         };
 
         fetchData();
-    }, [userId]);
+    }, [doctorId]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -100,13 +98,13 @@ const DoctorEdit = () => {
     };
 
     const handlePublish = async () => {
-        if (!selectedDoctor || !selectedSpecialty || !selectedDegree || !selectedPosition) {
-            toast.error("Vui lòng chọn đầy đủ thông tin");
+        if (!doctorName || !selectedSpecialty || !selectedDegree || !selectedPosition) {
+            toast.error("Vui lòng nhập đầy đủ thông tin");
             return;
         }
 
         const formData = new FormData();
-        formData.append("userId", selectedDoctor.value);
+        formData.append("doctorName", doctorName);
         formData.append("specialtyId", selectedSpecialty.value);
         formData.append("degreeId", selectedDegree.value);
         formData.append("positionId", selectedPosition.value);
@@ -116,7 +114,7 @@ const DoctorEdit = () => {
         }
 
         try {
-            const res = await updateDoctorInfo(selectedDoctor.value, formData);
+            const res = await updateDoctorInfo(doctorId, formData);
             if (res.EC === 0) {
                 toast.success("Cập nhật thành công");
             } else {
@@ -133,32 +131,28 @@ const DoctorEdit = () => {
             <h1 className="h4 mb-3">Chỉnh sửa thông tin bác sĩ</h1>
             <Row>
                 <Col md={previewMode ? 6 : 12}>
-                    <Select
-                        options={doctorOptions}
-                        value={selectedDoctor}
-                        isDisabled
-                        placeholder="Chọn bác sĩ"
-                        className="mb-3"
+                    <label>Tên bác sĩ:</label>
+                    <input
+                        className="form-control mb-3"
+                        value={doctorName}
+                        onChange={(e) => setDoctorName(e.target.value)}
                     />
-
-                    {(previewImg || selectedDoctor?.image) && (
+                    {previewImg && (
                         <div className="mb-3">
                             <img
-                                src={previewImg || buildImgSrc(selectedDoctor.image)}
+                                src={previewImg}
                                 alt="Doctor"
                                 style={{ maxWidth: 150, maxHeight: 150, objectFit: "cover", cursor: "pointer" }}
                                 onClick={() => setShowFullImg(true)}
                             />
                         </div>
                     )}
-
                     <input
                         type="file"
                         className="form-control mb-3"
                         accept="image/*"
                         onChange={handleFileChange}
                     />
-
                     <label>Chuyên khoa:</label>
                     <Select
                         options={specialtyOptions}
@@ -189,7 +183,6 @@ const DoctorEdit = () => {
                         value={content}
                         onChange={setContent}
                     />
-
                     <div className="mt-3">
                         <Button
                             variant="secondary"
@@ -203,16 +196,15 @@ const DoctorEdit = () => {
                         </Button>
                     </div>
                 </Col>
-
                 {previewMode && (
                     <Col md={6}>
                         <Card className="h-100 overflow-auto">
                             <Card.Body>
-                                <h2>{selectedDoctor?.label || "(Bác sĩ)"}</h2>
-                                {(previewImg || selectedDoctor?.image) && (
+                                <h2>{doctorName || "(Bác sĩ)"}</h2>
+                                {previewImg && (
                                     <div className="mb-3 text-center">
                                         <img
-                                            src={previewImg || buildImgSrc(selectedDoctor.image)}
+                                            src={previewImg}
                                             alt="Doctor Preview"
                                             style={{ maxWidth: "100%", height: "auto", objectFit: "contain" }}
                                         />
@@ -238,7 +230,7 @@ const DoctorEdit = () => {
                     }}
                 >
                     <img
-                        src={previewImg || buildImgSrc(selectedDoctor.image)}
+                        src={previewImg}
                         alt="Doctor Full"
                         style={{ maxWidth: "90%", maxHeight: "90%", objectFit: "contain" }}
                     />

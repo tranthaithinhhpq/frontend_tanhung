@@ -4,16 +4,20 @@ const createDoctorInfo = (data) => {
     return axios.post("/api/v1/doctor-info/create", data);
 };
 
-
-
-const updateDoctorInfo = (userId, data) => {
-    return axios.put(`/api/v1/doctor-info/${userId}`, data, {
+const updateDoctorInfo = (id, data) => {
+    return axios.put(`/api/v1/doctor/${id}`, data, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
     });
 };
 
+const getDoctorDetail = (id) => {
+    return axios.get(`/api/v1/doctor/detail/${id}`);
+};
+
 export {
-    createDoctorInfo, updateDoctorInfo
+    createDoctorInfo,
+    updateDoctorInfo,
+    getDoctorDetail
 };

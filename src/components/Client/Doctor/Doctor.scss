@@ -9,6 +9,13 @@
         border-radius: 8px;
     }
 
+    .doctor-card-img {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+    }
+
     .card {
         border-radius: 12px;
         overflow: hidden;
@@ -30,19 +37,6 @@
 
         li {
             margin-bottom: 5px;
-        }
-    }
-
-    .other-doctors {
-        .card {
-            .card-img-top {
-                aspect-ratio: 3 / 4;
-                object-fit: cover;
-            }
-
-            .btn {
-                font-size: 0.85rem;
-            }
         }
     }
 

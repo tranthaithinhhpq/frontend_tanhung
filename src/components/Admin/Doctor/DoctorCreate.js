@@ -104,7 +104,7 @@ const DoctorCreate = () => {
 
         try {
             const formData = new FormData();
-            formData.append('username', username);
+            formData.append('doctorName', username);
             formData.append('specialtyId', selectedSpecialty.value);
             formData.append('degreeId', selectedDegree.value);
             formData.append('positionId', selectedPosition.value);

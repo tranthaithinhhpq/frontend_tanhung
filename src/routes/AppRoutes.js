@@ -43,8 +43,13 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin" exact component={Home} />
             <PrivateRoutes path="/admin/doctor" exact component={DoctorTable} />
             <PrivateRoutes path="/admin/doctor/new" exact component={DoctorCreate} />
-            <PrivateRoutes path="/admin/doctor/edit/:userId" component={DoctorEdit} />
+            <PrivateRoutes path="/admin/doctor/edit/:doctorId" component={DoctorEdit} />
             <PrivateRoutes path="/admin/news" exact component={NewsForm} />
+
+
+
+
+
 
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
@@ -54,7 +59,7 @@ const AppRoutes = () => {
             {/* Client */}
             <Route path="/" exact component={HomeClient} />
             <Route path="/doctors" exact component={DoctorGallery} />
-            <Route path="/doctor/detail/:userId" component={DoctorDetailPage} />
+            <PrivateRoutes path="/doctor/detail/:doctorId" component={DoctorDetailPage} />
             <Route path="/booking" component={AppointmentForm} />
             <Route path="/news" exact component={NewsList} />
             <Route path="/news/:id" component={NewsDetail} />
