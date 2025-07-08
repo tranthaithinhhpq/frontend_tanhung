@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Login from "../components/Admin/Login/Login";
 import Register from "../components/Admin/Register/Register";
 import Users from "../components/Admin/ManageUsers/Users";
@@ -19,53 +19,67 @@ import DoctorTable from "../components/Admin/Doctor/DoctorTable";
 import DoctorEdit from "../components/Admin/Doctor/DoctorEdit";
 import DoctorCreate from "../components/Admin/Doctor/DoctorCreate";
 
+// Specialty (admin)
+import SpecialtyTable from "../components/Admin/ManageSpecialty/SpecialtyTable";
+import SpecialtyEdit from "../components/Admin/ManageSpecialty/SpecialtyEdit";
+import SpecialtyCreate from "../components/Admin/ManageSpecialty/SpecialtyCreate";
+
+// Specialty (client)
+import SpecialtyGallery from "../components/Client/ManageSpecialty/SpecialtyGallery";
+import SpecialtyDetailPage from "../components/Client/ManageSpecialty/SpecialtyDetailPage";
+
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
-    const Project = () => {
-        return (
-            <div className="container mt-3">
-                <h4>Todo...</h4>
-            </div>
-        );
-    };
 
+    const Project = () => (
+        <div className="container mt-3">
+            <h4>Todo...</h4>
+        </div>
+    );
 
-    // Đợi load user xong rồi mới render route
     if (user.isLoading) return null;
 
     return (
         <Switch>
-            {/* Admin - bảo vệ bằng PrivateRoutes */}
+            {/* Admin - Private routes */}
             <PrivateRoutes path="/admin/users" component={Users} />
             <PrivateRoutes path="/admin/projects" component={Project} />
             <PrivateRoutes path="/admin/roles" component={Role} />
             <PrivateRoutes path="/admin/group-role" component={GroupRole} />
             <PrivateRoutes path="/admin" exact component={Home} />
+
+            {/* Doctor admin */}
             <PrivateRoutes path="/admin/doctor" exact component={DoctorTable} />
             <PrivateRoutes path="/admin/doctor/new" exact component={DoctorCreate} />
             <PrivateRoutes path="/admin/doctor/edit/:doctorId" component={DoctorEdit} />
+
+            {/* Specialty admin */}
+            <PrivateRoutes path="/admin/specialty" exact component={SpecialtyTable} />
+            <PrivateRoutes path="/admin/specialty/create" exact component={SpecialtyCreate} />
+            <PrivateRoutes path="/admin/specialty/edit/:id" component={SpecialtyEdit} />
+
+            {/* News admin */}
             <PrivateRoutes path="/admin/news" exact component={NewsForm} />
-
-
-
-
-
 
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             <Route path="/admin/register" component={Register} />
 
-
             {/* Client */}
             <Route path="/" exact component={HomeClient} />
             <Route path="/doctors" exact component={DoctorGallery} />
-            <PrivateRoutes path="/doctor/detail/:doctorId" component={DoctorDetailPage} />
+            <Route path="/doctor/detail/:doctorId" component={DoctorDetailPage} />
             <Route path="/booking" component={AppointmentForm} />
+
+            {/* Specialty client */}
+            <Route path="/specialties" exact component={SpecialtyGallery} />
+            <Route path="/specialty/:id" component={SpecialtyDetailPage} />
+
+            {/* News client */}
             <Route path="/news" exact component={NewsList} />
             <Route path="/news/:id" component={NewsDetail} />
 
-
-            {/* 404 fallback */}
+            {/* Fallback */}
             <Route path="*">
                 <div className="container">404 not found...</div>
             </Route>
