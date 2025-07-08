@@ -20,13 +20,23 @@ import DoctorEdit from "../components/Admin/Doctor/DoctorEdit";
 import DoctorCreate from "../components/Admin/Doctor/DoctorCreate";
 
 // Specialty (admin)
-import SpecialtyTable from "../components/Admin/ManageSpecialty/SpecialtyTable";
-import SpecialtyEdit from "../components/Admin/ManageSpecialty/SpecialtyEdit";
-import SpecialtyCreate from "../components/Admin/ManageSpecialty/SpecialtyCreate";
+import SpecialtyTable from "../components/Admin/Specialty/SpecialtyTable";
+import SpecialtyEdit from "../components/Admin/Specialty/SpecialtyEdit";
+import SpecialtyCreate from "../components/Admin/Specialty/SpecialtyCreate";
 
 // Specialty (client)
-import SpecialtyGallery from "../components/Client/ManageSpecialty/SpecialtyGallery";
-import SpecialtyDetailPage from "../components/Client/ManageSpecialty/SpecialtyDetailPage";
+import SpecialtyGallery from "../components/Client/Specialty/SpecialtyGallery";
+import SpecialtyDetailPage from "../components/Client/Specialty/SpecialtyDetailPage";
+
+// Device (admin)
+import DeviceTable from "../components/Admin/Device/DeviceTable";
+import DeviceCreate from "../components/Admin/Device/DeviceCreate";
+import DeviceEdit from "../components/Admin/Device/DeviceEdit";
+
+// Device (client)
+import DeviceGallery from "../components/Client/Device/DeviceGallery";
+import DeviceDetailPage from "../components/Client/Device/DeviceDetailPage";
+
 
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
@@ -61,6 +71,12 @@ const AppRoutes = () => {
             {/* News admin */}
             <PrivateRoutes path="/admin/news" exact component={NewsForm} />
 
+            {/* Device admin */}
+            <PrivateRoutes path="/admin/device" exact component={DeviceTable} />
+            <PrivateRoutes path="/admin/device/new" exact component={DeviceCreate} />
+            <PrivateRoutes path="/admin/device/edit/:id" component={DeviceEdit} />
+
+
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             <Route path="/admin/register" component={Register} />
@@ -78,6 +94,10 @@ const AppRoutes = () => {
             {/* News client */}
             <Route path="/news" exact component={NewsList} />
             <Route path="/news/:id" component={NewsDetail} />
+
+            {/* Device client */}
+            <Route path="/devices" exact component={DeviceGallery} />
+            <Route path="/device/:id" component={DeviceDetailPage} />
 
             {/* Fallback */}
             <Route path="*">

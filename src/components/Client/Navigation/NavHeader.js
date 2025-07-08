@@ -74,7 +74,7 @@ const NavHeaderClient = () => {
                                 <li><Link className="dropdown-item" to="/tam-nhin">Tầm nhìn & Sứ mệnh</Link></li>
                                 <li><Link className="dropdown-item" to="/doctors">Đội ngũ bác sĩ</Link></li>
                                 <li><Link className="dropdown-item" to="/specialties">Chuyên khoa</Link></li>
-                                <li><Link className="dropdown-item" to="/trang-thiet-bi">Trang thiết bị</Link></li>
+                                <li><Link className="dropdown-item" to="/devices">Trang thiết bị</Link></li>
                                 <li><Link className="dropdown-item" to="/so-do-to-chuc">Sơ đồ tổ chức</Link></li>
                             </ul>
                         </li>
