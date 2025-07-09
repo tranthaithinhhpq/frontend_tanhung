@@ -3,6 +3,7 @@ import { Table, Button, Modal } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../../setup/axios';
+import '../../Admin/Doctor/Doctor.scss';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -72,8 +73,10 @@ const DeviceTable = () => {
                                 <img src={`${BACKEND_URL}${item.image}`} alt="device" style={{ width: 60, height: 40, objectFit: 'cover' }} />
                             </td>
                             <td>
-                                <Button variant="warning" className="me-2" onClick={() => history.push(`/admin/device/edit/${item.id}`)}>Sửa</Button>
-                                <Button variant="danger" onClick={() => openDeleteModal(item)}>Xóa</Button>
+
+
+                                <i variant="warning" className="fa fa-pencil edit" onClick={() => history.push(`/admin/device/edit/${item.id}`)}></i>
+                                <i variant="danger" className="fa fa-trash-o delete" onClick={() => openDeleteModal(item)}></i>
                             </td>
                         </tr>
                     ))}

@@ -34,7 +34,8 @@ const AppointmentForm = () => {
             setSelectedDoctor(null);
             axios.get(`/api/v1/doctor/by-specialty/${selectedSpecialty.value}`).then(res => {
                 if (res.EC === 0) {
-                    setDoctors(res.DT.map(d => ({ value: d.id, label: d.username })));
+                    setDoctors(res.DT.map(d => ({ value: d.id, label: d.doctorName })));
+
                 } else {
                     setDoctors([]);
                 }
