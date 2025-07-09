@@ -22,7 +22,7 @@ const DoctorGallery = () => {
             try {
                 const res = await axios.get('/api/v1/doctor/list');
                 if (res.EC === 0) {
-                    console.log('Doctors data:', res.DT);
+
                     // Xử lý tùy theo structure trả về
                     if (Array.isArray(res.DT)) {
                         setDoctors(res.DT);
