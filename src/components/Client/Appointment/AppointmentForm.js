@@ -1,3 +1,4 @@
+// ✅ FRONTEND - AppointmentForm.js
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
@@ -5,6 +6,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import moment from 'moment';
+
 
 const AppointmentForm = () => {
     const [form, setForm] = useState({
@@ -20,30 +23,31 @@ const AppointmentForm = () => {
     const [selectedTime, setSelectedTime] = useState(null);
     const [timeSlots, setTimeSlots] = useState([]);
 
-    // Load danh sách chuyên khoa
+    // Load specialties
     useEffect(() => {
-        axios.get('/api/v1/specialty/read').then(res => {
-            if (res.EC === 0) {
-                setSpecialties(res.DT.map(s => ({ value: s.id, label: s.name })));
-            }
-        }).catch(err => console.error("❌ Lỗi load specialty:", err));
+        axios.get('/api/v1/specialty/read')
+            .then(res => {
+                if (res.EC === 0) {
+                    setSpecialties(res.DT.map(s => ({ value: s.id, label: s.name })));
+                }
+            }).catch(err => console.error("❌ Lỗi load specialty:", err));
     }, []);
 
-    // Load bác sĩ theo chuyên khoa
+    // Load doctors theo specialty
     useEffect(() => {
         if (selectedSpecialty) {
             setSelectedDoctor(null);
-            axios.get(`/api/v1/doctor/by-specialty/${selectedSpecialty.value}`).then(res => {
-                if (res.EC === 0) {
-                    setDoctors(res.DT.map(d => ({ value: d.id, label: d.doctorName })));
-                } else {
-                    setDoctors([]);
-                }
-            }).catch(err => console.error("❌ Lỗi load doctor:", err));
+            axios.get(`/api/v1/doctor/by-specialty/${selectedSpecialty.value}`)
+                .then(res => {
+                    if (res.EC === 0) {
+                        setDoctors(res.DT.map(d => ({ value: d.id, label: d.doctorName })));
+                    } else setDoctors([]);
+                })
+                .catch(err => console.error("❌ Lỗi load doctor:", err));
         }
     }, [selectedSpecialty]);
 
-    // Load lịch làm việc theo bác sĩ
+    // Load schedule khi chọn bác sĩ
     useEffect(() => {
         if (selectedDoctor) {
             axios.get(`/api/v1/doctor/${selectedDoctor.value}/schedule`).then(res => {
@@ -57,27 +61,31 @@ const AppointmentForm = () => {
                     setScheduleMap(schedule);
                     setSelectedDate(null);
                     setSelectedTime(null);
+                    setTimeSlots([]);
+
                 }
             }).catch(err => console.error("❌ Lỗi load schedule:", err));
         }
     }, [selectedDoctor]);
 
-    // Cập nhật khung giờ khi chọn ngày
+    // ✅ Handle change ngày khám
     const handleDateChange = (date) => {
         setSelectedDate(date);
         const dateStr = format(date, "yyyy-MM-dd");
         const slots = scheduleMap[dateStr] || [];
 
         const formattedSlots = slots.map(s => ({
-            value: s.time,
+            value: s.slotId,
             label: s.time,
-            slotId: s.slotId
+            time: s.time
         }));
 
         setTimeSlots(formattedSlots);
+        console.log("timeSlots: ", formattedSlots);
         setSelectedTime(null);
     };
 
+    // ✅ Submit lịch khám
     const handleSubmit = async () => {
         if (!selectedDoctor || !selectedDate || !selectedTime) {
             toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
@@ -88,8 +96,8 @@ const AppointmentForm = () => {
             ...form,
             specialtyId: selectedSpecialty.value,
             doctorId: selectedDoctor.value,
-            slotId: selectedTime.slotId,
-            scheduleTime: `${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.value}`
+            slotId: selectedTime.value,
+            scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
         };
 
         try {
@@ -162,10 +170,6 @@ const AppointmentForm = () => {
                     placeholder="Chọn giờ khám"
                     isDisabled={!selectedDate}
                 />
-            </div>
-            <div className="mb-3">
-                <label>Lý do khám</label>
-                <textarea className="form-control" value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} />
             </div>
             <button className="btn btn-primary" onClick={handleSubmit}>Đặt lịch</button>
         </div>
