@@ -156,6 +156,7 @@ const AppointmentForm = () => {
                     selected={selectedDate}
                     onChange={handleDateChange}
                     minDate={new Date()}
+                    maxDate={new Date(new Date().setDate(new Date().getDate() + 30))}
                     includeDates={availableDates}
                     placeholderText="Chọn ngày khả dụng"
                     className="form-control"

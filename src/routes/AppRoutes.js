@@ -28,15 +28,20 @@ import SpecialtyCreate from "../components/Admin/Specialty/SpecialtyCreate";
 import SpecialtyGallery from "../components/Client/Specialty/SpecialtyGallery";
 import SpecialtyDetailPage from "../components/Client/Specialty/SpecialtyDetailPage";
 
-// Device (admin)
+
 import DeviceTable from "../components/Admin/Device/DeviceTable";
 import DeviceCreate from "../components/Admin/Device/DeviceCreate";
 import DeviceEdit from "../components/Admin/Device/DeviceEdit";
+
+// Service Price (admin)
+
 
 // Device (client)
 import DeviceGallery from "../components/Client/Device/DeviceGallery";
 import DeviceDetailPage from "../components/Client/Device/DeviceDetailPage";
 import DoctorDayOffTable from "../components/Admin/Doctor/DoctorDayOffTable";
+import ServicePriceTable from "../components/Admin/Price/ServicePriceTable";
+
 
 
 
@@ -78,6 +83,9 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/device" exact component={DeviceTable} />
             <PrivateRoutes path="/admin/device/new" exact component={DeviceCreate} />
             <PrivateRoutes path="/admin/device/edit/:id" component={DeviceEdit} />
+
+            {/* Price admin */}
+            <PrivateRoutes path="/admin/service-price" exact component={ServicePriceTable} />
 
 
             {/* Public Admin */}
