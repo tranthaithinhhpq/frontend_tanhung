@@ -36,6 +36,8 @@ import DeviceEdit from "../components/Admin/Device/DeviceEdit";
 // Device (client)
 import DeviceGallery from "../components/Client/Device/DeviceGallery";
 import DeviceDetailPage from "../components/Client/Device/DeviceDetailPage";
+import DoctorDayOffTable from "../components/Admin/Doctor/DoctorDayOffTable";
+
 
 
 const AppRoutes = () => {
@@ -62,6 +64,7 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/doctor" exact component={DoctorTable} />
             <PrivateRoutes path="/admin/doctor/new" exact component={DoctorCreate} />
             <PrivateRoutes path="/admin/doctor/edit/:doctorId" component={DoctorEdit} />
+            <PrivateRoutes path="/admin/doctor-day-off" component={DoctorDayOffTable} />
 
             {/* Specialty admin */}
             <PrivateRoutes path="/admin/specialty" exact component={SpecialtyTable} />

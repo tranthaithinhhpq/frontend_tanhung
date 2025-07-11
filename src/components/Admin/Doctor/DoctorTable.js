@@ -165,3 +165,4 @@ const DoctorTable = () => {
 
 export default DoctorTable;
 
+
