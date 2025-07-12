@@ -34,13 +34,18 @@ import DeviceCreate from "../components/Admin/Device/DeviceCreate";
 import DeviceEdit from "../components/Admin/Device/DeviceEdit";
 
 // Service Price (admin)
-
+import ServicePriceTable from "../components/Admin/Price/ServicePriceTable";
 
 // Device (client)
 import DeviceGallery from "../components/Client/Device/DeviceGallery";
 import DeviceDetailPage from "../components/Client/Device/DeviceDetailPage";
 import DoctorDayOffTable from "../components/Admin/Doctor/DoctorDayOffTable";
-import ServicePriceTable from "../components/Admin/Price/ServicePriceTable";
+
+// Booking
+import PatientBookingTable from "../components/Admin/Booking/PatientBookingTable";
+
+
+
 
 
 
@@ -86,6 +91,9 @@ const AppRoutes = () => {
 
             {/* Price admin */}
             <PrivateRoutes path="/admin/service-price" exact component={ServicePriceTable} />
+
+            {/* Booking admin */}
+            <PrivateRoutes path="/admin/booking" exact component={PatientBookingTable} />
 
 
             {/* Public Admin */}
