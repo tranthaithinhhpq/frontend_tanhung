@@ -22,6 +22,8 @@ const AppointmentForm = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [timeSlots, setTimeSlots] = useState([]);
+    const [services, setServices] = useState([]);
+    const [selectedService, setSelectedService] = useState(null);
 
     // Load specialties
     useEffect(() => {
@@ -37,13 +39,24 @@ const AppointmentForm = () => {
     useEffect(() => {
         if (selectedSpecialty) {
             setSelectedDoctor(null);
+            setSelectedService(null);
+
             axios.get(`/api/v1/doctor/by-specialty/${selectedSpecialty.value}`)
                 .then(res => {
                     if (res.EC === 0) {
                         setDoctors(res.DT.map(d => ({ value: d.id, label: d.doctorName })));
                     } else setDoctors([]);
-                })
-                .catch(err => console.error("❌ Lỗi load doctor:", err));
+                });
+
+            axios.get(`/api/v1/service-price/selectable/${selectedSpecialty.value}`)
+                .then(res => {
+                    if (res.EC === 0) {
+                        setServices(res.DT.map(s => ({
+                            value: s.id,
+                            label: `${s.name} - ${s.price.toLocaleString()}đ`
+                        })));
+                    } else setServices([]);
+                });
         }
     }, [selectedSpecialty]);
 
@@ -97,6 +110,7 @@ const AppointmentForm = () => {
             specialtyId: selectedSpecialty.value,
             doctorId: selectedDoctor.value,
             slotId: selectedTime.value,
+            servicePriceId: selectedService?.value,
             scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
         };
 
@@ -149,6 +163,16 @@ const AppointmentForm = () => {
             <div className="mb-3">
                 <label>Bác sĩ</label>
                 <Select options={doctors} value={selectedDoctor} onChange={setSelectedDoctor} />
+            </div>
+            <div className="mb-3">
+                <label>Dịch vụ khám</label>
+                <Select
+                    options={services}
+                    value={selectedService}
+                    onChange={setSelectedService}
+                    placeholder="Chọn dịch vụ"
+                    isDisabled={!services.length}
+                />
             </div>
             <div className="mb-3">
                 <label>Ngày khám</label>

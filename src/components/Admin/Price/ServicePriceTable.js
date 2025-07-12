@@ -5,6 +5,7 @@ import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import Scrollbars from 'react-custom-scrollbars';
+import '../../Admin/Doctor/Doctor.scss';
 
 const ServicePriceTable = () => {
     const [servicePrices, setServicePrices] = useState([]);
@@ -20,7 +21,6 @@ const ServicePriceTable = () => {
         name: '',
         group: '',
         price: '',
-        priceInsurance: '',
         isSelectable: false,
         specialtyId: null
     });
@@ -89,7 +89,6 @@ const ServicePriceTable = () => {
             name: item.name,
             group: item.group,
             price: item.price,
-            priceInsurance: item.priceInsurance,
             isSelectable: item.isSelectable,
             specialtyId: specialties.length > 0
                 ? specialties.find(s => s.value === item.specialtyId) || null
@@ -117,12 +116,13 @@ const ServicePriceTable = () => {
         <div className="container py-4">
             <h4>Quản lý bảng giá dịch vụ</h4>
 
-            <div className="text-end mb-3">
+            <div className="text-start mb-3">
                 <Button onClick={() => {
                     setShowModal(true);
                     setIsEditMode(false);
-                    setFormData({ name: '', group: '', price: '', priceInsurance: '', isSelectable: false, specialtyId: null });
-                }}>+ Thêm dịch vụ</Button>
+                    setFormData({ name: '', group: '', price: '', isSelectable: false, specialtyId: null });
+                }}><i className="fa fa-plus-circle"></i> Thêm mới</Button>
+
             </div>
 
             <Scrollbars autoHeight autoHeightMax={400} autoHide>
@@ -132,7 +132,6 @@ const ServicePriceTable = () => {
                             <th>Tên dịch vụ</th>
                             <th>Nhóm</th>
                             <th>Giá</th>
-                            <th>Giá BH</th>
                             <th>Cho phép đặt</th>
                             <th>Chuyên khoa</th>
                             <th>Hành động</th>
@@ -144,15 +143,18 @@ const ServicePriceTable = () => {
                                 <td>{item.name}</td>
                                 <td>{item.group}</td>
                                 <td>{item.price}</td>
-                                <td>{item.priceInsurance}</td>
                                 <td>{item.isSelectable ? 'Có' : 'Không'}</td>
                                 <td>{item.Specialty?.name || item.specialtyId}</td>
                                 <td>
-                                    <Button size="sm" onClick={() => handleEdit(item)}>Sửa</Button>{' '}
-                                    <Button size="sm" variant="danger" onClick={() => {
+                                    {/* <Button size="sm" onClick={() => handleEdit(item)}>Sửa</Button>{' '} */}
+                                    <i
+                                        className="fa fa-pencil edit"
+                                        onClick={() => handleEdit(item)}
+                                    ></i>
+                                    <i className="fa fa-trash-o delete" size="sm" variant="danger" onClick={() => {
                                         setDeleteId(item.id);
                                         setShowConfirmModal(true);
-                                    }}>Xóa</Button>
+                                    }}></i>
                                 </td>
                             </tr>
                         )) : (
@@ -208,14 +210,6 @@ const ServicePriceTable = () => {
                             type="number"
                             value={formData.price}
                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Giá BH</Form.Label>
-                        <Form.Control
-                            type="number"
-                            value={formData.priceInsurance}
-                            onChange={(e) => setFormData({ ...formData, priceInsurance: e.target.value })}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">
