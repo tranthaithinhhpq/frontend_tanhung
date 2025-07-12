@@ -43,6 +43,10 @@ import DoctorDayOffTable from "../components/Admin/Doctor/DoctorDayOffTable";
 
 // Booking
 import PatientBookingTable from "../components/Admin/Booking/PatientBookingTable";
+import BookingCreate from "../components/Admin/Booking/BookingCreate";
+import BookingEdit from "../components/Admin/Booking/BookingEdit";
+
+
 
 
 
@@ -94,6 +98,9 @@ const AppRoutes = () => {
 
             {/* Booking admin */}
             <PrivateRoutes path="/admin/booking" exact component={PatientBookingTable} />
+            <PrivateRoutes path="/admin/booking/new" exact component={BookingCreate} />
+            <PrivateRoutes path="/admin/booking/:id" exact component={BookingEdit} />
+
 
 
             {/* Public Admin */}
