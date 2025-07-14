@@ -11,7 +11,7 @@ import moment from 'moment';
 const BookingEdit = () => {
     const { id } = useParams(); // ID của booking cần sửa
     const history = useHistory();
-
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [form, setForm] = useState({
         name: '', phone: '', dob: '', address: '', email: '', reason: ''
     });
@@ -93,7 +93,7 @@ const BookingEdit = () => {
         }
     }, [selectedSpecialty]);
 
-    // Load schedule của bác sĩ
+
     useEffect(() => {
         if (selectedDoctor) {
             axios.get(`/api/v1/doctor/${selectedDoctor.value}/schedule`).then(res => {
@@ -106,12 +106,59 @@ const BookingEdit = () => {
                     setAvailableDates(mappedDates);
                     setScheduleMap(schedule);
 
-                    // reset khung giờ
-                    setTimeSlots([]);
+                    // ✅ Nếu KHÔNG phải lần load đầu tiên và đã có selectedDate thì load lại time slots
+                    if (!isFirstLoad && selectedDate) {
+                        const dateStr = format(selectedDate, "yyyy-MM-dd");
+                        const slots = schedule[dateStr] || [];
+                        const formattedSlots = slots.map(s => ({
+                            value: s.slotId,
+                            label: s.time,
+                            time: s.time
+                        }));
+                        setTimeSlots(formattedSlots);
+                        setSelectedTime(null); // reset khung giờ (user chọn lại)
+                    }
                 }
             });
         }
     }, [selectedDoctor]);
+
+    useEffect(() => {
+        const fetchBooking = async () => {
+            try {
+                const res = await axios.get(`/api/v1/booking/${id}`);
+                if (res.EC === 0) {
+                    const b = res.DT;
+                    setForm({
+                        name: b.name,
+                        phone: b.phone,
+                        dob: b.dob?.split('T')[0] || '',
+                        address: b.address,
+                        email: b.email,
+                        reason: b.reason
+                    });
+
+                    setSelectedSpecialty({ value: b.specialtyId, label: b.specialtyName });
+                    setSelectedDoctor({ value: b.doctorId, label: b.doctorName });
+                    setSelectedService(b.servicePriceId ? { value: b.servicePriceId, label: b.serviceName } : null);
+
+                    const date = moment(b.scheduleTime).toDate();
+                    const timeLabel = moment(b.scheduleTime).format("HH:mm");
+
+                    setSelectedDate(date);
+                    setSelectedTime({ value: b.slotId, label: timeLabel, time: timeLabel });
+
+                    // ✅ Đánh dấu đã load lần đầu
+                    setIsFirstLoad(false);
+                } else {
+                    toast.error(res.EM);
+                }
+            } catch (err) {
+                toast.error("Không thể tải lịch hẹn");
+            }
+        };
+        fetchBooking();
+    }, [id]);
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -147,7 +194,7 @@ const BookingEdit = () => {
             const res = await axios.put(`/api/v1/booking/${id}`, data);
             if (res.EC === 0) {
                 toast.success("Cập nhật lịch thành công");
-                history.push('/admin/bookings'); // hoặc reload lại
+                history.push('/admin/booking'); // hoặc reload lại
             } else {
                 toast.error(res.EM);
             }
@@ -185,7 +232,23 @@ const BookingEdit = () => {
             </div>
 
             <div className="mb-3"><label>Chuyên khoa</label>
-                <Select options={specialties} value={selectedSpecialty} onChange={setSelectedSpecialty} />
+                {/* <Select options={specialties} value={selectedSpecialty} onChange={setSelectedSpecialty} /> */}
+                <Select
+                    options={specialties}
+                    value={selectedSpecialty}
+                    onChange={(selected) => {
+                        setSelectedSpecialty(selected);
+                        setSelectedDoctor(null);
+                        setDoctors([]);
+                        setSelectedService(null);
+                        setServices([]);
+                        setSelectedDate(null);
+                        setAvailableDates([]);
+                        setScheduleMap({});
+                        setSelectedTime(null);
+                        setTimeSlots([]);
+                    }}
+                />
             </div>
 
             <div className="mb-3"><label>Bác sĩ</label>

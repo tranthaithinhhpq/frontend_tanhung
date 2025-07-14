@@ -21,6 +21,7 @@ const ServicePriceTable = () => {
         name: '',
         group: '',
         price: '',
+        priceInsurance: '',
         isSelectable: false,
         specialtyId: null
     });
@@ -89,6 +90,7 @@ const ServicePriceTable = () => {
             name: item.name,
             group: item.group,
             price: item.price,
+            priceInsurance: item.priceInsurance || '',
             isSelectable: item.isSelectable,
             specialtyId: specialties.length > 0
                 ? specialties.find(s => s.value === item.specialtyId) || null
@@ -132,6 +134,7 @@ const ServicePriceTable = () => {
                             <th>Tên dịch vụ</th>
                             <th>Nhóm</th>
                             <th>Giá</th>
+                            <th>Giá bảo hiểm</th>
                             <th>Cho phép đặt</th>
                             <th>Chuyên khoa</th>
                             <th>Hành động</th>
@@ -143,10 +146,10 @@ const ServicePriceTable = () => {
                                 <td>{item.name}</td>
                                 <td>{item.group}</td>
                                 <td>{item.price}</td>
+                                <td>{item.priceInsurance}</td>
                                 <td>{item.isSelectable ? 'Có' : 'Không'}</td>
                                 <td>{item.Specialty?.name || item.specialtyId}</td>
                                 <td>
-                                    {/* <Button size="sm" onClick={() => handleEdit(item)}>Sửa</Button>{' '} */}
                                     <i
                                         className="fa fa-pencil edit"
                                         onClick={() => handleEdit(item)}
@@ -210,6 +213,14 @@ const ServicePriceTable = () => {
                             type="number"
                             value={formData.price}
                             onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Giá bảo hiểm</Form.Label>
+                        <Form.Control
+                            type="number"
+                            value={formData.priceInsurance}
+                            onChange={(e) => setFormData({ ...formData, priceInsurance: e.target.value })}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">

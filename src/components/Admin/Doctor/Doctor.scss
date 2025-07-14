@@ -14,3 +14,33 @@
     color: red;
     cursor: pointer;
 }
+
+.table-responsive-custom {
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* ✅ Không cho cuộn dọc */
+    max-width: 100%;
+    padding-bottom: 0.5rem;
+}
+
+.booking-table {
+    white-space: nowrap !important;
+    /* ✅ Không cho chữ xuống dòng */
+    width: 100%;
+    min-width: 1000px;
+    /* ✅ Giúp xuất hiện thanh cuộn khi nhỏ màn hình */
+    table-layout: auto;
+}
+
+.booking-table th,
+.booking-table td {
+    white-space: nowrap !important;
+}
+
+.custom-datepicker-calendar {
+    z-index: 9999 !important;
+}
+
+.react-datepicker-popper {
+    z-index: 9999 !important;
+}

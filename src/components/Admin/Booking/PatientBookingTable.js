@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,6 +7,8 @@ import Select from 'react-select';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import '../../Admin/Doctor/Doctor.scss';
+import { useHistory } from 'react-router-dom';
+import Scrollbars from 'react-custom-scrollbars';
 
 
 const PatientBookingTable = () => {
@@ -20,7 +22,10 @@ const PatientBookingTable = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editData, setEditData] = useState(null);
+    const history = useHistory();
 
+    const scrollbarRef = useRef();
+    const [scrollHeight, setScrollHeight] = useState(window.innerHeight);
 
 
 
@@ -53,6 +58,16 @@ const PatientBookingTable = () => {
 
     useEffect(() => {
         fetchDoctors();
+    }, []);
+
+    useEffect(() => {
+        const updateHeight = () => {
+            setScrollHeight(window.innerHeight);
+        };
+        updateHeight();
+
+        window.addEventListener("resize", updateHeight);
+        return () => window.removeEventListener("resize", updateHeight);
     }, []);
 
     useEffect(() => {
@@ -114,6 +129,7 @@ const PatientBookingTable = () => {
     return (
         <div className="container py-4">
             <h4>Quản lý lịch khám bệnh nhân</h4>
+
             <div className="text-end mb-3">
 
             </div>
@@ -137,45 +153,71 @@ const PatientBookingTable = () => {
                         isClearable
                     />
                 </div>
+                <div className="col-md-4 d-flex justify-content-end">
+                    <Button className="mb-3" onClick={() => history.push('/admin/booking/new')}>
+                        <i className="fa fa-plus-circle"></i> Đặt lịch khám
+                    </Button>
+                </div>
             </div>
 
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Bệnh nhân</th>
-                        <th>Ngày sinh</th>
-                        <th>Điện thoại</th>
-                        <th>Bác sĩ</th>
-                        <th>Ngày khám</th>
-                        <th>Khung giờ</th>
-                        <th>Dịch vụ</th>
-                        <th>Lý do khám</th>
-                        <th>Giá tiền</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bookings.length > 0 ? bookings.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.name}</td>
-                            <td>{item.dob}</td>
-                            <td>{item.phone}</td>
-                            <td>{item.DoctorInfo?.doctorName || item.doctorId}</td>
-                            <td>{item.scheduleTime?.split('T')[0]}</td>
-                            <td>{item.WorkingSlotTemplate?.startTime} - {item.WorkingSlotTemplate?.endTime}</td>
-                            <td>{item.ServicePrice?.name}</td>
-                            <td>{item.reason}</td>
-                            <td>{item.ServicePrice?.price?.toLocaleString('vi-VN')}đ</td>
-                            <td>
-                                <i className="fa fa-pencil edit me-2" onClick={() => handleEdit(item)}></i>
-                                <i className="fa fa-trash-o delete" onClick={() => handleDelete(item.id)}></i>
-                            </td>
-                        </tr>
-                    )) : (
-                        <tr><td colSpan="7" className="text-center">Không có lịch khám</td></tr>
-                    )}
-                </tbody>
-            </Table>
+            <Scrollbars
+                autoHide
+                autoHeight
+                autoHeightMin={0}
+                autoHeightMax={scrollHeight}
+                universal={true}
+                renderTrackHorizontal={props => <div {...props} style={{ display: 'none' }} />}
+                ref={scrollbarRef}
+            >
+                <div className="table-responsive-custom" style={{ minWidth: '900px' }}>
+
+                    <Table striped bordered hover className="booking-table">
+                        <thead>
+                            <tr>
+                                <th>Bệnh nhân</th>
+                                <th>Ngày sinh</th>
+                                <th>Điện thoại</th>
+                                <th>Bác sĩ</th>
+                                <th>Chuyên khoa</th>
+                                <th>Ngày khám</th>
+                                <th>Khung giờ</th>
+                                <th>Dịch vụ</th>
+                                <th>Lý do khám</th>
+                                <th>Giá tiền</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {bookings.length > 0 ? bookings.map((item) => (
+                                <tr key={item.id}>
+                                    <td>{item.name}</td>
+                                    <td>{item.dob}</td>
+                                    <td>{item.phone}</td>
+                                    <td>{item.DoctorInfo?.doctorName || item.doctorId}</td>
+                                    <td>{item.Specialty?.name}</td>
+                                    <td>{item.scheduleTime?.split('T')[0]}</td>
+                                    <td>{item.WorkingSlotTemplate?.startTime} - {item.WorkingSlotTemplate?.endTime}</td>
+                                    <td>{item.ServicePrice?.name}</td>
+                                    <td>{item.reason}</td>
+                                    <td>{item.ServicePrice?.price?.toLocaleString('vi-VN')}đ</td>
+                                    <td>
+
+
+                                        <i
+                                            className="fa fa-pencil edit"
+                                            onClick={() => history.push(`/admin/booking/${item.id}`)}
+                                        ></i>
+
+                                        <i className="fa fa-trash-o delete" onClick={() => handleDelete(item.id)}></i>
+                                    </td>
+                                </tr>
+                            )) : (
+                                <tr><td colSpan="7" className="text-center">Không có lịch khám</td></tr>
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
+            </Scrollbars>
 
             {totalPage > 0 && (
                 <ReactPaginate
@@ -218,6 +260,7 @@ const PatientBookingTable = () => {
                                     dateFormat="yyyy-MM-dd"
                                     placeholderText="Chọn ngày sinh"
                                     isClearable
+                                    calendarClassName="custom-datepicker-calendar"
                                 />
 
                             </Form.Group>
