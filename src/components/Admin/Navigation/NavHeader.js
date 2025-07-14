@@ -171,7 +171,7 @@ const NavHeader = () => {
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/service-price">Bảng giá dịch vụ</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/drug-price">Bảng giá thuốc</Link></li>
                                 <li><Link className="dropdown-item" to="/chuyen-khoa">Tư vấn hỏi đáp</Link></li>
                             </ul>
                         </li>
