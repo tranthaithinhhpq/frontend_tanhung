@@ -26,6 +26,7 @@ const BookingCreate = () => {
     const [selectedTime, setSelectedTime] = useState(null);
     const [timeSlots, setTimeSlots] = useState([]);
 
+
     // Load specialties
     useEffect(() => {
         axios.get('/api/v1/specialty/read').then(res => {
@@ -49,10 +50,26 @@ const BookingCreate = () => {
 
             axios.get(`/api/v1/service-price/selectable/${selectedSpecialty.value}`).then(res => {
                 if (res.EC === 0) {
-                    setServices(res.DT.map(s => ({
-                        value: s.id,
-                        label: `${s.name} - ${s.price.toLocaleString()}đ`
-                    })));
+                    const mapped = [];
+                    res.DT.forEach(s => {
+                        // Giá dịch vụ thường
+                        mapped.push({
+                            value: s.id,
+                            label: `${s.name} - ${s.price.toLocaleString()}đ`,
+                            type: 'regular'
+                        });
+
+                        // Nếu có giá bảo hiểm và > 0 thì thêm lựa chọn thứ 2
+                        if (s.priceInsurance && s.priceInsurance > 0) {
+                            mapped.push({
+                                value: s.id,
+                                label: `${s.name} (có BHYT) - ${s.priceInsurance.toLocaleString()}đ`,
+                                type: 'insurance'
+                            });
+                        }
+                    });
+
+                    setServices(mapped);
                 }
             });
         }
@@ -107,6 +124,7 @@ const BookingCreate = () => {
             doctorId: selectedDoctor.value,
             slotId: selectedTime.value,
             servicePriceId: selectedService?.value,
+            serviceType: selectedService?.type || 'regular',  // 👈 Gửi lên nếu muốn biết loại giá
             scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
         };
 

@@ -47,6 +47,11 @@ import BookingCreate from "../components/Admin/Booking/BookingCreate";
 import BookingEdit from "../components/Admin/Booking/BookingEdit";
 
 
+//Service Price(client)
+import ServicePrice from "../components/Client/ServicePrice/ServicePrice";
+
+
+
 
 
 
@@ -124,6 +129,10 @@ const AppRoutes = () => {
             {/* Device client */}
             <Route path="/devices" exact component={DeviceGallery} />
             <Route path="/device/:id" component={DeviceDetailPage} />
+
+            {/* Service client */}
+            <Route path="/service-prices" exact component={ServicePrice} />
+
 
             {/* Fallback */}
             <Route path="*">

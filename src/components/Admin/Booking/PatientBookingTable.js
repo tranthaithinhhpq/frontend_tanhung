@@ -26,6 +26,8 @@ const PatientBookingTable = () => {
 
     const scrollbarRef = useRef();
     const [scrollHeight, setScrollHeight] = useState(window.innerHeight);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
 
 
@@ -90,6 +92,13 @@ const PatientBookingTable = () => {
         setShowEditModal(true);
     };
 
+    const confirmDelete = (id) => {
+        setDeleteId(id);
+        setShowConfirmModal(true);
+    };
+
+
+
     const handleSaveEdit = async () => {
         try {
             const payload = {
@@ -114,15 +123,17 @@ const PatientBookingTable = () => {
 
 
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Bạn có chắc muốn xóa lịch khám này?")) return;
+    const handleDelete = async () => {
         try {
-            await axios.delete(`/api/v1/booking/${id}`);
+            await axios.delete(`/api/v1/booking/${deleteId}`);
             toast.success("Xóa thành công");
-            fetchBookings(); // refresh lại danh sách
+            fetchBookings();
         } catch (err) {
             console.error(err);
             toast.error("Lỗi khi xóa lịch");
+        } finally {
+            setShowConfirmModal(false);
+            setDeleteId(null);
         }
     };
 
@@ -208,7 +219,7 @@ const PatientBookingTable = () => {
                                             onClick={() => history.push(`/admin/booking/${item.id}`)}
                                         ></i>
 
-                                        <i className="fa fa-trash-o delete" onClick={() => handleDelete(item.id)}></i>
+                                        <i className="fa fa-trash-o delete" onClick={() => confirmDelete(item.id)}></i>
                                     </td>
                                 </tr>
                             )) : (
@@ -299,6 +310,18 @@ const PatientBookingTable = () => {
                     <Button variant="primary" onClick={handleSaveEdit}>Lưu thay đổi</Button>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Xác nhận xóa</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Bạn có chắc chắn muốn xóa lịch khám này?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Hủy</Button>
+                    <Button variant="danger" onClick={handleDelete}>Xóa</Button>
+                </Modal.Footer>
+            </Modal>
+
 
         </div>
     );
