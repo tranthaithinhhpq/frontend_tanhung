@@ -52,6 +52,7 @@ import BookingEdit from "../components/Admin/Booking/BookingEdit";
 
 //Service Price(client)
 import ServicePrice from "../components/Client/ServicePrice/ServicePrice";
+import DrugPrice from "../components/Client/DrugPrice/DrugPrice";
 
 
 
@@ -104,7 +105,7 @@ const AppRoutes = () => {
 
             {/* Service Price admin */}
             <PrivateRoutes path="/admin/service-price" exact component={ServicePriceTable} />
-            DrugPriceTable
+
             {/* Drug Price admin */}
             <PrivateRoutes path="/admin/drug-price" exact component={DrugPriceTable} />
 
@@ -137,8 +138,13 @@ const AppRoutes = () => {
             <Route path="/devices" exact component={DeviceGallery} />
             <Route path="/device/:id" component={DeviceDetailPage} />
 
-            {/* Service client */}
+            {/* Service Prices client */}
             <Route path="/service-prices" exact component={ServicePrice} />
+
+            {/* Drug Prices client */}
+            <Route path="/drug-prices" exact component={DrugPrice} />
+
+
 
 
             {/* Fallback */}

@@ -152,7 +152,7 @@ const NavHeaderClient = () => {
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/service-prices">Bảng giá dịch vụ</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>
+                                <li><Link className="dropdown-item" to="/drug-prices">Bảng giá thuốc</Link></li>
                                 <li><Link className="dropdown-item" to="/chuyen-khoa">Tư vấn hỏi đáp</Link></li>
                             </ul>
                         </li>
