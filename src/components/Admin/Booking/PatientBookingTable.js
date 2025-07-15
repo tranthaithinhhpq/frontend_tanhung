@@ -195,6 +195,7 @@ const PatientBookingTable = () => {
                                 <th>Dịch vụ</th>
                                 <th>Lý do khám</th>
                                 <th>Giá tiền</th>
+                                <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -211,6 +212,7 @@ const PatientBookingTable = () => {
                                     <td>{item.ServicePrice?.name}</td>
                                     <td>{item.reason}</td>
                                     <td>{item.ServicePrice?.price?.toLocaleString('vi-VN')}đ</td>
+                                    <td>{item.status}</td>
                                     <td>
 
 

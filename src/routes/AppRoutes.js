@@ -55,15 +55,6 @@ import ServicePrice from "../components/Client/ServicePrice/ServicePrice";
 import DrugPrice from "../components/Client/DrugPrice/DrugPrice";
 
 
-
-
-
-
-
-
-
-
-
 const AppRoutes = () => {
     const { user } = useContext(UserContext);
 

@@ -13,7 +13,7 @@ const BookingEdit = () => {
     const history = useHistory();
     const [isFirstLoad, setIsFirstLoad] = useState(true);
     const [form, setForm] = useState({
-        name: '', phone: '', dob: '', address: '', email: '', reason: ''
+        name: '', phone: '', dob: '', address: '', email: '', reason: '', status: 'PENDING'
     });
 
     const [specialties, setSpecialties] = useState([]);
@@ -135,7 +135,8 @@ const BookingEdit = () => {
                         dob: b.dob?.split('T')[0] || '',
                         address: b.address,
                         email: b.email,
-                        reason: b.reason
+                        reason: b.reason,
+                        status: b.status || 'PENDING'
                     });
 
                     setSelectedSpecialty({ value: b.specialtyId, label: b.specialtyName });
@@ -202,6 +203,20 @@ const BookingEdit = () => {
             toast.error("Lỗi khi cập nhật lịch");
         }
     };
+
+    const convertStatusLabel = (status) => {
+        switch (status) {
+            case 'PENDING': return 'Chờ xác nhận';
+            case 'CONFIRMED': return 'Đã xác nhận';
+            case 'CANCELLED': return 'Đã hủy';
+            case 'RESCHEDULED': return 'Đã dời lịch';
+            case 'CHECKED_IN': return 'Đã đến khám';
+            case 'COMPLETED': return 'Đã khám xong';
+            case 'NO_SHOW': return 'Không đến';
+            default: return status;
+        }
+    };
+
 
     return (
         <div className="container mt-4">
@@ -273,6 +288,22 @@ const BookingEdit = () => {
 
             <div className="mb-3"><label>Khung giờ khám</label>
                 <Select options={timeSlots} value={selectedTime} onChange={setSelectedTime} placeholder="Chọn giờ khám" isDisabled={!selectedDate} />
+            </div>
+
+            <div className="mb-3"><label>Trạng thái</label>
+                <Select
+                    options={[
+                        { value: 'PENDING', label: 'Chờ xác nhận' },
+                        { value: 'CONFIRMED', label: 'Đã xác nhận' },
+                        { value: 'CANCELLED', label: 'Đã hủy' },
+                        { value: 'RESCHEDULED', label: 'Đã dời lịch' },
+                        { value: 'CHECKED_IN', label: 'Đã đến khám' },
+                        { value: 'COMPLETED', label: 'Đã khám xong' },
+                        { value: 'NO_SHOW', label: 'Không đến' },
+                    ]}
+                    value={{ value: form.status, label: convertStatusLabel(form.status) }}
+                    onChange={(selected) => setForm({ ...form, status: selected.value })}
+                />
             </div>
 
             <button className="btn btn-primary" onClick={handleSubmit}>Cập nhật</button>
