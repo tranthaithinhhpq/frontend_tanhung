@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../../../setup/axios';
 import '../../Admin/Doctor/Doctor.scss';
+import ReactPaginate from 'react-paginate';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -12,15 +13,27 @@ const DeviceTable = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedDevice, setSelectedDevice] = useState(null);
     const history = useHistory();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const [limit] = useState(5);
 
     const fetchData = async () => {
-        const res = await axios.get('/api/v1/device/read');
-        if (res.EC === 0) setDevices(res.DT);
+        try {
+            const res = await axios.get(`/api/v1/device/paginate?page=${currentPage}&limit=${limit}`);
+            if (res.EC === 0) {
+                setDevices(res.DT.devices);
+                setTotalPage(res.DT.totalPages);
+            } else {
+                toast.error(res.EM);
+            }
+        } catch (e) {
+            toast.error("Lỗi khi tải dữ liệu");
+        }
     };
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [currentPage]);
 
     const openDeleteModal = (device) => {
         setSelectedDevice(device);
@@ -43,6 +56,10 @@ const DeviceTable = () => {
             toast.error('Xóa thất bại');
         }
         closeDeleteModal();
+    };
+
+    const handlePageClick = (event) => {
+        setCurrentPage(event.selected + 1);
     };
 
     return (
@@ -96,6 +113,29 @@ const DeviceTable = () => {
                     <Button variant="danger" onClick={confirmDelete}>Xóa</Button>
                 </Modal.Footer>
             </Modal>
+
+            {totalPage > 1 && (
+                <ReactPaginate
+                    nextLabel="Next >"
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={totalPage}
+                    previousLabel="< Prev"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    containerClassName="pagination justify-content-center"
+                    activeClassName="active"
+                    forcePage={currentPage - 1}
+                />
+            )}
         </div>
     );
 };
