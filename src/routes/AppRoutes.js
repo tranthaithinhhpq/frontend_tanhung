@@ -39,6 +39,9 @@ import ServicePriceTable from "../components/Admin/Price/ServicePriceTable";
 // Drug Price (admin)
 import DrugPriceTable from "../components/Admin/Price/DrugPriceTable";
 
+// PageImageContent (admin)
+import PageImageContentTable from "../components/Admin/PageImageContentTable/PageImageContentTable";
+
 // Banner Price (admin)
 import BannerTable from "../components/Admin/Banner/BannerTable";
 
@@ -56,6 +59,7 @@ import BookingEdit from "../components/Admin/Booking/BookingEdit";
 //Service Price(client)
 import ServicePrice from "../components/Client/ServicePrice/ServicePrice";
 import DrugPrice from "../components/Client/DrugPrice/DrugPrice";
+
 
 
 
@@ -111,6 +115,10 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/booking" exact component={PatientBookingTable} />
             <PrivateRoutes path="/admin/booking/new" exact component={BookingCreate} />
             <PrivateRoutes path="/admin/booking/:id" exact component={BookingEdit} />
+
+            {/* PageImage admin */}
+            <PrivateRoutes path="/admin/page-image" exact component={PageImageContentTable} />
+
 
 
 
