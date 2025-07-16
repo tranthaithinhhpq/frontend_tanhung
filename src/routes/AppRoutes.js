@@ -39,6 +39,9 @@ import ServicePriceTable from "../components/Admin/Price/ServicePriceTable";
 // Drug Price (admin)
 import DrugPriceTable from "../components/Admin/Price/DrugPriceTable";
 
+// Banner Price (admin)
+import BannerTable from "../components/Admin/Banner/BannerTable";
+
 // Device (client)
 import DeviceGallery from "../components/Client/Device/DeviceGallery";
 import DeviceDetailPage from "../components/Client/Device/DeviceDetailPage";
@@ -53,6 +56,7 @@ import BookingEdit from "../components/Admin/Booking/BookingEdit";
 //Service Price(client)
 import ServicePrice from "../components/Client/ServicePrice/ServicePrice";
 import DrugPrice from "../components/Client/DrugPrice/DrugPrice";
+
 
 
 const AppRoutes = () => {
@@ -96,6 +100,9 @@ const AppRoutes = () => {
 
             {/* Service Price admin */}
             <PrivateRoutes path="/admin/service-price" exact component={ServicePriceTable} />
+
+            {/* Banner admin */}
+            <PrivateRoutes path="/admin/banner" exact component={BannerTable} />
 
             {/* Drug Price admin */}
             <PrivateRoutes path="/admin/drug-price" exact component={DrugPriceTable} />
