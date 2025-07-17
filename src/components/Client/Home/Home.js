@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import './Home.scss';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import NewsPreview from './NewsPreview';
 
 const HomeClient = () => {
     const [banners, setBanners] = useState([]);
@@ -110,6 +111,7 @@ const HomeClient = () => {
                     </div>
                 </div>
             </div>
+            <NewsPreview />
 
         </>
     );

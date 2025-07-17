@@ -114,3 +114,91 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     border-color: #e0e0e0;
 }
+
+//new card
+// .news-card {
+//     transition: all 0.3s ease;
+//     border-radius: 6px;
+
+//     &:hover {
+//         transform: translateY(-5px);
+//         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+//     }
+
+//     img {
+//         // height: 160px;
+//         // object-fit: cover;
+//         height: 200px; // tăng chiều cao ảnh
+//         object-fit: cover;
+//         width: 100%;
+//         border-top-left-radius: 6px;
+//         border-top-right-radius: 6px;
+//     }
+// }
+
+// .news-card .card-body {
+//     min-height: 120px; // hoặc cao hơn nếu bạn muốn cân đối với ảnh
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: space-between;
+// }
+
+// .news-card img {
+//     aspect-ratio: 16 / 9 !important; // hoặc 16 / 9 tùy ảnh
+//     width: 100%;
+//     object-fit: cover;
+//     border-top-left-radius: 6px;
+//     border-top-right-radius: 6px;
+// }
+
+
+.news-card {
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    img {
+        aspect-ratio: 16 / 9;
+        width: 100%;
+        object-fit: cover;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
+    .card-body {
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}
+
+.custom-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.custom-arrow.prev {
+    left: -15px;
+}
+
+.custom-arrow.next {
+    right: -15px;
+}
