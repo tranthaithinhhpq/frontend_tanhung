@@ -1,115 +1,118 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
+import './Home.scss';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const HomeClient = () => {
     const [banners, setBanners] = useState([]);
-    const [textSections, setTextSections] = useState({});
-    const [imageSections, setImageSections] = useState({});
-    const [videoSections, setVideoSections] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
+    const [current, setCurrent] = useState(0);
+    const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1200);
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
     useEffect(() => {
-        axios.get('/api/v1/client/homepage')
-            .then(res => {
-                if (res.EC === 0) {
-                    const { banners, texts, images, videos } = res.DT;
-                    setBanners(banners || []);
-                    setTextSections(groupBySection(texts));
-                    setImageSections(groupBySection(images));
-                    setVideoSections(groupBySection(videos));
-                }
-                setIsLoading(false);
-            })
-            .catch(() => setIsLoading(false));
+        axios.get('/api/v1/client/banner').then(res => {
+            if (res.EC === 0) setBanners(res.DT || []);
+        });
     }, []);
 
-    const groupBySection = (arr = []) =>
-        arr.reduce((acc, cur) => {
-            acc[cur.section] = acc[cur.section] || [];
-            acc[cur.section].push(cur);
-            return acc;
-        }, {});
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrent(prev => (prev + 1) % banners.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, [banners]);
 
-    if (isLoading) return <div className="text-center mt-5">Đang tải nội dung...</div>;
+    // 🛠 Theo dõi thay đổi kích thước màn hình
+    useEffect(() => {
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth > 1200);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
-    const isMobile = window.innerWidth < 768;
+    const handlePrev = () => setCurrent((current - 1 + banners.length) % banners.length);
+    const handleNext = () => setCurrent((current + 1) % banners.length);
+    const goToSlide = (index) => setCurrent(index);
+
+    if (!banners.length) return null;
 
     return (
-        <div>
-            {/* 🔹 HEADER */}
-            <header className="bg-light py-3 border-bottom">
-                <div className="container d-flex justify-content-between align-items-center">
-                    <img src={textSections['header']?.[0]?.image} alt="Logo" style={{ height: '50px' }} />
-                    <div><strong>Hotline:</strong> {textSections['header']?.[0]?.contentText}</div>
+        <>
+            <div className="banner-slider">
+                <button className="arrow left" onClick={handlePrev}>&#10094;</button>
+
+                <div className="banner-wrapper">
+                    {banners.map((item, index) => {
+                        const src = BACKEND_URL + (isDesktop ? item.imageDesktop : item.imagePhone);
+                        return (
+                            <img
+                                key={item.id}
+                                src={src}
+                                alt={item.title}
+                                className={`banner-img ${index === current ? 'active' : ''}`}
+                            />
+                        );
+                    })}
                 </div>
-            </header>
 
-            {/* 🔹 BANNER */}
-            <section className="banner-section">
-                {banners.map(b => (
-                    <img key={b.id}
-                        src={isMobile ? b.imagePhone : b.imageDesktop}
-                        alt={b.title}
-                        className="img-fluid w-100" />
-                ))}
-            </section>
+                <button className="arrow right" onClick={handleNext}>&#10095;</button>
 
-            {/* 🔹 GIỚI THIỆU */}
-            {textSections['about']?.[0] &&
-                <section className="container my-5">
-                    <h4 className="mb-3">{textSections['about'][0].title}</h4>
-                    <div dangerouslySetInnerHTML={{ __html: textSections['about'][0].contentText }} />
-                </section>
-            }
-
-            {/* 🔹 VIDEO */}
-            {videoSections['video']?.[0]?.youtubeId &&
-                <section className="video-section text-center my-5">
-                    <iframe
-                        width="80%" height="400"
-                        src={`https://www.youtube.com/embed/${videoSections['video'][0].youtubeId}`}
-                        frameBorder="0"
-                        allowFullScreen
-                        title="video" />
-                </section>
-            }
-
-            {/* 🔹 ĐỐI TÁC */}
-            {imageSections['partner']?.length > 0 &&
-                <section className="partner-section container my-5">
-                    <h4 className="text-center mb-4">Đối tác</h4>
-                    <div className="row text-center">
-                        {imageSections['partner'].map(img => (
-                            <div className="col-4 col-md-2 mb-3" key={img.id}>
-                                <img src={img.image} alt={img.title} className="img-fluid" />
+                <div className="dot-indicators">
+                    {banners.map((_, index) => (
+                        <span
+                            key={index}
+                            className={`dot ${index === current ? 'active' : ''}`}
+                            onClick={() => goToSlide(index)}
+                        ></span>
+                    ))}
+                </div>
+            </div>
+            <div className="container my-4">
+                <div className="row g-4">
+                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
+                        <div className="card h-100 text-center p-3">
+                            <div className='icon'>
+                                <i className="bi bi-person-badge fs-1 mb-2 icon doctor"></i>
                             </div>
-                        ))}
+                            <h5>Bác sĩ</h5>
+                            <p className="small">Tìm hiểu thông tin bác sĩ chuyên khoa, kinh nghiệm, và lịch làm việc.</p>
+                        </div>
                     </div>
-                </section>
-            }
+                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
+                        <div className="card h-100 text-center p-3">
+                            <div className='icon'>
+                                <i className="bi bi-calendar-check fs-1 mb-2 icon booking"></i>
+                            </div>
+                            <h5>Đặt lịch khám</h5>
 
-            {/* 🔹 TIN TỨC MỚI */}
-            {textSections['news']?.[0] &&
-                <section className="container my-5">
-                    <h4 className="mb-3">{textSections['news'][0].title || 'Tin tức mới'}</h4>
-                    <div dangerouslySetInnerHTML={{ __html: textSections['news'][0].contentText }} />
-                </section>
-            }
 
-            {/* 🔹 FOOTER */}
-            <footer className="bg-dark text-white py-4 mt-5">
-                <div className="container">
-                    <div dangerouslySetInnerHTML={{ __html: textSections['footer']?.[0]?.contentText || '' }} />
+                            <p className="small">Chủ động chọn ngày khám, bác sĩ và chuyên khoa bạn cần.</p>
+                        </div>
+                    </div>
+                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
+                        <div className="card h-100 text-center p-3">
+                            <div className='icon'>
+                                <i className="bi bi-hospital fs-1 mb-2 specialty"></i>
+                            </div>
+
+                            <h5>Chuyên khoa</h5>
+                            <p className="small">Hệ thống chuyên khoa toàn diện, chất lượng cao.</p>
+                        </div>
+                    </div>
+                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
+                        <div className="card h-100 text-center p-3">
+                            <div className='icon'><i className="bi bi-receipt fs-1 mb-2 price"></i></div>
+
+                            <h5>Bảng giá</h5>
+                            <p className="small">Tra cứu chi phí khám chữa bệnh rõ ràng, minh bạch.</p>
+                        </div>
+                    </div>
                 </div>
-            </footer>
-        </div>
+            </div>
+
+        </>
     );
 };
 
 export default HomeClient;
-
-
-
-
-
-

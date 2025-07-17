@@ -9,6 +9,7 @@ import { UserContext } from './context/UserContext';
 import { Rings } from 'react-loader-spinner';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const Layout = () => {
   const { user } = React.useContext(UserContext);
   const location = useLocation();

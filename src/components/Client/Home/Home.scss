@@ -1,0 +1,116 @@
+.banner-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+
+    .banner-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 31.25%; // Tỷ lệ 1920x600 = 600/1920 = 31.25%
+
+        @media (max-width: 1200px) {
+            padding-bottom: 56.25%; // Tỷ lệ 16:9 cho thiết bị nhỏ hơn
+        }
+    }
+
+    .banner-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw; // 👈 chiếm toàn bộ chiều ngang trình duyệt
+        object-fit: cover; // 👈 lấp đầy nhưng không bóp méo ảnh
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: 0;
+        display: block;
+    }
+
+    .banner-img.active {
+        opacity: 1;
+        z-index: 1;
+    }
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: none;
+        color: white;
+        font-size: 2rem;
+        padding: 0 15px;
+        cursor: pointer;
+
+        &.left {
+            left: 10px;
+        }
+
+        &.right {
+            right: 10px;
+        }
+    }
+
+    .dot-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: background 0.3s;
+
+            &.active {
+                background: white;
+            }
+        }
+    }
+}
+
+.service-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    // border: 1px solid #f0f0f0;
+    .icon {
+        font-size: 36px;
+        transition: color 0.3s ease;
+
+        .doctor {
+            color: #007BFF;
+        }
+
+        .booking {
+            color: #10B981
+        }
+
+        .specialty {
+            color: #F97316
+        }
+
+        .price {
+            color: #8B5CF6
+        }
+
+
+    }
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: #e0e0e0;
+}

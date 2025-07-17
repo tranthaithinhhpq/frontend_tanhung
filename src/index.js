@@ -8,6 +8,7 @@ import { UserProvider } from './context/UserContext';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
+
 ReactDOM.render(
   <React.StrictMode>
     <UserProvider>

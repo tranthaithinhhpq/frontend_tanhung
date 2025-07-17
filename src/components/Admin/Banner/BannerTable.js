@@ -28,6 +28,11 @@ const BannerTable = () => {
     const [filePhone, setFilePhone] = useState(null);
     const [showFull, setShowFull] = useState({ type: '', show: false });
 
+
+    const [bannerToDelete, setBannerToDelete] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+
     const fetchBanners = useCallback(async () => {
         try {
             const res = await axios.get(`/api/v1/banner?page=${currentPage}&limit=${limit}`);
@@ -45,18 +50,6 @@ const BannerTable = () => {
         }
     }, [currentPage, limit]);
 
-
-    // const fetchBanners = useCallback(async () => {
-    //     try {
-    //         const res = await axios.get(`/api/v1/banner?page=${currentPage}&limit=${limit}`);
-    //         if (res.EC === 0) {
-    //             setBanners(res.DT.rows || []);
-    //             setTotalPage(res.DT.totalPages || 0);
-    //         } else toast.error(res.EM);
-    //     } catch (err) {
-    //         toast.error("Lỗi tải danh sách banner");
-    //     }
-    // }, [currentPage, limit]);
 
     const buildImgSrc = (raw) => {
         if (!raw) return '';
@@ -141,18 +134,30 @@ const BannerTable = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Bạn có chắc muốn xoá banner này?")) return;
+    const handleDelete = (banner) => {
+        setShowDeleteModal(true);
+    };
+    const confirmDelete = async () => {
+        console.log("Xoá banner:", bannerToDelete);
+        if (!bannerToDelete) return;
+
         try {
-            const res = await axios.delete(`/api/v1/banner/${id}`);
+            const res = await axios.delete(`/api/v1/banner/${bannerToDelete.id}`);
             if (res.EC === 0) {
                 toast.success("Đã xoá banner");
                 fetchBanners();
-            } else toast.error(res.EM);
+            } else {
+                toast.error(res.EM || "Lỗi xoá");
+            }
         } catch (err) {
-            toast.error("Lỗi khi xoá banner");
+            console.error(err);
+            toast.error("Lỗi hệ thống khi xoá");
+        } finally {
+            setShowDeleteModal(false);
+            setBannerToDelete(null);
         }
     };
+
 
     return (
         <div className="container mt-4">
@@ -164,8 +169,8 @@ const BannerTable = () => {
                 <thead>
                     <tr>
                         <th>Tiêu đề</th>
-                        <th>Desktop</th>
-                        <th>Mobile</th>
+                        <th>Desktop(1920x600px)</th>
+                        <th>Mobile(750x500px)</th>
                         <th>Sort</th>
                         <th>Hành động</th>
                     </tr>
@@ -187,7 +192,14 @@ const BannerTable = () => {
                             <td>{item.sortOrder}</td>
                             <td>
                                 <i className="fa fa-pencil edit" onClick={() => handleEdit(item)}></i>
-                                <i className="fa fa-trash delete text-danger" onClick={() => handleDelete(item.id)}></i>
+                                <i
+                                    className="fa fa-trash delete text-danger"
+                                    onClick={() => {
+                                        console.log("Set banner to delete:", item); // kiểm tra
+                                        setBannerToDelete(item);
+                                        setShowDeleteModal(true);
+                                    }}
+                                ></i>
                             </td>
                         </tr>
                     )) : (
@@ -270,6 +282,23 @@ const BannerTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>Hủy</Button>
                     <Button variant="primary" onClick={handleSave}>Lưu</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Xác nhận xoá</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Bạn có chắc muốn xoá banner không?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                        Hủy
+                    </Button>
+                    <Button variant="danger" onClick={confirmDelete}>
+                        Xác nhận xoá
+                    </Button>
                 </Modal.Footer>
             </Modal>
 
