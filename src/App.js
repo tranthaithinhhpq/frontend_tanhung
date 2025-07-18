@@ -8,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import { UserContext } from './context/UserContext';
 import { Rings } from 'react-loader-spinner';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from './components/Client/Footer/Footer';
+
 
 
 const Layout = () => {
@@ -29,6 +31,10 @@ const Layout = () => {
           </div>
           <div className="app-container">
             <AppRoutes />
+          </div>
+          <div className="app-footer">
+            {isAdminRoute ? "" : <Footer />}
+
           </div>
         </>
       )}

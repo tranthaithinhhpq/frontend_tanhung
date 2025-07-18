@@ -5,6 +5,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import NewsPreview from './NewsPreview';
 import HomeIntroSections from './HomeIntroSections';
 import HomeIntroVideo from './HomeIntroVideo';
+import StatisticsSection from './StatisticsSection';
+import PartnerSlider from './PartnerSlider ';
+
+
 
 
 const HomeClient = () => {
@@ -117,6 +121,8 @@ const HomeClient = () => {
             <NewsPreview />
             <HomeIntroSections />
             <HomeIntroVideo />
+            <StatisticsSection />
+            <PartnerSlider />
         </>
     );
 };

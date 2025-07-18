@@ -215,3 +215,45 @@
         }
     }
 }
+
+.statistics-section {
+    background-color: #2f353c;
+
+    .stat-title {
+        font-size: 1.1rem;
+    }
+}
+
+.partner-slider {
+    background: #f9f9f9;
+
+    .partner-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 8px; // khoảng cách giữa các khung
+    }
+
+    .partner-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    img {
+        height: 100px; // tăng kích thước
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .slick-track {
+        display: flex;
+        align-items: center;
+    }
+}
