@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
+
 import './Doctor.scss';
 
 const DoctorTable = () => {

@@ -61,6 +61,15 @@ import ServicePrice from "../components/Client/ServicePrice/ServicePrice";
 import DrugPrice from "../components/Client/DrugPrice/DrugPrice";
 
 
+//Page
+import PageAdmin from "../components/Admin/Page/PageAdmin";
+import PageCreate from "../components/Admin/Page/PageCreate";
+import PageEdit from "../components/Admin/Page/PageEdit";
+
+
+
+
+
 
 
 const AppRoutes = () => {
@@ -118,6 +127,15 @@ const AppRoutes = () => {
 
             {/* PageImage admin */}
             <PrivateRoutes path="/admin/page-image" exact component={PageImageContentTable} />
+
+            {/* PageAdmin admin */}
+            <PrivateRoutes path="/admin/page" exact component={PageAdmin} />
+            <PrivateRoutes path="/admin/page-new" exact component={PageCreate} />
+            <PrivateRoutes path="/admin/page/edit/:id" exact component={PageEdit} />
+
+
+
+
 
 
 
