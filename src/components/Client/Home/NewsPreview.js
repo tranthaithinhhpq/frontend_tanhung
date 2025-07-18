@@ -211,37 +211,41 @@ const NewsPreview = () => {
 
     const settings = {
         dots: false,
-        infinite: true,
+        infinite: topNews.length > 4, // chỉ vô tận nếu đủ bài
         speed: 500,
         arrows: true,
-        slidesToShow: 4,
-        slidesToScroll: 4, // 👈 bằng với slidesToShow
+        slidesToShow: Math.min(topNews.length, 4),
+        slidesToScroll: Math.min(topNews.length, 4),
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 1200,
                 settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3 // 👈 tương ứng
+                    slidesToShow: Math.min(topNews.length, 3),
+                    slidesToScroll: Math.min(topNews.length, 3),
+                    infinite: topNews.length > 3
                 }
             },
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
+                    slidesToShow: Math.min(topNews.length, 2),
+                    slidesToScroll: Math.min(topNews.length, 2),
+                    infinite: topNews.length > 2
                 }
             },
             {
                 breakpoint: 576,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    infinite: topNews.length > 1
                 }
             }
         ]
     };
+
 
     return (
         <div className="container my-5">

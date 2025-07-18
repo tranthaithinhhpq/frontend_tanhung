@@ -202,3 +202,16 @@
 .custom-arrow.next {
     right: -15px;
 }
+
+.home-intro {
+    .intro-block {
+        .text h2 {
+            font-weight: bold;
+        }
+
+        img {
+            max-height: 400px;
+            object-fit: cover;
+        }
+    }
+}
