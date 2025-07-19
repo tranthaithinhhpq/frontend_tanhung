@@ -65,10 +65,7 @@ import DrugPrice from "../components/Client/DrugPrice/DrugPrice";
 import PageAdmin from "../components/Admin/Page/PageAdmin";
 import PageCreate from "../components/Admin/Page/PageCreate";
 import PageEdit from "../components/Admin/Page/PageEdit";
-
-
-
-
+import ClientPage from "../components/Client/Page/ClientPage";
 
 
 
@@ -140,6 +137,8 @@ const AppRoutes = () => {
 
 
 
+
+
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             <Route path="/admin/register" component={Register} />
@@ -167,6 +166,9 @@ const AppRoutes = () => {
 
             {/* Drug Prices client */}
             <Route path="/drug-prices" exact component={DrugPrice} />
+
+            {/* Page client */}
+            <Route path="/:slug" exact component={ClientPage} />
 
 
 

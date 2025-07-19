@@ -192,8 +192,8 @@ const NavHeaderClient = () => {
         const fetchAboutPages = async () => {
             try {
                 const res = await axios.get('/api/v1/client/page?section=about');
-                if (res.data.EC === 0) {
-                    setAboutPages(res.data.DT);
+                if (res.EC === 0) {
+                    setAboutPages(res.DT);
                 }
             } catch (err) {
                 console.error('Error fetching about pages:', err);
@@ -244,14 +244,16 @@ const NavHeaderClient = () => {
                                 Giới thiệu
                             </a>
                             <ul className="dropdown-menu">
-                                {aboutPages.map((page) => (
-                                    <li key={page.slug}>
-                                        <Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link>
-                                    </li>
-                                ))}
+
                                 <li><Link className="dropdown-item" to="/doctors">Đội ngũ bác sĩ</Link></li>
                                 <li><Link className="dropdown-item" to="/specialties">Chuyên khoa</Link></li>
                                 <li><Link className="dropdown-item" to="/devices">Trang thiết bị</Link></li>
+                                {aboutPages.map((pageclient) => (
+                                    <li key={pageclient.slug}>
+                                        <Link className="dropdown-item" to={`/${pageclient.slug}`}>{pageclient.title}</Link>
+                                    </li>
+                                ))}
+
                             </ul>
                         </li>
 
@@ -264,6 +266,7 @@ const NavHeaderClient = () => {
                                 <li><Link className="dropdown-item" to="/tam-nhin">Hướng dẫn</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>
                                 <li><Link className="dropdown-item" to="/chuyen-khoa">Tư vấn hỏi đáp</Link></li>
+
                             </ul>
                         </li>
 
