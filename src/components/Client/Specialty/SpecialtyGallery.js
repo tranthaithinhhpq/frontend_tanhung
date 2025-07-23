@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import axios from '../../../setup/axios';
+import './SpecialtyGallery.scss';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -21,11 +22,14 @@ const SpecialtyGallery = () => {
             <Row>
                 {specialties.map(sp => (
                     <Col key={sp.id} lg={3} md={4} sm={6} xs={12} className="mb-4">
-                        <Card className="h-100" onClick={() => history.push(`/specialty/${sp.id}`)}>
+                        <Card
+                            className="specialty-card h-100"
+                            onClick={() => history.push(`/specialty/${sp.id}`)}
+                        >
                             <Card.Img
                                 variant="top"
                                 src={`${BACKEND_URL}${sp.image}`}
-                                style={{ aspectRatio: '3/2', objectFit: 'cover' }}
+                                className="card-img-top"
                             />
                             <Card.Body>
                                 <Card.Title>{sp.name}</Card.Title>

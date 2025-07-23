@@ -22,6 +22,8 @@ const NewsForm = ({ editData }) => {
 
     const quillRef = useRef(null);
 
+
+
     useEffect(() => {
         axios.get("/api/v1/news-categories").then(res => {
             if (res.EC === 0) {

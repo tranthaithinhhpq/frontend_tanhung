@@ -12,7 +12,7 @@ import HomeClient from "../components/Client/Home/Home";
 import DoctorGallery from "../components/Client/Doctor/DoctorGallery";
 import AppointmentForm from "../components/Client/Appointment/AppointmentForm";
 import DoctorDetailPage from "../components/Client/Doctor/DoctorDetailPage";
-import NewsForm from "../components/Admin/News/NewsForm";
+import NewsCreate from "../components/Admin/News/NewsCreate";
 import NewsList from "../components/Client/News/NewsList";
 import NewsDetail from "../components/Client/News/NewsDetail";
 import DoctorTable from "../components/Admin/Doctor/DoctorTable";
@@ -67,6 +67,12 @@ import PageCreate from "../components/Admin/Page/PageCreate";
 import PageEdit from "../components/Admin/Page/PageEdit";
 import ClientPage from "../components/Client/Page/ClientPage";
 
+//News admin
+import NewsTable from "../components/Admin/News/NewsTable";
+import NewsEdit from "../components/Admin/News/NewsEdit";
+
+
+
 
 
 const AppRoutes = () => {
@@ -101,7 +107,9 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/specialty/edit/:id" component={SpecialtyEdit} />
 
             {/* News admin */}
-            <PrivateRoutes path="/admin/news" exact component={NewsForm} />
+            <PrivateRoutes path="/admin/news" exact component={NewsTable} />
+            <PrivateRoutes path="/admin/news/create" exact component={NewsCreate} />
+            <PrivateRoutes path="/admin/news/edit/:id" exact component={NewsEdit} />
 
             {/* Device admin */}
             <PrivateRoutes path="/admin/device" exact component={DeviceTable} />
@@ -129,15 +137,6 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/page" exact component={PageAdmin} />
             <PrivateRoutes path="/admin/page-new" exact component={PageCreate} />
             <PrivateRoutes path="/admin/page/edit/:id" exact component={PageEdit} />
-
-
-
-
-
-
-
-
-
 
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />

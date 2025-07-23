@@ -54,13 +54,13 @@ const SpecialtyTable = () => {
     return (
         <div className="container my-4">
             <h3>Quản lý chuyên khoa</h3>
-            <Button className="mb-3" onClick={() => history.push('/admin/specialty/new')}>
+            <Button className="mb-3" onClick={() => history.push('/admin/specialty/create')}>
                 <i className="fa fa-plus-circle"></i> Thêm mới
             </Button>
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>Ảnh</th>
+                        <th>Ảnh (4x3)</th>
                         <th>Tên chuyên khoa</th>
                         <th>Mô tả</th>
                         <th>Hành động</th>

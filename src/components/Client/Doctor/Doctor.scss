@@ -46,3 +46,39 @@
         }
     }
 }
+
+
+.pagination-doctor-card {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    gap: 8px;
+
+    li {
+        a {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #007bff;
+            background-color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        &.active a {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        &.disabled a {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        &:hover:not(.active):not(.disabled) a {
+            background-color: #e9ecef;
+        }
+    }
+}

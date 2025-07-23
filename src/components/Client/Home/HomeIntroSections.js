@@ -69,6 +69,7 @@ const HomeIntroSections = () => {
             try {
                 const res = await axios.get('/api/v1/client/home-sections');
                 if (res.EC === 0) {
+                    console.log("res dt shot: ", res.DT);
                     setSections(res.DT);
                 }
             } catch (err) {
