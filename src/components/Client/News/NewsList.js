@@ -14,7 +14,7 @@ const NewsList = () => {
 
     const fetchNews = async (page = 1, categoryParam = category, keywordParam = keyword) => {
         try {
-            const res = await axios.get('/api/v1/news', {
+            const res = await axios.get('/api/v1/client/news', {
                 params: {
                     page,
                     limit: pagination.limit,
@@ -98,13 +98,12 @@ const NewsList = () => {
                 {news.map(item => (
                     <Col md={4} key={item.id} className="mb-4">
                         <Card>
+
                             <Card.Img
                                 variant="top"
                                 src={
                                     item.image
-                                        ? `${process.env.REACT_APP_BACKEND_URL}/${item.image
-                                            .replace(/^src[\\/]+public[\\/]+/, '')  // Xóa src/public hoặc src\public\
-                                            .replace(/\\/g, '/')}`                  // Đổi \ thành /
+                                        ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
                                         : '/default-news.jpg'
                                 }
                             />

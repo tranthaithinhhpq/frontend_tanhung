@@ -7,23 +7,17 @@
 // === Global overrides ===
 .navbar {
 
-
-
-    // Link mặc định mờ 55%
+    // Link mặc định: màu đen 75%
     .nav-link {
-        color: rgba(255, 255, 255, 0.55) !important;
+        color: rgba(0, 0, 0, 0.75) !important;
         transition: color 0.15s ease-in-out;
-
 
         &:hover,
         &:focus {
-            color: #fff !important; // sáng khi hover
+            color: #000 !important; // đậm khi hover
         }
     }
 
-    // “Welcome …” nằm trong span – dùng cùng quy tắc kế thừa nav-link
-
-    // Tiêu đề dropdown “Settings” – giữ caret cùng màu khi hover
     .dropdown-toggle::after {
         border-top-color: currentColor !important;
     }
@@ -49,11 +43,11 @@
             cursor: pointer;
 
             .brand-name-1 {
-                color: #61dafb;
+                color: #ED1B24;
             }
 
             .brand-name-2 {
-                color: #fff;
+                color: #000;
                 font-size: 0.875rem;
             }
         }

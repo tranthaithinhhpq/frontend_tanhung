@@ -41,7 +41,7 @@ const NavHeader = () => {
     if (!user?.isAuthenticated || location.pathname === '/admin/login') return null;
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark custom-navbar">
+        <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar ">
             <div className="container-fluid">
                 {/* Logo */}
                 <Link className="navbar-brand fw-bold logo" to="/">

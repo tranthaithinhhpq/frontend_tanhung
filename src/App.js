@@ -9,7 +9,7 @@ import { UserContext } from './context/UserContext';
 import { Rings } from 'react-loader-spinner';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/Client/Footer/Footer';
-
+import './App.scss';
 
 
 const Layout = () => {
@@ -29,7 +29,7 @@ const Layout = () => {
           <div className="app-header">
             {isAdminRoute ? <NavHeader /> : <NavHeaderClient />}
           </div>
-          <div className="app-container">
+          <div className="app-container" >
             <AppRoutes />
           </div>
           <div className="app-footer">
