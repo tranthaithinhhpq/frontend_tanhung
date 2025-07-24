@@ -134,20 +134,24 @@ const BannerTable = () => {
         }
     };
 
-    const handleDelete = (banner) => {
-        setShowDeleteModal(true);
-    };
+
     const confirmDelete = async () => {
-        console.log("Xoá banner:", bannerToDelete);
         if (!bannerToDelete) return;
 
         try {
-            const res = await axios.delete(`/api/v1/banner/${bannerToDelete.id}`);
-            if (res.EC === 0) {
+            const res = await axios.post('/api/v1/banner/delete', {
+                id: bannerToDelete.id,
+                imageDesktop: bannerToDelete.imageDesktop,
+                imageMobile: bannerToDelete.imageMobile,
+
+            });
+            console.log("Delete response:", res);
+
+            if (res?.EC === 0) {
                 toast.success("Đã xoá banner");
                 fetchBanners();
             } else {
-                toast.error(res.EM || "Lỗi xoá");
+                toast.error(res?.EM || "Lỗi xoá");
             }
         } catch (err) {
             console.error(err);
@@ -157,6 +161,7 @@ const BannerTable = () => {
             setBannerToDelete(null);
         }
     };
+
 
 
     return (
