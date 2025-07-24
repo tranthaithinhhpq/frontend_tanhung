@@ -33,6 +33,30 @@ const CustomHtmlEditor = ({ value, onChange }) => {
             const items = e.clipboardData?.items;
             if (!items) return;
 
+            const htmlData = e.clipboardData?.getData('text/html');
+            if (htmlData && htmlData.includes('<table')) {
+                e.preventDefault(); // Ngăn trình duyệt dán mặc định
+                pushToUndo(textarea.value);
+
+                const selectionStart = textarea.selectionStart;
+                const selectionEnd = textarea.selectionEnd;
+
+                const before = textarea.value.substring(0, selectionStart);
+                const after = textarea.value.substring(selectionEnd);
+
+                const updatedValue = `${before}${htmlData}${after}`;
+                onChange(updatedValue);
+
+                // Đặt lại vị trí con trỏ
+                setTimeout(() => {
+                    textarea.focus();
+                    textarea.selectionStart = textarea.selectionEnd = before.length + htmlData.length;
+                }, 0);
+
+                return;
+            }
+
+
             for (let item of items) {
                 if (item.type.indexOf("image") === 0) {
                     const file = item.getAsFile();

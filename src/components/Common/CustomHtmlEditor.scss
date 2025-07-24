@@ -3,3 +3,15 @@
     white-space: normal !important;
     /* Ngăn xuống dòng do \n trong chuỗi HTML */
 }
+
+.ql-editor table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.ql-editor th,
+.ql-editor td {
+    border: 1px solid black;
+    padding: 8px;
+}
