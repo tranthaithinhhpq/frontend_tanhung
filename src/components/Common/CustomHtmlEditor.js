@@ -58,27 +58,37 @@ const CustomHtmlEditor = ({ value, onChange }) => {
 
 
             for (let item of items) {
-                if (item.type.indexOf("image") === 0) {
-                    const file = item.getAsFile();
-                    const formData = new FormData();
-                    formData.append("image", file);
 
-                    try {
-                        const res = await axios.post("/api/v1/upload", formData);
-                        const imageUrl = `${BACKEND_URL}/${res.path}`;
-                        const markdown = `\n<img src="${imageUrl}" alt="uploaded" />\n`;
-                        const currentValue = textarea.value;
-                        const selectionStart = textarea.selectionStart;
-                        const newValue =
-                            currentValue.substring(0, selectionStart) +
-                            markdown +
-                            currentValue.substring(selectionStart);
-                        pushToUndo(currentValue);
-                        onChange(newValue);
-                    } catch (error) {
-                        console.error("Image upload failed", error);
-                    }
+
+
+
+                const file = item.getAsFile();
+                const formData = new FormData();
+                formData.append("file", file); // <== Bắt buộc là "file" (đúng như server yêu cầu)
+
+                try {
+                    const res = await axios.post("/api/v1/upload", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    });
+
+                    const uploadedUrl = `${BACKEND_URL}/${res.path}`;
+                    const embedCode = `<embed src="${uploadedUrl}" type="application/pdf" width="100%" height="600px" />`;
+                    const currentValue = textarea.value;
+                    const selectionStart = textarea.selectionStart;
+
+                    const newValue =
+                        currentValue.substring(0, selectionStart) +
+                        embedCode +
+                        currentValue.substring(selectionStart);
+
+                    pushToUndo(currentValue);
+                    onChange(newValue);
+                } catch (error) {
+                    console.error("Upload failed", error);
                 }
+
             }
         };
 
