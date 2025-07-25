@@ -4,6 +4,7 @@ import { Button, Modal, Dropdown, Form } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import axios from "../../setup/axios";
 import './CustomHtmlEditor.scss';
+import getCaretCoordinates from "textarea-caret";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
@@ -24,6 +25,35 @@ const CustomHtmlEditor = ({ value, onChange }) => {
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
+
+    const [selection, setSelection] = useState({ start: 0, end: 0, text: "" });
+    const [showToolbar, setShowToolbar] = useState(false);
+    const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
+
+
+    const handleSelect = (e) => {
+        const textarea = textareaRef.current;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+
+        if (selectedText.trim().length > 0) {
+            const caret = getCaretCoordinates(textarea, start);
+
+            const rect = textarea.getBoundingClientRect();
+
+            setToolbarPosition({
+                top: rect.top + caret.top - 35,  // 35px phía trên caret
+                left: rect.left + caret.left
+            });
+
+            setSelection({ start, end, text: selectedText });
+            setShowToolbar(true);
+        } else {
+            setShowToolbar(false);
+        }
+    };
+
 
     useEffect(() => {
         const textarea = textareaRef.current;
@@ -148,6 +178,40 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         setTableModal(false);
     };
 
+    const applyFormat = (type) => {
+        const { start, end, text } = selection;
+        let formatted = text;
+
+        if (type === "bold") formatted = `<strong>${text}</strong>`;
+        if (type === "italic") formatted = `<em>${text}</em>`;
+        if (type === "underline") formatted = `<u>${text}</u>`;
+        if (type === "h1") formatted = `<h1>${text}</h1>`;
+        if (type === "h2") formatted = `<h2>${text}</h2>`;
+        if (type === "h3") formatted = `<h3>${text}</h3>`;
+        if (type === "h4") formatted = `<h4>${text}</h4>`;
+        if (type === "h5") formatted = `<h5>${text}</h5>`;
+        if (type === "h6") formatted = `<h6>${text}</h6>`;
+        if (type === "paragraph") formatted = `<p>${text}</p>`;
+
+        if (type === "ul" || type === "ol") {
+            const lines = text.split(/\r?\n/).map(line => `<li>${line.trim()}</li>`);
+            const tag = type === "ul" ? "ul" : "ol";
+            formatted = `<${tag}>\n${lines.join("\n")}\n</${tag}>`;
+        }
+
+        const newValue = value.substring(0, start) + formatted + value.substring(end);
+        onChange(newValue);
+        setShowToolbar(false);
+    };
+
+    const applyColor = (color) => {
+        const { start, end, text } = selection;
+        const formatted = `<span style="color: ${color}">${text}</span>`;
+        const newValue = value.substring(0, start) + formatted + value.substring(end);
+        onChange(newValue);
+        setShowToolbar(false);
+    };
+
     return (
         <div className="mb-3">
             <div className="d-flex justify-content-between align-items-center mb-2">
@@ -247,6 +311,7 @@ const CustomHtmlEditor = ({ value, onChange }) => {
             <textarea
                 ref={textareaRef}
                 className="form-control"
+                onSelect={handleSelect}
                 rows={12}
                 value={value}
                 onChange={(e) => {
@@ -306,6 +371,39 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                     <Button variant="primary" onClick={generateTable}>Chèn bảng</Button>
                 </Modal.Footer>
             </Modal>
+
+            {showToolbar && (
+                <div
+                    className="floating-toolbar"
+                    style={{
+                        position: "absolute",
+                        top: toolbarPosition.top,
+                        left: toolbarPosition.left,
+                        background: "#fff",
+                        border: "1px solid #ccc",
+                        borderRadius: 4,
+                        padding: 6,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                        display: "flex",
+                        gap: "6px",
+                        zIndex: 1000
+                    }}
+                >
+                    <button onClick={() => applyFormat("bold")}><b>B</b></button>
+                    <button onClick={() => applyFormat("italic")}><i>I</i></button>
+                    <button onClick={() => applyFormat("underline")}><u>U</u></button>
+                    <button onClick={() => applyFormat("h1")}>H1</button>
+                    <button onClick={() => applyFormat("h2")}>H2</button>
+                    <button onClick={() => applyFormat("h3")}>H3</button>
+                    <button onClick={() => applyFormat("h4")}>H4</button>
+                    <button onClick={() => applyFormat("h5")}>H5</button>
+                    <button onClick={() => applyFormat("h6")}>H6</button>
+                    <button onClick={() => applyFormat("paragraph")}>text</button>
+                    <button onClick={() => applyFormat("ul")}>• list</button>
+                    <button onClick={() => applyFormat("ol")}>1. number</button>
+                </div>
+            )}
+
         </div>
     );
 };
