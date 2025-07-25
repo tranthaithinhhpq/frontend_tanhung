@@ -187,7 +187,7 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                         variant={previewMode ? "secondary" : "outline-secondary"}
                         onClick={() => setPreviewMode(true)}
                     >
-                        Xem Preview
+                        Preview Full
                     </Button>
 
                     <Modal show={formatModal} onHide={() => setFormatModal(false)} centered>

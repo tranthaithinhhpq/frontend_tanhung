@@ -78,11 +78,7 @@ const PageAdmin = () => {
     return (
         <div className="container py-4">
             <h3>Quản lý các trang</h3>
-            <Button className="mb-3" onClick={() => {
-                setForm({ slug: '', title: '', contentThumbnail: '', videoYoutubeId: '', status: true });
-                setEditMode(false);
-                setShowModal(true);
-            }}>+ Thêm mới</Button>
+            <Button className="mb-3" onClick={() => history.push('/admin/page-new')}>+ Thêm mới</Button>
 
             <Table striped bordered>
                 <thead>
@@ -92,6 +88,7 @@ const PageAdmin = () => {
                         <th>Tiêu đề</th>
                         <th>Youtube ID</th>
                         <th>Trạng thái</th>
+                        <th>Thuộc trang</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -104,6 +101,7 @@ const PageAdmin = () => {
                                 <td>{item.title}</td>
                                 <td>{item.videoYoutubeId}</td>
                                 <td>{item.status ? 'Hiển thị' : 'Ẩn'}</td>
+                                <td>{item.section}</td>
                                 <td>
                                     <button
                                         className="btn btn-warning btn-sm me-2"

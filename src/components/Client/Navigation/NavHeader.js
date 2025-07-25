@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import './Nav.scss';
 import { Link } from 'react-router-dom';
@@ -10,6 +12,9 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080'
 const NavHeaderClient = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [aboutPages, setAboutPages] = useState([]);
+    const [clientPages, setClientPages] = useState([]);
+    // const [recruitmentPages, setRecruitmentPages] = useState([]);
+    const [pricePages, setPricePages] = useState([]);
     const [logoImg, setLogoImg] = useState(null);
 
     useEffect(() => {
@@ -19,23 +24,21 @@ const NavHeaderClient = () => {
     }, []);
 
     useEffect(() => {
-        const fetchAboutPages = async () => {
+        const fetchPagesBySection = async (section, setState) => {
             try {
-                const res = await axios.get('/api/v1/client/page?section=about');
+                const res = await axios.get(`/api/v1/client/page?section=${section}`);
                 if (res.EC === 0) {
-                    setAboutPages(res.DT);
+                    setState(res.DT);
                 }
             } catch (err) {
-                console.error('Error fetching about pages:', err);
+                console.error(`Error fetching ${section} pages:`, err);
             }
         };
 
         const fetchLogo = async () => {
             try {
                 const res = await axios.get('/api/v1/client/logo?section=logo');
-                console.log("res.DT: ", res.DT);
-
-                if (res.EC === 0 && res.DT && res.DT.image) {
+                if (res.EC === 0 && res.DT?.image) {
                     setLogoImg(`${BACKEND_URL}${res.DT.image}`);
                 }
             } catch (err) {
@@ -43,21 +46,22 @@ const NavHeaderClient = () => {
             }
         };
 
-        fetchAboutPages();
+        fetchPagesBySection('about', setAboutPages);
+        fetchPagesBySection('client', setClientPages);
+
+        fetchPagesBySection('price', setPricePages);
         fetchLogo();
     }, []);
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar ">
+        <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar">
             <div className="container-fluid">
-                {/* Logo */}
                 <Link className="navbar-brand fw-bold logo" to="/">
                     <Navbar.Brand as={Link} to="/">
-                        <img src={logoImg} width="35" height="35" alt="Logo bệnh viện" />
+                        <img src={logoImg || fallbackLogo} width="35" height="35" alt="Logo bệnh viện" />
                     </Navbar.Brand>
                 </Link>
 
-                {/* Brand text (ẩn 992–1200) */}
                 {!(windowWidth >= 992 && windowWidth <= 1200) && (
                     <Link to="/" className="brand-link ms-1 me-1">
                         <div className="brand-text">
@@ -67,7 +71,6 @@ const NavHeaderClient = () => {
                     </Link>
                 )}
 
-                {/* Toggler */}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -82,6 +85,7 @@ const NavHeaderClient = () => {
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
+                        {/* Giới thiệu */}
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Giới thiệu
@@ -96,35 +100,30 @@ const NavHeaderClient = () => {
                             </ul>
                         </li>
 
-                        {/* Các mục khác giữ nguyên như cũ */}
+                        {/* Khách hàng */}
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Khách hàng
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/tam-nhin">Hướng dẫn</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Tư vấn hỏi đáp</Link></li>
+
+                                {clientPages.map((page) => (
+                                    <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                ))}
                             </ul>
                         </li>
 
-                        <li className="nav-item dropdown">
-                            <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Tin tức
-                            </a>
-                            <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/news">Tin tức & Sự kiện</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Thông báo</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Hoạt động</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Các bệnh</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Hướng dẫn dùng thuốc</Link></li>
-                            </ul>
+                        {/* Tin tức */}
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/news">Tin tức</Link>
                         </li>
 
+                        {/* Đặt lịch */}
                         <li className="nav-item">
                             <Link className="nav-link" to="/booking">Đặt lịch khám</Link>
                         </li>
 
+                        {/* Tuyển dụng
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Tuyển dụng
@@ -132,9 +131,13 @@ const NavHeaderClient = () => {
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/tam-nhin">Thông tin tuyển dụng</Link></li>
                                 <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Đăng ký tuyển dụng</Link></li>
+                                {recruitmentPages.map((page) => (
+                                    <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                ))}
                             </ul>
-                        </li>
+                        </li> */}
 
+                        {/* Bảng giá */}
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Bảng giá
@@ -142,8 +145,15 @@ const NavHeaderClient = () => {
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/service-prices">Bảng giá dịch vụ</Link></li>
                                 <li><Link className="dropdown-item" to="/drug-prices">Bảng giá thuốc</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Tư vấn hỏi đáp</Link></li>
+                                {pricePages.map((page) => (
+                                    <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                ))}
                             </ul>
+                        </li>
+
+                        {/* Liên hệ */}
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/contact">Liên hệ</Link>
                         </li>
                     </ul>
 

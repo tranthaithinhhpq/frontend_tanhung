@@ -287,7 +287,13 @@ const DoctorDayOffTable = () => {
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Chọn khung giờ nghỉ</Form.Label>
-                        <Select isMulti options={slotOptions} value={selectedSlots} onChange={setSelectedSlots} />
+                        <Select
+                            isMulti
+                            options={slotOptions}
+                            value={selectedSlots}
+                            onChange={setSelectedSlots}
+                            isDisabled={allDay} // ⬅️ dòng thêm để disable khi allDay = true
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Ghi chú</Form.Label>
