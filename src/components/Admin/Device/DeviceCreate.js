@@ -35,7 +35,9 @@ const DeviceCreate = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
+        console.log("file", file)
         setImage(file);
+        console.log("image", image)
         if (file) {
             const previewURL = URL.createObjectURL(file);
             setPreview(previewURL);

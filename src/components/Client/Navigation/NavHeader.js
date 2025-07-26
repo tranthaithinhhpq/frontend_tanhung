@@ -13,7 +13,7 @@ const NavHeaderClient = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [aboutPages, setAboutPages] = useState([]);
     const [clientPages, setClientPages] = useState([]);
-    // const [recruitmentPages, setRecruitmentPages] = useState([]);
+    const [contactPages, setContactPages] = useState([]);
     const [pricePages, setPricePages] = useState([]);
     const [logoImg, setLogoImg] = useState(null);
 
@@ -48,7 +48,7 @@ const NavHeaderClient = () => {
 
         fetchPagesBySection('about', setAboutPages);
         fetchPagesBySection('client', setClientPages);
-
+        fetchPagesBySection('contact', setContactPages);
         fetchPagesBySection('price', setPricePages);
         fetchLogo();
     }, []);
@@ -152,8 +152,16 @@ const NavHeaderClient = () => {
                         </li>
 
                         {/* Liên hệ */}
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/contact">Liên hệ</Link>
+                        <li className="nav-item dropdown">
+                            <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Liên hệ
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li><Link className="dropdown-item" to="/contact">Hỏi & đáp</Link></li>
+                                {contactPages.map((page) => (
+                                    <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                ))}
+                            </ul>
                         </li>
                     </ul>
 

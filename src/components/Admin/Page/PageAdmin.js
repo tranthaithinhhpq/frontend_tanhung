@@ -11,6 +11,7 @@ const PageAdmin = () => {
     const [currentPage, setCurrentPage] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const history = useHistory();
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
     const [form, setForm] = useState({
         slug: '',
@@ -80,10 +81,11 @@ const PageAdmin = () => {
             <h3>Quản lý các trang</h3>
             <Button className="mb-3" onClick={() => history.push('/admin/page-new')}>+ Thêm mới</Button>
 
-            <Table striped bordered>
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Hình ảnh</th>
                         <th>Slug</th>
                         <th>Tiêu đề</th>
                         <th>Youtube ID</th>
@@ -97,6 +99,7 @@ const PageAdmin = () => {
                         pages.map((item, index) => (
                             <tr key={item.id}>
                                 <td>{index + 1}</td>
+                                <td><img src={`${BACKEND_URL}${item.image}`} alt="device" style={{ width: 60, height: 40, objectFit: 'cover' }} /></td>
                                 <td>{item.slug}</td>
                                 <td>{item.title}</td>
                                 <td>{item.videoYoutubeId}</td>

@@ -10,6 +10,12 @@ const ClientPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+    const buildImgSrc = (imagePath) => {
+        if (!imagePath) return '/default-page.jpg';
+        return encodeURI(`${BACKEND_URL}${imagePath}`);
+    };
+
     useEffect(() => {
         const fetchPage = async () => {
             try {
@@ -34,72 +40,45 @@ const ClientPage = () => {
     if (error) return <div className="client-page container py-5 text-danger">{error}</div>;
 
     return (
-        <div className="client-page container py-5">
-            <h1 className="mb-4">{page.title}</h1>
-            {page.videoYoutubeId && (
-                <div className="mb-4">
-                    <iframe
-                        width="100%"
-                        height="400"
-                        src={`https://www.youtube.com/embed/${page.videoYoutubeId}`}
-                        title="YouTube video"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                    ></iframe>
+
+        <>
+            <div className="card p-4 mb-4 text-white" style={{ backgroundColor: '#343A40' }}>
+                <div className="row align-items-center">
+                    <div className="col-md-3 text-center mb-3 mb-md-0">
+                        <img
+                            src={buildImgSrc(page.image)}
+                            alt={page.title}
+                            className="img-fluid rounded"
+                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                        />
+                    </div>
+                    <div className="col-md-9">
+                        <h2 className="fw-bold">{page.title}</h2>
+
+                        <p className="text-white">Ngày đăng: {new Date(page.createdAt).toLocaleDateString()}</p>
+                    </div>
                 </div>
-            )}
-            <div className="page-content" dangerouslySetInnerHTML={{ __html: page.contentThumbnail }}></div>
-        </div>
+            </div>
+
+            <div className="client-page container py-5">
+                <h1 className="mb-4">{page.title}</h1>
+                {page.videoYoutubeId && (
+                    <div className="mb-4">
+                        <iframe
+                            width="100%"
+                            height="400"
+                            src={`https://www.youtube.com/embed/${page.videoYoutubeId}`}
+                            title="YouTube video"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                )}
+                <div className="page-content" dangerouslySetInnerHTML={{ __html: page.contentThumbnail }}></div>
+            </div>
+        </>
     );
 };
 
 export default ClientPage;
-
-
-// import React, { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
-// import axios from '../../../setup/axios';
-// import parse from 'html-react-parser';
-
-// const ClientPage = () => {
-//     const { slug } = useParams();
-//     const [page, setPage] = useState(null);
-
-//     useEffect(() => {
-//         const fetchPage = async () => {
-//             try {
-//                 const res = await axios.get(`/api/v1/client/page/${slug}`);
-//                 console.log("res.data ", res.data)
-
-//                 setPage(res.data);
-//             } catch (error) {
-//                 console.error("Failed to load page", error);
-//             }
-//         };
-//         fetchPage();
-//     }, [slug]);
-
-//     if (!page) return <div className="container py-5 text-danger">Không tìm thấy nội dung.</div>;
-
-//     return (
-//         <div className="container py-5">
-//             <h2 className="mb-4">{page.title}</h2>
-//             <div>{parse(page.contentThumbnail)}</div>
-//             {page.videoYoutubeId &&
-//                 <div className="mt-4">
-//                     <iframe
-//                         width="100%"
-//                         height="450"
-//                         src={`https://www.youtube.com/embed/${page.videoYoutubeId}`}
-//                         frameBorder="0"
-//                         allowFullScreen
-//                         title="Video"
-//                     ></iframe>
-//                 </div>
-//             }
-//         </div>
-//     );
-// };
-
-// export default ClientPage;
