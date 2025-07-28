@@ -157,7 +157,7 @@ const NavHeaderClient = () => {
                                 Liên hệ
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/contact">Hỏi & đáp</Link></li>
+                                <li><Link className="dropdown-item" to="/question">Hỏi & đáp</Link></li>
                                 {contactPages.map((page) => (
                                     <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
                                 ))}

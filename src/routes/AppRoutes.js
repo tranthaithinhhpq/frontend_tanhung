@@ -19,6 +19,7 @@ import DoctorTable from "../components/Admin/Doctor/DoctorTable";
 import DoctorEdit from "../components/Admin/Doctor/DoctorEdit";
 import DoctorCreate from "../components/Admin/Doctor/DoctorCreate";
 
+
 // Specialty (admin)
 import SpecialtyTable from "../components/Admin/Specialty/SpecialtyTable";
 import SpecialtyEdit from "../components/Admin/Specialty/SpecialtyEdit";
@@ -72,6 +73,10 @@ import NewsTable from "../components/Admin/News/NewsTable";
 import NewsEdit from "../components/Admin/News/NewsEdit";
 
 
+//Question 
+import QuestionTable from "../components/Admin/Question/QuestionTable";
+import QuestionForm from "../components/Client/Question/QuestionForm";
+
 
 
 
@@ -122,6 +127,9 @@ const AppRoutes = () => {
             {/* Banner admin */}
             <PrivateRoutes path="/admin/banner" exact component={BannerTable} />
 
+            {/* Question admin */}
+            <PrivateRoutes path="/admin/question" exact component={QuestionTable} />
+
             {/* Drug Price admin */}
             <PrivateRoutes path="/admin/drug-price" exact component={DrugPriceTable} />
 
@@ -151,6 +159,9 @@ const AppRoutes = () => {
             {/* Specialty client */}
             <Route path="/specialties" exact component={SpecialtyGallery} />
             <Route path="/specialty/:id" component={SpecialtyDetailPage} />
+
+            {/* QuestionForm client */}
+            <Route path="/question" exact component={QuestionForm} />
 
             {/* News client */}
             <Route path="/news" exact component={NewsList} />
