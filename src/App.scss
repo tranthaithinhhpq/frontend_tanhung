@@ -47,3 +47,23 @@ body {
 footer {
     margin-top: 120px; // hoặc 80px tuỳ bạn muốn cách bao nhiêu
 }
+
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    .app-header {
+        flex-shrink: 0;
+    }
+
+    .app-container {
+        flex: 1; // Đẩy footer xuống 
+        padding-top: 98.5px;
+    }
+
+    .app-footer {
+        margin-top: 120px; // khoảng cách với nội dung
+        flex-shrink: 0;
+    }
+}

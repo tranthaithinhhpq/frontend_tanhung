@@ -61,7 +61,7 @@ const ClientPage = () => {
             </div>
 
             <div className="client-page container py-5">
-                {/* <h1 className="mb-4">{page.title}</h1> */}
+
                 {page.videoYoutubeId && (
                     <div className="mb-4">
                         <iframe

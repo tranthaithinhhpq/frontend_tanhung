@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-
 import { getDoctorDetail, updateDoctorInfo } from "../../../services/doctorService";
 import { getSpecialty } from "../../../services/specialtyService";
 import { getDegree } from "../../../services/degreeService";
 import { getPosition } from "../../../services/positionService";
+import CustomHtmlEditor from '../../Common/CustomHtmlEditor';
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
@@ -178,11 +177,11 @@ const DoctorEdit = () => {
                         className="mb-3"
                     />
                     <label>Bài viết:</label>
-                    <ReactQuill
-                        theme="snow"
+
+                    <CustomHtmlEditor theme="snow"
                         value={content}
-                        onChange={setContent}
-                    />
+                        onChange={setContent} />
+
                     <div className="mt-3">
                         <Button
                             variant="secondary"

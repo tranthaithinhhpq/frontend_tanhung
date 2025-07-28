@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "../../../setup/axios";
 import { toast } from "react-toastify";
-import ReactQuill from "react-quill";
 import Select from "react-select";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import "react-quill/dist/quill.snow.css";
+import CustomHtmlEditor from '../../Common/CustomHtmlEditor';
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
@@ -204,47 +204,26 @@ const NewsEdit = () => {
                         )}
                     </div>
 
-                    <div className="mb-3">
-                        <Button
-                            variant={editorMode === "quill" ? "primary" : "outline-primary"}
-                            className="me-2"
-                            onClick={() => setEditorMode("quill")}
-                        >
-                            Quill Editor
-                        </Button>
-                        <Button
-                            variant={editorMode === "html" ? "primary" : "outline-primary"}
-                            onClick={() => setEditorMode("html")}
-                        >
-                            HTML
-                        </Button>
-                    </div>
 
-                    {editorMode === "quill" ? (
-                        <ReactQuill
-                            ref={quillRef}
-                            value={content}
-                            onChange={setContent}
-                            theme="snow"
-                            modules={{
-                                toolbar: [
-                                    [{ header: [1, 2, 3, false] }],
-                                    ["bold", "italic", "underline", "strike"],
-                                    [{ list: "ordered" }, { list: "bullet" }],
-                                    ["link", "image"],
-                                    ["clean"],
-                                ],
-                            }}
-                        />
-                    ) : (
-                        <textarea
-                            className="form-control"
-                            rows={10}
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            placeholder="Nhập mã HTML..."
-                        />
-                    )}
+
+
+
+                    <CustomHtmlEditor ref={quillRef}
+                        value={content}
+                        onChange={setContent}
+                        theme="snow"
+                        modules={{
+                            toolbar: [
+                                [{ header: [1, 2, 3, false] }],
+                                ["bold", "italic", "underline", "strike"],
+                                [{ list: "ordered" }, { list: "bullet" }],
+                                ["link", "image"],
+                                ["clean"],
+                            ],
+                        }} />
+
+
+
 
                     <div className="mt-3">
                         <Button

@@ -25,18 +25,19 @@ const Layout = () => {
           <div>Loading data...</div>
         </div>
       ) : (
-        <>
+        <div className="page-layout">
           <div className="app-header">
             {isAdminRoute ? <NavHeader /> : <NavHeaderClient />}
           </div>
-          <div className="app-container" >
+
+          <div className="app-container">
             <AppRoutes />
           </div>
+
           <div className="app-footer">
             {isAdminRoute ? "" : <Footer />}
-
           </div>
-        </>
+        </div>
       )}
 
       <ToastContainer
@@ -52,6 +53,7 @@ const Layout = () => {
     </>
   );
 };
+
 
 const App = () => (
   <Router>
