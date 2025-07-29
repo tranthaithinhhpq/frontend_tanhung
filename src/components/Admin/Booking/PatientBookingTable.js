@@ -9,6 +9,8 @@ import ReactPaginate from 'react-paginate';
 import '../../Admin/Doctor/Doctor.scss';
 import { useHistory } from 'react-router-dom';
 import Scrollbars from 'react-custom-scrollbars';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 
 const PatientBookingTable = () => {
@@ -43,6 +45,30 @@ const PatientBookingTable = () => {
         { value: 'done', label: 'Đã khám' },
         { value: 'cancelled', label: 'Đã hủy' }
     ];
+
+    const exportToExcel = () => {
+        const exportData = bookings.map(item => ({
+            'Bệnh nhân': item.name,
+            'Ngày sinh': item.dob,
+            'Điện thoại': item.phone,
+            'Bác sĩ': item.DoctorInfo?.doctorName,
+            'Chuyên khoa': item.DoctorInfo?.Specialty?.name,
+            'Ngày khám': item.scheduleTime?.split('T')[0],
+            'Khung giờ': `${item.WorkingSlotTemplate?.startTime} - ${item.WorkingSlotTemplate?.endTime}`,
+            'Dịch vụ': item.ServicePrice?.name,
+            'Lý do khám': item.reason,
+            'Giá tiền': item.ServicePrice?.price,
+            'Trạng thái': item.status,
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'LichKham');
+
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const file = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        saveAs(file, 'lich_kham_benh_nhan.xlsx');
+    };
 
     const fetchSpecialties = async () => {
         const res = await axios.get('/api/v1/specialty/read'); // hoặc endpoint phù hợp
@@ -159,11 +185,6 @@ const PatientBookingTable = () => {
     };
 
 
-
-
-
-
-
     const handleDelete = async () => {
         try {
             await axios.delete(`/api/v1/booking/${deleteId}`);
@@ -184,7 +205,7 @@ const PatientBookingTable = () => {
             <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                 <h4 className="mb-0">📋 Quản lý lịch khám bệnh nhân</h4>
                 <div className="d-flex gap-2">
-                    <Button variant="success" onClick={() => toast.info("Chức năng đang phát triển")}>
+                    <Button variant="success" onClick={exportToExcel}>
                         <i className="fa fa-file-excel-o me-1" /> Xuất Excel
                     </Button>
                     <Button variant="primary" onClick={() => history.push('/admin/booking/new')}>
