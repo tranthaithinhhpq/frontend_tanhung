@@ -35,6 +35,7 @@ const PatientBookingTable = () => {
 
     const [filterStartDate, setFilterStartDate] = useState(null);
     const [filterEndDate, setFilterEndDate] = useState(null);
+    const [dateMode, setDateMode] = useState('single'); // 'single' | 'range'
 
     const statusOptions = [
         { value: 'pending', label: 'Chờ xác nhận' },
@@ -178,213 +179,119 @@ const PatientBookingTable = () => {
     };
 
     return (
+
         <div className="container py-4">
-            <h4>Quản lý lịch khám bệnh nhân</h4>
-
-            <div className="text-end mb-3">
-
-            </div>
-            <div className="row mb-3">
-                <div className="col-md-3">
-                    <Select
-                        placeholder="Chọn bác sĩ"
-                        options={doctors}
-                        value={filterDoctor}
-                        onChange={setFilterDoctor}
-                        isClearable
-                    />
-                </div>
-                <div className="col-md-3">
-                    <Select
-                        placeholder="Chọn chuyên khoa"
-                        options={specialties}
-                        value={filterSpecialty}
-                        onChange={setFilterSpecialty}
-                        isClearable
-                    />
-                </div>
-                <div className="col-md-3">
-                    <Select
-                        placeholder="Chọn trạng thái"
-                        options={statusOptions}
-                        value={filterStatus}
-                        onChange={setFilterStatus}
-                        isClearable
-                    />
-                </div>
-                <div className="col-md-3">
-                    <DatePicker
-                        className="form-control"
-                        selected={filterDate}
-                        onChange={setFilterDate}
-                        placeholderText="Chọn ngày khám"
-                        dateFormat="yyyy-MM-dd"
-                        isClearable
-                    />
-                </div>
-
-                <div className="col-md-4 d-flex justify-content-end">
-                    <Button className="mb-3" onClick={() => history.push('/admin/booking/new')}>
-                        <i className="fa fa-plus-circle"></i> Đặt lịch khám
+            <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h4 className="mb-0">📋 Quản lý lịch khám bệnh nhân</h4>
+                <div className="d-flex gap-2">
+                    <Button variant="success" onClick={() => toast.info("Chức năng đang phát triển")}>
+                        <i className="fa fa-file-excel-o me-1" /> Xuất Excel
+                    </Button>
+                    <Button variant="primary" onClick={() => history.push('/admin/booking/new')}>
+                        <i className="fa fa-plus-circle me-1" /> Đặt lịch khám
                     </Button>
                 </div>
             </div>
 
-            <Scrollbars
-                autoHide
-                autoHeight
-                autoHeightMin={0}
-                autoHeightMax={scrollHeight}
-                universal={true}
-                renderTrackHorizontal={props => <div {...props} style={{ display: 'none' }} />}
-                ref={scrollbarRef}
-            >
-                <div className="table-responsive-custom" style={{ minWidth: '900px' }}>
-
-                    <Table striped bordered hover className="booking-table">
-                        <thead>
-                            <tr>
-                                <th>Bệnh nhân</th>
-                                <th>Ngày sinh</th>
-                                <th>Điện thoại</th>
-                                <th>Bác sĩ</th>
-                                <th>Chuyên khoa</th>
-                                <th>Ngày khám</th>
-                                <th>Khung giờ</th>
-                                <th>Dịch vụ</th>
-                                <th>Lý do khám</th>
-                                <th>Giá tiền</th>
-                                <th>Trạng thái</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {bookings.length > 0 ? bookings.map((item) => (
-                                <tr key={item.id}>
-                                    <td>{item.name}</td>
-                                    <td>{item.dob}</td>
-                                    <td>{item.phone}</td>
-                                    <td>{item.DoctorInfo?.doctorName || item.doctorId}</td>
-                                    <td>{item.Specialty?.name}</td>
-                                    <td>{item.scheduleTime?.split('T')[0]}</td>
-                                    <td>{item.WorkingSlotTemplate?.startTime} - {item.WorkingSlotTemplate?.endTime}</td>
-                                    <td>{item.ServicePrice?.name}</td>
-                                    <td>{item.reason}</td>
-                                    <td>{item.ServicePrice?.price?.toLocaleString('vi-VN')}đ</td>
-                                    <td>{item.status}</td>
-                                    <td>
-
-
-                                        <i
-                                            className="fa fa-pencil edit"
-                                            onClick={() => history.push(`/admin/booking/${item.id}`)}
-                                        ></i>
-
-                                        <i className="fa fa-trash-o delete" onClick={() => confirmDelete(item.id)}></i>
-                                    </td>
-                                </tr>
-                            )) : (
-                                <tr><td colSpan="7" className="text-center">Không có lịch khám</td></tr>
-                            )}
-                        </tbody>
-                    </Table>
+            <div className="row g-3 mb-3">
+                <div className="col-md-3">
+                    <Select placeholder="Chọn bác sĩ" options={doctors} value={filterDoctor} onChange={setFilterDoctor} isClearable />
                 </div>
-            </Scrollbars>
+                <div className="col-md-3">
+                    <Select placeholder="Chọn chuyên khoa" options={specialties} value={filterSpecialty} onChange={setFilterSpecialty} isClearable />
+                </div>
+                <div className="col-md-3">
+                    <Select placeholder="Chọn trạng thái" options={statusOptions} value={filterStatus} onChange={setFilterStatus} isClearable />
+                </div>
+                <div className="col-md-3">
+                    <Form.Select value={dateMode} onChange={(e) => {
+                        setDateMode(e.target.value);
+                        setFilterDate(null);
+                        setFilterStartDate(null);
+                        setFilterEndDate(null);
+                    }}>
+                        <option value="single">Lọc theo ngày</option>
+                        <option value="range">Lọc theo khoảng thời gian</option>
+                    </Form.Select>
+                </div>
+            </div>
 
-            {totalPage > 0 && (
-                <ReactPaginate
-                    nextLabel=">"
-                    onPageChange={handlePageClick}
-                    pageCount={totalPage}
-                    forcePage={currentPage - 1}
-                    previousLabel="<"
-                    containerClassName="pagination justify-content-center mt-3"
-                    activeClassName="active"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                />
-            )}
-            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Sửa lịch khám</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {editData && (
-                        <>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Họ tên</Form.Label>
-                                <Form.Control
-                                    value={editData.name}
-                                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                                />
-                            </Form.Group>
+            <div className="row g-3 mb-4">
+                {dateMode === 'single' && (
+                    <div className="col-md-3">
+                        <DatePicker className="form-control" selected={filterDate} onChange={setFilterDate}
+                            placeholderText="Chọn ngày khám" dateFormat="yyyy-MM-dd" isClearable />
+                    </div>
+                )}
+                {dateMode === 'range' && (
+                    <>
+                        <div className="col-md-3">
+                            <DatePicker className="form-control" selected={filterStartDate} onChange={setFilterStartDate}
+                                placeholderText="Từ ngày" dateFormat="yyyy-MM-dd" isClearable />
+                        </div>
+                        <div className="col-md-3">
+                            <DatePicker className="form-control" selected={filterEndDate} onChange={setFilterEndDate}
+                                placeholderText="Đến ngày" dateFormat="yyyy-MM-dd" isClearable />
+                        </div>
+                    </>
+                )}
+            </div>
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>Ngày sinh</Form.Label>
-                                <DatePicker
-                                    className="form-control"
-                                    selected={isValidDate(editData.dob) ? new Date(editData.dob) : null}
-                                    onChange={(date) => setEditData({ ...editData, dob: date })}
-                                    dateFormat="yyyy-MM-dd"
-                                    placeholderText="Chọn ngày sinh"
-                                    isClearable
-                                    calendarClassName="custom-datepicker-calendar"
-                                />
 
-                            </Form.Group>
+            <div className="table-responsive-custom" style={{ minWidth: '900px' }}>
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>Điện thoại</Form.Label>
-                                <Form.Control
-                                    value={editData.phone}
-                                    onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
-                                />
-                            </Form.Group>
+                <Table striped bordered hover className="booking-table">
+                    <thead>
+                        <tr>
+                            <th>Bệnh nhân</th>
+                            <th>Ngày sinh</th>
+                            <th>Điện thoại</th>
+                            <th>Bác sĩ</th>
+                            <th>Chuyên khoa</th>
+                            <th>Ngày khám</th>
+                            <th>Khung giờ</th>
+                            <th>Dịch vụ</th>
+                            <th>Lý do khám</th>
+                            <th>Giá tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {bookings.length > 0 ? bookings.map((item) => (
+                            <tr key={item.id}>
+                                <td>{item.name}</td>
+                                <td>{item.dob}</td>
+                                <td>{item.phone}</td>
+                                <td>{item.DoctorInfo?.doctorName || item.doctorId}</td>
+                                <td>{item.DoctorInfo?.Specialty?.name || ''}</td>
+                                <td>{item.scheduleTime?.split('T')[0]}</td>
+                                <td>{item.WorkingSlotTemplate?.startTime} - {item.WorkingSlotTemplate?.endTime}</td>
+                                <td>{item.ServicePrice?.name}</td>
+                                <td>{item.reason}</td>
+                                <td>{item.ServicePrice?.price?.toLocaleString('vi-VN')}đ</td>
+                                <td>{item.status}</td>
+                                <td>
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>Ngày khám</Form.Label>
-                                <DatePicker
-                                    className="form-control"
-                                    selected={editData.scheduleTime}
-                                    onChange={(date) => setEditData({ ...editData, scheduleTime: date })}
-                                    dateFormat="yyyy-MM-dd"
-                                />
-                            </Form.Group>
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>Lý do khám</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    value={editData.reason}
-                                    onChange={(e) => setEditData({ ...editData, reason: e.target.value })}
-                                />
-                            </Form.Group>
-                        </>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowEditModal(false)}>Hủy</Button>
-                    <Button variant="primary" onClick={handleSaveEdit}>Lưu thay đổi</Button>
-                </Modal.Footer>
-            </Modal>
+                                    <i
+                                        className="fa fa-pencil edit"
+                                        onClick={() => history.push(`/admin/booking/${item.id}`)}
+                                    ></i>
 
-            <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Xác nhận xóa</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Bạn có chắc chắn muốn xóa lịch khám này?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Hủy</Button>
-                    <Button variant="danger" onClick={handleDelete}>Xóa</Button>
-                </Modal.Footer>
-            </Modal>
+                                    <i className="fa fa-trash-o delete" onClick={() => confirmDelete(item.id)}></i>
+                                </td>
+                            </tr>
+                        )) : (
+                            <tr><td colSpan="7" className="text-center">Không có lịch khám</td></tr>
+                        )}
+                    </tbody>
+                </Table>
+            </div>
 
 
         </div>
+
     );
 };
 
