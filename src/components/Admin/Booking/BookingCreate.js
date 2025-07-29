@@ -112,9 +112,80 @@ const BookingCreate = () => {
     };
 
     // Gửi lịch hẹn
+    // const handleSubmit = async () => {
+    //     if (!selectedDoctor || !selectedDate || !selectedTime) {
+    //         toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
+    //         return;
+    //     }
+
+    //     const data = {
+    //         ...form,
+    //         specialtyId: selectedSpecialty.value,
+    //         doctorId: selectedDoctor.value,
+    //         slotId: selectedTime.value,
+    //         servicePriceId: selectedService?.value,
+    //         serviceType: selectedService?.type || 'regular',  // 👈 Gửi lên nếu muốn biết loại giá
+    //         scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
+    //     };
+
+    //     try {
+    //         const res = await axios.post('/api/v1/booking/create', data);
+    //         if (res.EC === 0) {
+    //             toast.success("Đặt lịch thành công");
+    //             setForm({ name: '', phone: '', dob: '', address: '', email: '', reason: '' });
+    //             setSelectedSpecialty(null);
+    //             setSelectedDoctor(null);
+    //             setSelectedService(null);
+    //             setSelectedDate(null);
+    //             setSelectedTime(null);
+    //             setTimeSlots([]);
+    //         } else {
+    //             toast.error(res.EM || "Đặt lịch thất bại");
+    //         }
+    //     } catch (err) {
+    //         toast.error("Lỗi khi gửi yêu cầu đặt lịch");
+    //     }
+    // };
+
     const handleSubmit = async () => {
-        if (!selectedDoctor || !selectedDate || !selectedTime) {
-            toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
+        if (!form.name.trim()) {
+            toast.error("Vui lòng nhập họ tên bệnh nhân");
+            return;
+        }
+
+        if (!form.phone.trim()) {
+            toast.error("Vui lòng nhập số điện thoại");
+            return;
+        }
+
+        if (!form.reason.trim()) {
+            toast.error("Vui lòng nhập lý do khám");
+            return;
+        }
+
+        // Validate định dạng email đơn giản
+        if (form.email && !/\S+@\S+\.\S+/.test(form.email)) {
+            toast.error("Email không hợp lệ");
+            return;
+        }
+
+        if (!selectedSpecialty) {
+            toast.error("Vui lòng chọn chuyên khoa");
+            return;
+        }
+
+        if (!selectedDoctor) {
+            toast.error("Vui lòng chọn bác sĩ");
+            return;
+        }
+
+        if (!selectedDate) {
+            toast.error("Vui lòng chọn ngày khám");
+            return;
+        }
+
+        if (!selectedTime) {
+            toast.error("Vui lòng chọn giờ khám");
             return;
         }
 
@@ -124,7 +195,7 @@ const BookingCreate = () => {
             doctorId: selectedDoctor.value,
             slotId: selectedTime.value,
             servicePriceId: selectedService?.value,
-            serviceType: selectedService?.type || 'regular',  // 👈 Gửi lên nếu muốn biết loại giá
+            serviceType: selectedService?.type || 'regular',
             scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
         };
 
@@ -146,6 +217,7 @@ const BookingCreate = () => {
             toast.error("Lỗi khi gửi yêu cầu đặt lịch");
         }
     };
+
 
     return (
         <div className="container mt-4">

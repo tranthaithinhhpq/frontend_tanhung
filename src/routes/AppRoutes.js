@@ -55,6 +55,8 @@ import DoctorDayOffTable from "../components/Admin/Doctor/DoctorDayOffTable";
 import PatientBookingTable from "../components/Admin/Booking/PatientBookingTable";
 import BookingCreate from "../components/Admin/Booking/BookingCreate";
 import BookingEdit from "../components/Admin/Booking/BookingEdit";
+import BookingHistory from "../components/Client/Appointment/BookingHistory";
+
 
 
 //Service Price(client)
@@ -76,6 +78,9 @@ import NewsEdit from "../components/Admin/News/NewsEdit";
 //Question 
 import QuestionTable from "../components/Admin/Question/QuestionTable";
 import QuestionForm from "../components/Client/Question/QuestionForm";
+
+
+
 
 
 
@@ -166,6 +171,7 @@ const AppRoutes = () => {
             {/* News client */}
             <Route path="/news" exact component={NewsList} />
             <Route path="/news/:id" component={NewsDetail} />
+            <Route path="/booking-history" component={BookingHistory} />
 
             {/* Device client */}
             <Route path="/devices" exact component={DeviceGallery} />
@@ -179,6 +185,10 @@ const AppRoutes = () => {
 
             {/* Page client */}
             <Route path="/:slug" exact component={ClientPage} />
+
+
+            {/* Booking Client */}
+
 
 
 

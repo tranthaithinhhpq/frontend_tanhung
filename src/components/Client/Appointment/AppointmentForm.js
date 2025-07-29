@@ -118,9 +118,104 @@ const AppointmentForm = () => {
     };
 
     // ✅ Submit lịch khám
+    // const handleSubmit = async () => {
+    //     if (!selectedDoctor || !selectedDate || !selectedTime) {
+    //         toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
+    //         return;
+    //     }
+
+    //     const data = {
+    //         ...form,
+    //         specialtyId: selectedSpecialty.value,
+    //         doctorId: selectedDoctor.value,
+    //         slotId: selectedTime.value,
+    //         servicePriceId: selectedService?.value,
+    //         serviceType: selectedService?.type || 'regular',
+    //         scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
+    //     };
+
+    //     try {
+    //         const res = await axios.post('/api/v1/booking/create', data);
+    //         if (res.EC === 0) {
+    //             toast.success("Đặt lịch thành công");
+    //             setForm({ name: '', phone: '', dob: '', address: '', email: '', reason: '' });
+    //             setSelectedSpecialty(null);
+    //             setSelectedDoctor(null);
+    //             setSelectedDate(null);
+    //             setSelectedTime(null);
+    //             setTimeSlots([]);
+    //         } else {
+    //             toast.error(res.EM || "Đặt lịch thất bại");
+    //         }
+    //     } catch (err) {
+    //         console.error("❌ Lỗi gửi lịch hẹn:", err);
+    //         toast.error("Lỗi khi gửi yêu cầu đặt lịch");
+    //     }
+    // };
+
     const handleSubmit = async () => {
-        if (!selectedDoctor || !selectedDate || !selectedTime) {
-            toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
+        // ✅ Kiểm tra các trường bắt buộc
+        if (!form.name.trim()) {
+            toast.error("Vui lòng nhập họ tên");
+            return;
+        }
+        if (form.name.length < 3) {
+            toast.error("Họ tên phải có ít nhất 3 ký tự");
+            return;
+        }
+
+        const phoneRegex = /^(0|\+84)[0-9]{9}$/;
+        if (!form.phone.trim() || !phoneRegex.test(form.phone.trim())) {
+            toast.error("Vui lòng nhập số điện thoại hợp lệ (bắt đầu bằng 0 hoặc +84, có 10 số)");
+            return;
+        }
+
+        if (!form.dob) {
+            toast.error("Vui lòng nhập ngày sinh");
+            return;
+        }
+
+        const dobDate = new Date(form.dob);
+        if (dobDate > new Date()) {
+            toast.error("Ngày sinh không được lớn hơn hiện tại");
+            return;
+        }
+
+        if (!form.address.trim()) {
+            toast.error("Vui lòng nhập địa chỉ");
+            return;
+        }
+
+        if (form.email.trim()) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(form.email.trim())) {
+                toast.error("Email không hợp lệ");
+                return;
+            }
+        }
+
+        if (!selectedSpecialty) {
+            toast.error("Vui lòng chọn chuyên khoa");
+            return;
+        }
+
+        if (!selectedDoctor) {
+            toast.error("Vui lòng chọn bác sĩ");
+            return;
+        }
+
+        if (!selectedDate) {
+            toast.error("Vui lòng chọn ngày khám");
+            return;
+        }
+
+        if (!selectedTime) {
+            toast.error("Vui lòng chọn giờ khám");
+            return;
+        }
+
+        if (!form.reason.trim()) {
+            toast.error("Vui lòng nhập lý do khám");
             return;
         }
 
@@ -152,6 +247,7 @@ const AppointmentForm = () => {
             toast.error("Lỗi khi gửi yêu cầu đặt lịch");
         }
     };
+
 
     return (
         <div className="container mt-4">
@@ -216,6 +312,18 @@ const AppointmentForm = () => {
                     isDisabled={!selectedDate}
                 />
             </div>
+
+            <div className="mb-3">
+                <label>Lý do khám</label>
+                <textarea
+                    className="form-control"
+                    rows={3}
+                    placeholder="Nhập lý do khám (nếu có)"
+                    value={form.reason}
+                    onChange={e => setForm({ ...form, reason: e.target.value })}
+                />
+            </div>
+
             <button className="btn btn-primary" onClick={handleSubmit}>Đặt lịch</button>
         </div>
     );

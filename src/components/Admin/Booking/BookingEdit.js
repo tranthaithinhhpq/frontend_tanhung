@@ -177,8 +177,43 @@ const BookingEdit = () => {
     };
 
     const handleSubmit = async () => {
-        if (!selectedDoctor || !selectedDate || !selectedTime) {
-            toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
+        if (!form.name.trim()) {
+            toast.error("Vui lòng nhập họ tên bệnh nhân");
+            return;
+        }
+
+        if (!form.phone.trim()) {
+            toast.error("Vui lòng nhập số điện thoại");
+            return;
+        }
+
+        if (!form.reason.trim()) {
+            toast.error("Vui lòng nhập lý do khám");
+            return;
+        }
+
+        if (form.email && !/\S+@\S+\.\S+/.test(form.email)) {
+            toast.error("Email không hợp lệ");
+            return;
+        }
+
+        if (!selectedSpecialty) {
+            toast.error("Vui lòng chọn chuyên khoa");
+            return;
+        }
+
+        if (!selectedDoctor) {
+            toast.error("Vui lòng chọn bác sĩ");
+            return;
+        }
+
+        if (!selectedDate) {
+            toast.error("Vui lòng chọn ngày khám");
+            return;
+        }
+
+        if (!selectedTime) {
+            toast.error("Vui lòng chọn giờ khám");
             return;
         }
 
@@ -195,7 +230,7 @@ const BookingEdit = () => {
             const res = await axios.put(`/api/v1/booking/${id}`, data);
             if (res.EC === 0) {
                 toast.success("Cập nhật lịch thành công");
-                history.push('/admin/booking'); // hoặc reload lại
+                history.push('/admin/booking');
             } else {
                 toast.error(res.EM);
             }

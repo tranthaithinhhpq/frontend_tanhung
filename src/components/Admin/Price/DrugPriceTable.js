@@ -4,6 +4,7 @@ import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import Scrollbars from 'react-custom-scrollbars';
+import * as XLSX from 'xlsx';
 
 const DrugPriceTable = () => {
     const [drugs, setDrugs] = useState([]);
@@ -24,6 +25,59 @@ const DrugPriceTable = () => {
         price: '',
         insurancePrice: ''
     });
+
+    const handleExcelImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (evt) => {
+            try {
+                const data = new Uint8Array(evt.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(sheet); // [{...}]
+
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const row of rows) {
+                    const payload = {
+                        code: row.code?.toString().trim() || '',
+                        name: row.name?.toString().trim() || '',
+                        activeIngredient: row.activeIngredient?.toString().trim() || '',
+                        concentration: row.concentration?.toString().trim() || '',
+                        unit: row.unit?.toString().trim() || '',
+                        price: Number(row.price || 0),
+                        insurancePrice: Number(row.insurancePrice || 0)
+                    };
+
+                    // Kiểm tra bắt buộc
+                    if (!payload.name || !payload.price || !payload.insurancePrice) {
+                        console.warn('Bỏ qua dòng thiếu dữ liệu:', payload);
+                        errorCount++;
+                        continue;
+                    }
+
+                    try {
+                        await axios.post('/api/v1/medicine', payload);
+                        successCount++;
+                    } catch (err) {
+                        console.error('Lỗi tạo thuốc:', err);
+                        errorCount++;
+                    }
+                }
+
+                toast.success(`Đã import ${successCount} dòng thành công, bỏ qua ${errorCount} dòng lỗi.`);
+                fetchDrugs();
+            } catch (err) {
+                console.error('Lỗi đọc file:', err);
+                toast.error('Lỗi đọc file Excel');
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    };
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
@@ -86,12 +140,41 @@ const DrugPriceTable = () => {
     return (
         <div className="container py-4">
             <h4>Quản lý bảng giá thuốc</h4>
-            <div className="mb-3 d-flex justify-content-between align-items-center">
+            {/* <div className="mb-3 d-flex justify-content-between align-items-center">
                 <Button onClick={() => {
                     setShowModal(true);
                     setIsEditMode(false);
                     setFormData({ code: '', name: '', activeIngredient: '', concentration: '', unit: '', price: '', insurancePrice: '' });
                 }}>+ Thêm thuốc</Button>
+                <Form.Control
+                    type="text"
+                    placeholder="Tìm kiếm tên thuốc"
+                    value={searchText}
+                    onChange={e => { setSearchText(e.target.value); setCurrentPage(1); }}
+                    style={{ maxWidth: '300px' }}
+                />
+            </div> */}
+
+            <div className="mb-3 d-flex justify-content-between align-items-center">
+                <div className="d-flex gap-2">
+                    <Button onClick={() => {
+                        setShowModal(true);
+                        setIsEditMode(false);
+                        setFormData({ code: '', name: '', activeIngredient: '', concentration: '', unit: '', price: '', insurancePrice: '' });
+                    }}>
+                        + Thêm thuốc
+                    </Button>
+                    <Button variant="secondary" onClick={() => document.getElementById('excel-input').click()}>
+                        📥 Import Excel
+                    </Button>
+                    <input
+                        type="file"
+                        id="excel-input"
+                        accept=".xlsx,.xls"
+                        onChange={handleExcelImport}
+                        style={{ display: 'none' }}
+                    />
+                </div>
                 <Form.Control
                     type="text"
                     placeholder="Tìm kiếm tên thuốc"

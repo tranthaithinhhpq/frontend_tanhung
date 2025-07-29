@@ -152,9 +152,19 @@ const NavHeaderClient = () => {
                             </li>
 
                             {/* Đặt lịch */}
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/booking">Đặt lịch khám</Link>
+
+                            <li className="nav-item dropdown">
+                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Đặt lịch khám
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li><Link className="dropdown-item" to="/booking">Đặt lịch khám</Link></li>
+                                    <li><Link className="dropdown-item" to="/booking-history">Lịch sử đặt khám</Link></li>
+
+                                </ul>
                             </li>
+
+
 
                             <li className="nav-item dropdown">
                                 <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">

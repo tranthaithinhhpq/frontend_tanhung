@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import Scrollbars from 'react-custom-scrollbars';
 import '../../Admin/Doctor/Doctor.scss';
+import * as XLSX from 'xlsx';
 
 const ServicePriceTable = () => {
     const [servicePrices, setServicePrices] = useState([]);
@@ -13,6 +14,8 @@ const ServicePriceTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [limit] = useState(10);
     const [totalPage, setTotalPage] = useState(0);
+
+
 
     const [showModal, setShowModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -52,6 +55,63 @@ const ServicePriceTable = () => {
             toast.error('Lỗi tải bảng giá');
         }
     }, [currentPage, limit]);
+
+
+    const handleExcelImport = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (evt) => {
+            try {
+                const data = new Uint8Array(evt.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const rows = XLSX.utils.sheet_to_json(worksheet); // [{ name, group, price, priceInsurance, specialtyId }]
+
+                let successCount = 0;
+                let skipCount = 0;
+
+                for (const [index, row] of rows.entries()) {
+                    const name = row.name?.toString().trim();
+                    const group = row.group?.toString().trim() || '';
+                    const price = parseFloat(row.price);
+                    const priceInsurance = parseFloat(row.priceInsurance);
+                    const isSelectable = false;
+                    const specialtyId = row.specialtyId ? parseInt(row.specialtyId, 10) : null;
+
+                    if (!name || isNaN(price) || isNaN(priceInsurance)) {
+                        toast.error(`Dòng ${index + 2} thiếu thông tin bắt buộc (name, price, priceInsurance).`);
+                        skipCount++;
+                        continue;
+                    }
+
+                    await axios.post('/api/v1/service-price', {
+                        name,
+                        group,
+                        price,
+                        priceInsurance,
+                        isSelectable,
+                        specialtyId
+                    });
+
+                    successCount++;
+                }
+
+                toast.success(`Đã import ${successCount} dòng thành công, bỏ qua ${skipCount} dòng lỗi.`);
+                fetchServicePrices(); // Cập nhật danh sách
+            } catch (err) {
+                console.error(err);
+                toast.error("Lỗi import file Excel");
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    };
+
+
+
 
     useEffect(() => {
         fetchSpecialties();
@@ -118,14 +178,28 @@ const ServicePriceTable = () => {
         <div className="container py-4">
             <h4>Quản lý bảng giá dịch vụ</h4>
 
-            <div className="text-start mb-3">
+            <div className="d-flex gap-2 mb-3">
                 <Button onClick={() => {
                     setShowModal(true);
                     setIsEditMode(false);
                     setFormData({ name: '', group: '', price: '', isSelectable: false, specialtyId: null });
-                }}><i className="fa fa-plus-circle"></i> Thêm mới</Button>
+                }}>
+                    <i className="fa fa-plus-circle"></i> Thêm mới
+                </Button>
 
+                <Button variant="secondary" onClick={() => document.getElementById('excel-input').click()}>
+                    📥 Import Excel
+                </Button>
+
+                <input
+                    type="file"
+                    id="excel-input"
+                    accept=".xlsx,.xls"
+                    onChange={handleExcelImport}
+                    style={{ display: 'none' }}
+                />
             </div>
+
 
             <Scrollbars autoHeight autoHeightMax={400} autoHide>
                 <Table striped bordered hover>
@@ -256,6 +330,7 @@ const ServicePriceTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Hủy</Button>
                     <Button variant="danger" onClick={handleDelete}>Xóa</Button>
+
                 </Modal.Footer>
             </Modal>
         </div>
