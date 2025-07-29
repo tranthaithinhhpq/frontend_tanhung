@@ -29,6 +29,27 @@ const PatientBookingTable = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
+    const [specialties, setSpecialties] = useState([]);
+    const [filterSpecialty, setFilterSpecialty] = useState(null);
+    const [filterStatus, setFilterStatus] = useState(null);
+
+    const [filterStartDate, setFilterStartDate] = useState(null);
+    const [filterEndDate, setFilterEndDate] = useState(null);
+
+    const statusOptions = [
+        { value: 'pending', label: 'Chờ xác nhận' },
+        { value: 'confirmed', label: 'Đã xác nhận' },
+        { value: 'done', label: 'Đã khám' },
+        { value: 'cancelled', label: 'Đã hủy' }
+    ];
+
+    const fetchSpecialties = async () => {
+        const res = await axios.get('/api/v1/specialty/read'); // hoặc endpoint phù hợp
+        if (res.EC === 0) {
+            const options = res.DT.map(s => ({ value: s.id, label: s.name }));
+            setSpecialties(options);
+        }
+    };
 
 
     const fetchDoctors = async () => {
@@ -39,15 +60,23 @@ const PatientBookingTable = () => {
         }
     };
 
-    const fetchBookings = useCallback(async () => {
+    const fetchBookings = async () => {
         let url = `/api/v1/booking?page=${currentPage}&limit=${limit}`;
+        if (filterSpecialty?.value) url += `&specialtyId=${filterSpecialty.value}`;
+        if (filterStatus?.value) url += `&status=${filterStatus.value}`;
         if (filterDoctor?.value) url += `&doctorId=${filterDoctor.value}`;
         if (filterDate instanceof Date && !isNaN(filterDate.getTime())) {
-            const year = filterDate.getFullYear();
-            const month = (filterDate.getMonth() + 1).toString().padStart(2, '0');
-            const day = filterDate.getDate().toString().padStart(2, '0');
-            const dateStr = `${year}-${month}-${day}`; // local date string
+            // const dateStr = filterDate.toISOString().split('T')[0];
+            const dateStr = filterDate.toLocaleDateString('en-CA'); // yyyy-MM-dd theo local
             url += `&date=${dateStr}`;
+        }
+        if (filterStartDate instanceof Date && !isNaN(filterStartDate)) {
+            const fromDate = filterStartDate.toLocaleDateString('en-CA');
+            url += `&startDate=${fromDate}`;
+        }
+        if (filterEndDate instanceof Date && !isNaN(filterEndDate)) {
+            const toDate = filterEndDate.toLocaleDateString('en-CA');
+            url += `&endDate=${toDate}`;
         }
 
         const res = await axios.get(url);
@@ -55,11 +84,13 @@ const PatientBookingTable = () => {
             setBookings(res.DT.records);
             setTotalPage(res.DT.totalPages);
         }
-    }, [currentPage, limit, filterDoctor, filterDate]);
+    };
+
 
 
     useEffect(() => {
         fetchDoctors();
+        fetchSpecialties();
     }, []);
 
     useEffect(() => {
@@ -74,7 +105,16 @@ const PatientBookingTable = () => {
 
     useEffect(() => {
         fetchBookings();
-    }, [fetchBookings]);
+    }, [
+        currentPage,
+        filterDoctor,
+        filterDate,
+        filterStatus,
+        filterSpecialty,
+        filterStartDate,
+        filterEndDate
+    ]);
+
 
     const handlePageClick = (event) => {
         setCurrentPage(+event.selected + 1);
@@ -145,7 +185,7 @@ const PatientBookingTable = () => {
 
             </div>
             <div className="row mb-3">
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <Select
                         placeholder="Chọn bác sĩ"
                         options={doctors}
@@ -154,7 +194,25 @@ const PatientBookingTable = () => {
                         isClearable
                     />
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-3">
+                    <Select
+                        placeholder="Chọn chuyên khoa"
+                        options={specialties}
+                        value={filterSpecialty}
+                        onChange={setFilterSpecialty}
+                        isClearable
+                    />
+                </div>
+                <div className="col-md-3">
+                    <Select
+                        placeholder="Chọn trạng thái"
+                        options={statusOptions}
+                        value={filterStatus}
+                        onChange={setFilterStatus}
+                        isClearable
+                    />
+                </div>
+                <div className="col-md-3">
                     <DatePicker
                         className="form-control"
                         selected={filterDate}
@@ -164,6 +222,7 @@ const PatientBookingTable = () => {
                         isClearable
                     />
                 </div>
+
                 <div className="col-md-4 d-flex justify-content-end">
                     <Button className="mb-3" onClick={() => history.push('/admin/booking/new')}>
                         <i className="fa fa-plus-circle"></i> Đặt lịch khám
