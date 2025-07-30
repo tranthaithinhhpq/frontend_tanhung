@@ -1,11 +1,14 @@
 
 
-import React, { useEffect, useState } from 'react';
+
 import './Nav.scss';
 import { Link } from 'react-router-dom';
 import { Navbar } from 'react-bootstrap';
 import axios from '../../../setup/axios';
 import fallbackLogo from '../../../logo.png';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -16,6 +19,9 @@ const NavHeaderClient = () => {
     const [contactPages, setContactPages] = useState([]);
     const [pricePages, setPricePages] = useState([]);
     const [logoImg, setLogoImg] = useState(null);
+
+    const [keyword, setKeyword] = useState('');
+    const history = useHistory();
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -35,6 +41,8 @@ const NavHeaderClient = () => {
             }
         };
 
+
+
         const fetchLogo = async () => {
             try {
                 const res = await axios.get('/api/v1/client/logo?section=logo');
@@ -53,7 +61,14 @@ const NavHeaderClient = () => {
         fetchLogo();
     }, []);
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (!keyword.trim()) return;
+        history.push(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+    };
+
     return (
+
 
         <div style={{
             position: 'fixed',
@@ -193,9 +208,18 @@ const NavHeaderClient = () => {
                             </li>
                         </ul>
 
-                        <form className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-light" type="submit">Search</button>
+                        <form className="d-flex" onSubmit={handleSearch}>
+                            <input
+                                className="form-control me-2"
+                                type="search"
+                                placeholder="Tìm kiếm"
+                                aria-label="Search"
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
+                            />
+                            <button className="btn btn-dark" type="submit">
+                                <i className="bi bi-search"></i>
+                            </button>
                         </form>
                     </div>
                 </div>

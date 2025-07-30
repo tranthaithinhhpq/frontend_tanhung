@@ -13,7 +13,7 @@ const DeviceGallery = () => {
     useEffect(() => {
         const fetchDevices = async () => {
             try {
-                const res = await axios.get('/api/v1/device/read');
+                const res = await axios.get('/api/v1/client/device');
                 if (res.EC === 0) {
                     setDevices(res.DT);
                 }

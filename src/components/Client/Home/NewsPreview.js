@@ -49,36 +49,33 @@ const NewsPreview = () => {
 
     const settings = {
         dots: false,
-        infinite: topNews.length > 4, // chỉ vô tận nếu đủ bài
+        infinite: true,
         speed: 500,
         arrows: true,
-        slidesToShow: Math.min(topNews.length, 4),
-        slidesToScroll: Math.min(topNews.length, 4),
+        slidesToShow: 4,
+        slidesToScroll: 4, // 👈 bằng với slidesToShow
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 1200,
                 settings: {
-                    slidesToShow: Math.min(topNews.length, 3),
-                    slidesToScroll: Math.min(topNews.length, 3),
-                    infinite: topNews.length > 3
+                    slidesToShow: 3,
+                    slidesToScroll: 3 // 👈 tương ứng
                 }
             },
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: Math.min(topNews.length, 2),
-                    slidesToScroll: Math.min(topNews.length, 2),
-                    infinite: topNews.length > 2
+                    slidesToShow: 2,
+                    slidesToScroll: 2
                 }
             },
             {
                 breakpoint: 576,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1,
-                    infinite: topNews.length > 1
+                    slidesToScroll: 1
                 }
             }
         ]

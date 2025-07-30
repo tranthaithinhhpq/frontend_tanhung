@@ -84,19 +84,15 @@ const NavHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Nội bộ
+                                Tài khoản & Phân quyền
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/admin/page-image">Web Image</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/banner">Banner</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/users">User</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/doctor">Đội ngũ bác sĩ</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/doctor-day-off">Lịch bác sĩ</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/device">Trang thiết bị</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/roles">Role</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/group-role">GroupRole</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/specialty">Chuyên khoa</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/page">page</Link></li>
+
+                                <li><Link className="dropdown-item" to="/admin/users">Tài khoản</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/roles">Danh sách quyền</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/group-role">Phân quyền</Link></li>
+
+
                             </ul>
                         </li>
 
@@ -109,12 +105,13 @@ const NavHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Khách hàng
+                                Bác sĩ & Lịch Khám
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/tam-nhin">Hướng dẫn</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Khảo sát mức độ hài lòng</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/question">Tư vấn hỏi đáp</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/doctor">Đội ngũ bác sĩ</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/doctor-day-off">Lịch bác sĩ</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/booking">Đặt lịch khám</Link></li>
+
                             </ul>
                         </li>
 
@@ -127,38 +124,20 @@ const NavHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Tin tức
+                                Nội dung
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/admin/news">Tin tức & Sự kiện</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Thông báo</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Hoạt động</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Các bệnh</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Hướng dẫn dùng thuốc</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/news">Tin tức</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/page">Quản lý trang</Link></li>
                             </ul>
                         </li>
 
                         {/* === Đặt lịch khám (link đơn) === */}
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <Link className="nav-link" to="/admin/booking">Đặt lịch khám</Link>
-                        </li>
+                        </li> */}
 
-                        {/* === Tuyển dụng === */}
-                        <li className="nav-item dropdown">
-                            <a
-                                href="#"
-                                className="nav-link dropdown-toggle"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                Tuyển dụng
-                            </a>
-                            <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/tam-nhin">Thông tin tuyển dụng</Link></li>
-                                <li><Link className="dropdown-item" to="/doi-ngu-bac-si">Đăng ký tuyển dụng</Link></li>
-                            </ul>
-                        </li>
+
 
                         {/* === Bảng giá === */}
                         <li className="nav-item dropdown">
@@ -169,14 +148,39 @@ const NavHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Bảng giá
+                                Dịch vụ
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/service-price">Bảng giá dịch vụ</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/drug-price">Bảng giá thuốc</Link></li>
-                                <li><Link className="dropdown-item" to="/chuyen-khoa">Tư vấn hỏi đáp</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/question">Tư vấn hỏi đáp</Link></li>
+
                             </ul>
                         </li>
+
+
+                        {/* === Hệ thống === */}
+                        <li className="nav-item dropdown">
+                            <a
+                                href="#"
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Hệ thống
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li><Link className="dropdown-item" to="/admin/page-image">Web Image</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/banner">Banner</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/device">Trang thiết bị</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/specialty">Chuyên khoa</Link></li>
+
+                            </ul>
+                        </li>
+
+
+
                     </ul>
 
                     {/* Right side – user info */}

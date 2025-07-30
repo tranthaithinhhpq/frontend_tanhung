@@ -115,43 +115,6 @@
     border-color: #e0e0e0;
 }
 
-//new card
-// .news-card {
-//     transition: all 0.3s ease;
-//     border-radius: 6px;
-
-//     &:hover {
-//         transform: translateY(-5px);
-//         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-//     }
-
-//     img {
-//         // height: 160px;
-//         // object-fit: cover;
-//         height: 200px; // tăng chiều cao ảnh
-//         object-fit: cover;
-//         width: 100%;
-//         border-top-left-radius: 6px;
-//         border-top-right-radius: 6px;
-//     }
-// }
-
-// .news-card .card-body {
-//     min-height: 120px; // hoặc cao hơn nếu bạn muốn cân đối với ảnh
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: space-between;
-// }
-
-// .news-card img {
-//     aspect-ratio: 16 / 9 !important; // hoặc 16 / 9 tùy ảnh
-//     width: 100%;
-//     object-fit: cover;
-//     border-top-left-radius: 6px;
-//     border-top-right-radius: 6px;
-// }
-
-
 .news-card {
     transition: all 0.3s ease;
     border-radius: 6px;

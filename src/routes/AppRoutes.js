@@ -79,6 +79,11 @@ import NewsEdit from "../components/Admin/News/NewsEdit";
 import QuestionTable from "../components/Admin/Question/QuestionTable";
 import QuestionForm from "../components/Client/Question/QuestionForm";
 
+//Search
+import SearchPage from "../components/Client/Navigation/SearchPage";
+
+
+
 
 
 
@@ -179,6 +184,11 @@ const AppRoutes = () => {
 
             {/* Service Prices client */}
             <Route path="/service-prices" exact component={ServicePrice} />
+
+            {/* SearchPage client */}
+            <Route path="/search" exact component={SearchPage} />
+
+
 
             {/* Drug Prices client */}
             <Route path="/drug-prices" exact component={DrugPrice} />
