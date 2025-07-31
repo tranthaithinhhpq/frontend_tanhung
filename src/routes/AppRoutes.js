@@ -85,6 +85,13 @@ import SearchPage from "../components/Client/Navigation/SearchPage";
 //DegreeManagement
 import DegreeManagement from "../components/Admin/Degree/DegreeManagement";
 
+//PositionManagement
+import PositionManagement from "../components/Admin/Position/PositionManagement";
+
+import PageTextContentManagement from "../components/Admin/PageTextContent/PageTextContentManagement";
+
+// PageVideoContentManagement
+import PageVideoContentManagement from "../components/Admin/PageVideoContent/PageVideoContentManagement";
 
 
 
@@ -107,6 +114,20 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/roles" component={Role} />
             <PrivateRoutes path="/admin/group-role" component={GroupRole} />
             <PrivateRoutes path="/admin" exact component={Home} />
+
+
+            {/* Admin - Position */}
+
+
+            {/* Admin - Position */}
+            <PrivateRoutes path="/admin/position" component={PositionManagement} />
+
+            {/* Admin - PageTextContentManagement */}
+            <PrivateRoutes path="/admin/pagetext" component={PageTextContentManagement} />
+
+            <PrivateRoutes path="/admin/page-video-content" component={PageVideoContentManagement} />
+
+
 
             {/* Doctor admin */}
             <PrivateRoutes path="/admin/doctor" exact component={DoctorTable} />
@@ -161,6 +182,8 @@ const AppRoutes = () => {
             {/* DegreeManagement Admin */}
             <Route path="/admin/degree" component={DegreeManagement} />
 
+
+
             {/* Client */}
             <Route path="/" exact component={HomeClient} />
             <Route path="/doctors" exact component={DoctorGallery} />
@@ -196,7 +219,6 @@ const AppRoutes = () => {
 
             {/* Page client */}
             <Route path="/:slug" exact component={ClientPage} />
-
 
             {/* Booking Client */}
 

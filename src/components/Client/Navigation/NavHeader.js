@@ -69,7 +69,6 @@ const NavHeaderClient = () => {
 
     return (
 
-
         <div style={{
             position: 'fixed',
             top: 0,
@@ -92,12 +91,14 @@ const NavHeaderClient = () => {
                     <div className="d-flex align-items-center gap-4">
                         <div className="d-flex align-items-center">
                             <i className="fa fa-ambulance me-2" aria-hidden="true"></i>
-                            Cấp cứu: 321654987
+                            Cấp cứu: 0901 34 69 34
                         </div>
                         <div className="d-flex align-items-center">
                             <i className="fa fa-phone me-2" aria-hidden="true"></i>
-                            Tổng đài: 0123654987
+                            Tổng đài: {'(028)'} 377 606 48
                         </div>
+
+
                     </div>
                 </div>
             </div>
