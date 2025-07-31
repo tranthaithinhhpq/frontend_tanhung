@@ -81,12 +81,14 @@ const WorkingSlotTemplateManagement = () => {
             <h3>Quản lý khung giờ làm việc bác sĩ</h3>
 
             <div className="d-flex gap-2 align-items-center my-2">
-                <input
-                    className="form-control"
-                    style={{ maxWidth: '300px' }}
-                    placeholder="Tìm theo tên bác sĩ"
-                    value={doctorFilter}
-                    onChange={(e) => setDoctorFilter(e.target.value)}
+                <Select
+                    options={doctorOptions}
+                    value={doctorOptions.find(opt => opt.label === doctorFilter) || null}
+                    onChange={(selected) => setDoctorFilter(selected ? selected.label : '')}
+                    placeholder="Chọn bác sĩ cần lọc"
+                    isClearable
+                    className="flex-grow-1"
+                    styles={{ container: base => ({ ...base, maxWidth: '300px' }) }}
                 />
                 <Button variant="secondary" onClick={handleSearch}>Lọc</Button>
                 <Button onClick={() => { setEditId(null); setForm({ doctorId: '', dayOfWeek: 1, startTime: '', endTime: '', isActive: true }); setShowModal(true); }}>
