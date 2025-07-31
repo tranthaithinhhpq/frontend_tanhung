@@ -96,6 +96,11 @@ import PageVideoContentManagement from "../components/Admin/PageVideoContent/Pag
 // NewsCategoryManagement
 import NewsCategoryManagement from "../components/Admin/NewsCategory/NewsCategoryManagement";
 
+// WorkingSlotTemplateManagement
+import WorkingSlotTemplateManagement from "../components/Admin/Doctor/WorkingSlotTemplateManagement";
+
+
+
 
 
 
@@ -120,7 +125,8 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin" exact component={Home} />
 
 
-            {/* Admin - Position */}
+            {/* Admin - WorkingSlotTemplateManagement */}
+            <PrivateRoutes path="/admin/working-slot-template" component={WorkingSlotTemplateManagement} />
 
 
             {/* Admin - Position */}
