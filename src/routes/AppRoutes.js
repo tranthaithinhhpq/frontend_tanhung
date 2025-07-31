@@ -82,10 +82,8 @@ import QuestionForm from "../components/Client/Question/QuestionForm";
 //Search
 import SearchPage from "../components/Client/Navigation/SearchPage";
 
-
-
-
-
+//DegreeManagement
+import DegreeManagement from "../components/Admin/Degree/DegreeManagement";
 
 
 
@@ -159,6 +157,9 @@ const AppRoutes = () => {
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             <Route path="/admin/register" component={Register} />
+
+            {/* DegreeManagement Admin */}
+            <Route path="/admin/degree" component={DegreeManagement} />
 
             {/* Client */}
             <Route path="/" exact component={HomeClient} />

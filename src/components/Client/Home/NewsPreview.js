@@ -53,7 +53,7 @@ const NewsPreview = () => {
         speed: 500,
         arrows: true,
         slidesToShow: 4,
-        slidesToScroll: 4, // 👈 bằng với slidesToShow
+        slidesToScroll: 1, // 👈 bằng với slidesToShow
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         responsive: [
@@ -61,14 +61,14 @@ const NewsPreview = () => {
                 breakpoint: 1200,
                 settings: {
                     slidesToShow: 3,
-                    slidesToScroll: 3 // 👈 tương ứng
+                    slidesToScroll: 1 // 👈 tương ứng
                 }
             },
             {
                 breakpoint: 768,
                 settings: {
                     slidesToShow: 2,
-                    slidesToScroll: 2
+                    slidesToScroll: 1
                 }
             },
             {

@@ -96,7 +96,7 @@ const NavHeader = () => {
                             </ul>
                         </li>
 
-                        {/* === Khách hàng === */}
+                        {/* === Bác sĩ === */}
                         <li className="nav-item dropdown">
                             <a
                                 href="#"
@@ -105,13 +105,28 @@ const NavHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Bác sĩ & Lịch Khám
+                                Bác sĩ
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/doctor">Đội ngũ bác sĩ</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/doctor-day-off">Lịch bác sĩ</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/booking">Đặt lịch khám</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/degree">Học vị</Link></li>
+                            </ul>
+                        </li>
 
+                        {/* === Lịch nghỉ === */}
+                        <li className="nav-item dropdown">
+                            <a
+                                href="#"
+                                className="nav-link dropdown-toggle"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Quản lý Lịch
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li><Link className="dropdown-item" to="/admin/doctor-day-off">Lịch nghỉ bác sĩ</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/booking">Đặt lịch khám</Link></li>
                             </ul>
                         </li>
 
@@ -129,6 +144,8 @@ const NavHeader = () => {
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/news">Tin tức</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/page">Quản lý trang</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/page-image">Web Image</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/banner">Banner</Link></li>
                             </ul>
                         </li>
 
@@ -159,7 +176,7 @@ const NavHeader = () => {
                         </li>
 
 
-                        {/* === Hệ thống === */}
+                        {/* === Bệnh viện === */}
                         <li className="nav-item dropdown">
                             <a
                                 href="#"
@@ -168,17 +185,13 @@ const NavHeader = () => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Hệ thống
+                                Bệnh viện
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/admin/page-image">Web Image</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/banner">Banner</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/device">Trang thiết bị</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/specialty">Chuyên khoa</Link></li>
-
                             </ul>
                         </li>
-
 
 
                     </ul>
