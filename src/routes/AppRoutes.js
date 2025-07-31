@@ -93,6 +93,10 @@ import PageTextContentManagement from "../components/Admin/PageTextContent/PageT
 // PageVideoContentManagement
 import PageVideoContentManagement from "../components/Admin/PageVideoContent/PageVideoContentManagement";
 
+// NewsCategoryManagement
+import NewsCategoryManagement from "../components/Admin/NewsCategory/NewsCategoryManagement";
+
+
 
 
 const AppRoutes = () => {
@@ -134,6 +138,10 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/doctor/new" exact component={DoctorCreate} />
             <PrivateRoutes path="/admin/doctor/edit/:doctorId" component={DoctorEdit} />
             <PrivateRoutes path="/admin/doctor-day-off" component={DoctorDayOffTable} />
+
+
+            {/* NewsCategoryManagement admin */}
+            <PrivateRoutes path="/admin/news-categories" exact component={NewsCategoryManagement} />
 
             {/* Specialty admin */}
             <PrivateRoutes path="/admin/specialty" exact component={SpecialtyTable} />

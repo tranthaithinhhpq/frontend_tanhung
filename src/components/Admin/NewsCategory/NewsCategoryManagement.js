@@ -4,9 +4,9 @@ import { Table, Modal, Button, Form } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 
-const PageTextContentManagement = () => {
+const NewsCategoryManagement = () => {
     const [list, setList] = useState([]);
-    const [form, setForm] = useState({ section: '', title: '', contentText: '', sortOrder: 1 });
+    const [form, setForm] = useState({ name: '', description: '' });
     const [editId, setEditId] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -14,7 +14,7 @@ const PageTextContentManagement = () => {
     const [pagination, setPagination] = useState({ totalPages: 0, currentPage: 1 });
 
     const fetchData = async (page = 1) => {
-        const res = await axios.get(`/api/v1/page-text-content/paginate?page=${page}&limit=5`);
+        const res = await axios.get(`/api/v1/news-category/paginate?page=${page}&limit=5`);
         if (res.EC === 0) {
             setList(res.DT.rows);
             setPagination({ totalPages: res.DT.totalPages, currentPage: res.DT.currentPage });
@@ -24,23 +24,23 @@ const PageTextContentManagement = () => {
     useEffect(() => { fetchData(); }, []);
 
     const handleSave = async () => {
-        if (!form.section || !form.title) return toast.error("Vui lòng nhập đầy đủ");
+        if (!form.name) return toast.error("Vui lòng nhập tên");
 
         const res = editId
-            ? await axios.put(`/api/v1/page-text-content/${editId}`, form)
-            : await axios.post(`/api/v1/page-text-content`, form);
+            ? await axios.put(`/api/v1/news-category/${editId}`, form)
+            : await axios.post(`/api/v1/news-category`, form);
 
         if (res.EC === 0) toast.success(editId ? "Cập nhật thành công" : "Tạo mới thành công");
         else toast.error(res.EM);
 
         setShowModal(false);
-        setForm({ section: '', title: '', contentText: '', sortOrder: 1 });
+        setForm({ name: '', description: '' });
         setEditId(null);
         fetchData(pagination.currentPage);
     };
 
     const handleDelete = async () => {
-        const res = await axios.post(`/api/v1/page-text-content/delete`, { id: deleteId });
+        const res = await axios.post(`/api/v1/news-category/delete`, { id: deleteId });
         if (res.EC === 0) {
             toast.success("Xóa thành công");
             fetchData(pagination.currentPage);
@@ -54,8 +54,8 @@ const PageTextContentManagement = () => {
 
     return (
         <div className="container mt-4">
-            <h3>Quản lý nội dung văn bản</h3>
-            <Button onClick={() => { setForm({ section: '', title: '', contentText: '', sortOrder: 1 }); setEditId(null); setShowModal(true); }}>
+            <h3>Quản lý danh mục tin tức</h3>
+            <Button onClick={() => { setForm({ name: '', description: '' }); setEditId(null); setShowModal(true); }}>
                 Thêm mới
             </Button>
 
@@ -63,10 +63,8 @@ const PageTextContentManagement = () => {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Section</th>
-                        <th>Tiêu đề</th>
-                        <th>Nội dung</th>
-                        <th>Thứ tự</th>
+                        <th>Tên</th>
+                        <th>Mô tả</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -74,10 +72,8 @@ const PageTextContentManagement = () => {
                     {list.map((item, idx) => (
                         <tr key={item.id}>
                             <td>{(pagination.currentPage - 1) * 5 + idx + 1}</td>
-                            <td>{item.section}</td>
-                            <td>{item.title}</td>
-                            <td>{item.contentText}</td>
-                            <td>{item.sortOrder}</td>
+                            <td>{item.name}</td>
+                            <td>{item.description}</td>
                             <td>
                                 <Button variant="warning" size="sm" onClick={() => { setForm(item); setEditId(item.id); setShowModal(true); }}>
                                     Sửa
@@ -114,24 +110,16 @@ const PageTextContentManagement = () => {
             {/* Modal thêm/sửa */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{editId ? 'Chỉnh sửa' : 'Thêm'} nội dung</Modal.Title>
+                    <Modal.Title>{editId ? 'Chỉnh sửa' : 'Thêm'} danh mục</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-3">
-                        <Form.Label>Section *</Form.Label>
-                        <Form.Control value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Tiêu đề *</Form.Label>
-                        <Form.Control value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Nội dung</Form.Label>
-                        <Form.Control as="textarea" rows={4} value={form.contentText} onChange={(e) => setForm({ ...form, contentText: e.target.value })} />
+                        <Form.Label>Tên danh mục *</Form.Label>
+                        <Form.Control value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Thứ tự hiển thị</Form.Label>
-                        <Form.Control type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: +e.target.value })} />
+                        <Form.Label>Mô tả</Form.Label>
+                        <Form.Control as="textarea" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
@@ -145,7 +133,7 @@ const PageTextContentManagement = () => {
                 <Modal.Header closeButton>
                     <Modal.Title>Xác nhận xóa</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Bạn có chắc muốn xóa nội dung này?</Modal.Body>
+                <Modal.Body>Bạn có chắc muốn xóa danh mục này?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowConfirm(false)}>Hủy</Button>
                     <Button variant="danger" onClick={handleDelete}>Xóa</Button>
@@ -155,4 +143,4 @@ const PageTextContentManagement = () => {
     );
 };
 
-export default PageTextContentManagement;
+export default NewsCategoryManagement;

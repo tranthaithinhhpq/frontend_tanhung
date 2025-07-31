@@ -1,6 +1,3 @@
-
-
-
 import './Nav.scss';
 import { Link } from 'react-router-dom';
 import { Navbar } from 'react-bootstrap';
@@ -19,6 +16,8 @@ const NavHeaderClient = () => {
     const [contactPages, setContactPages] = useState([]);
     const [pricePages, setPricePages] = useState([]);
     const [logoImg, setLogoImg] = useState(null);
+    const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
+
 
     const [keyword, setKeyword] = useState('');
     const history = useHistory();
@@ -28,6 +27,32 @@ const NavHeaderClient = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    useEffect(() => {
+        const fetchTopbar = async () => {
+            try {
+                const res = await axios.get('/api/v1/page-text-content/topbar');
+
+                if (res.EC === 0) {
+
+                    const content = { phone: '', emergency: '', address: '' };
+
+                    res.DT.forEach(item => {
+                        console.log("item.section: ", item.section)
+                        if (item.section === 'phone') content.phone = item.title;
+                        if (item.section === 'emergency_number') content.emergency = item.title;
+                        if (item.section === 'address') content.address = item.title;
+                    });
+
+                    setTopbarContent(content);
+                }
+            } catch (err) {
+                console.error("Lỗi fetch topbar content:", err);
+            }
+        };
+        fetchTopbar();
+    }, []);
+
 
     useEffect(() => {
         const fetchPagesBySection = async (section, setState) => {
@@ -84,18 +109,22 @@ const NavHeaderClient = () => {
                     {/* Địa chỉ bên trái */}
                     <div className="d-flex align-items-center">
                         <i className="fa fa-map-marker me-2" aria-hidden="true"></i>
-                        871 Trần Xuân Soạn - P. Tân Hưng - Quận 7 - Tp. Hồ Chí Minh
+                        {topbarContent.address?.trim() ? topbarContent.address : "871 Trần Xuân Soạn - P. Tân Hưng - Quận 7 - Tp. Hồ Chí Minh"}
+
                     </div>
 
                     {/* Tổng đài + cấp cứu bên phải */}
                     <div className="d-flex align-items-center gap-4">
+
                         <div className="d-flex align-items-center">
                             <i className="fa fa-ambulance me-2" aria-hidden="true"></i>
-                            Cấp cứu: 0901 34 69 34
+                            Cấp cứu: {topbarContent.emergency || 'Cấp cứu: 0901 34 69 34'}
                         </div>
+
+
                         <div className="d-flex align-items-center">
                             <i className="fa fa-phone me-2" aria-hidden="true"></i>
-                            Tổng đài: {'(028)'} 377 606 48
+                            Tổng đài: {topbarContent.phone || '(028) 377 606 48'}
                         </div>
 
 

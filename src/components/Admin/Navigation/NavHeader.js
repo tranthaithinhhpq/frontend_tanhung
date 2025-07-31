@@ -144,11 +144,13 @@ const NavHeader = () => {
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/news">Tin tức</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/news-categories">Loại tin</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/page">Quản lý trang</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/page-image">Web Image</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/pagetext">Web text</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/page-video-content">Web video</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/banner">Banner</Link></li>
+
                             </ul>
                         </li>
 

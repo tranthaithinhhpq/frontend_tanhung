@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Footer.scss';
+import axios from '../../../setup/axios';
 import { FaMapMarkerAlt, FaPhone, FaAmbulance, FaFacebookMessenger } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
+    const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
+    useEffect(() => {
+        const fetchTopbar = async () => {
+            try {
+                const res = await axios.get('/api/v1/page-text-content/topbar');
+                if (res.EC === 0) {
+                    const content = { phone: '', emergency: '', address: '' };
+                    res.DT.forEach(item => {
+                        if (item.section === 'phone') content.phone = item.title;
+                        if (item.section === 'emergency_number') content.emergency = item.title;
+                        if (item.section === 'address') content.address = item.title;
+                    });
+                    setTopbarContent(content);
+                }
+            } catch (err) {
+                console.error("Lỗi fetch topbar content:", err);
+            }
+        };
+        fetchTopbar();
+    }, []);
     return (
         <footer className="footer text-white position-relative" style={{ backgroundColor: '#343a40' }}>
             <div className="container py-5">
@@ -11,12 +33,22 @@ const Footer = () => {
                     <div className="col-md-3 footer-column">
                         <h5 className="footer-title">Liên kết nhanh</h5>
                         <ul className="list-unstyled">
-                            <li>Trang chủ</li>
-                            <li>Giới thiệu</li>
-                            <li>Chuyên khoa</li>
-                            <li>Đội ngũ bác sĩ</li>
-                            <li>Trang thiết bị</li>
-                            <li>Liên hệ</li>
+                            <li>
+                                <Link to="/">Trang chủ</Link>
+                            </li>
+                            <li>
+                                <Link to="/specialties">Chuyên khoa</Link>
+                            </li>
+                            <li>
+                                <Link to="/doctors">Đội ngũ bác sĩ</Link>
+                            </li>
+                            <li>
+                                <Link to="/devices">Trang thiết bị</Link>
+                            </li>
+                            <li>
+                                <Link to="/question">Hỏi & đáp</Link>
+                            </li>
+
                         </ul>
                     </div>
 
@@ -24,12 +56,16 @@ const Footer = () => {
                     <div className="col-md-3 footer-column">
                         <h5 className="footer-title">Dịch vụ và hỗ trợ</h5>
                         <ul className="list-unstyled">
-                            <li>Tra cứu thuốc</li>
-                            <li>Đặt lịch khám</li>
-                            <li>Hướng dẫn khách hàng</li>
-                            <li>Khảo sát mức độ hài lòng</li>
-                            <li>Tra cứu kết quả xét nghiệm</li>
-                            <li>Bảng giá dịch vụ</li>
+                            <li>
+                                <Link to="/drug-prices">Bảng giá thuốc</Link>
+                            </li>
+                            <li>
+                                <Link to="/service-prices">Bảng giá dịch vụ</Link>
+                            </li>
+                            <li>
+                                <Link to="/booking">Đặt lịch khám</Link>
+                            </li>
+
                         </ul>
                     </div>
 
@@ -37,8 +73,8 @@ const Footer = () => {
                     <div className="col-md-3 footer-column">
                         <h5 className="footer-title">Thông tin liên hệ</h5>
                         <p>
-                            <FaPhone className="me-2 text-success" /> Tổng đài: (028) 377 606 48<br />
-                            <FaAmbulance className="me-2 text-success" /> Cấp cứu: 0901 34 69 34
+                            <FaPhone className="me-2 text-success" />{topbarContent.phone || '(028) 377 606 48'}<br />
+                            <FaAmbulance className="me-2 text-success" />{topbarContent.emergency || '0901 34 69 34'}
                         </p>
                         <h6 className="mt-3 footer-title">Giờ làm việc</h6>
                         <p className="mb-0">
@@ -73,18 +109,19 @@ const Footer = () => {
                     {/* Địa chỉ bên trái */}
                     <div className="d-flex align-items-center">
                         <FaMapMarkerAlt className="me-2" />
-                        871 Trần Xuân Soạn - P. Tân Hưng - Quận 7 - Tp. Hồ Chí Minh
+                        {topbarContent.address?.trim() ? topbarContent.address : "871 Trần Xuân Soạn - P. Tân Hưng - Quận 7 - Tp. Hồ Chí Minh"}
                     </div>
 
                     {/* Tổng đài + cấp cứu bên phải */}
                     <div className="d-flex align-items-center gap-4">
                         <div className="d-flex align-items-center">
                             <i className="fa fa-ambulance me-2" aria-hidden="true"></i>
-                            Cấp cứu: 321654987
+                            Cấp cứu: {topbarContent.emergency || '0901 34 69 34'}
                         </div>
                         <div className="d-flex align-items-center">
                             <i className="fa fa-phone me-2" aria-hidden="true"></i>
-                            Tổng đài: 0123654987
+                            Tổng đài: {topbarContent.phone || '(028) 377 606 48'}
+
                         </div>
                     </div>
                 </div>
