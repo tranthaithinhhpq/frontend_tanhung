@@ -29,8 +29,14 @@ const WorkingSlotTemplateManagement = () => {
     }, []);
 
     const fetchDoctors = async () => {
-        const res = await axios.get('/api/v1/doctor');
-        if (res.EC === 0) setDoctors(res.DT);
+        try {
+            const res = await axios.get('/api/v1/doctor-schedule');
+            if (res.EC === 0) {
+                setDoctors(res.DT); // giữ nguyên dạng [{ id, doctorName }]
+            }
+        } catch (err) {
+            toast.error("Lỗi tải danh sách bác sĩ");
+        }
     };
 
     const fetchData = async (page = 1, doctorName = '') => {
@@ -75,17 +81,14 @@ const WorkingSlotTemplateManagement = () => {
             <h3>Quản lý khung giờ làm việc bác sĩ</h3>
 
             <div className="d-flex gap-2 align-items-center my-2">
-                <Select
-                    options={doctorOptions}
-                    onChange={(selected) => {
-                        setDoctorFilter(selected?.label || '');
-                        fetchData(1, selected?.label || '');
-                    }}
-                    placeholder="Lọc theo bác sĩ..."
-                    isClearable
-                    className="me-2"
-                    styles={{ container: (base) => ({ ...base, width: 300 }) }}
+                <input
+                    className="form-control"
+                    style={{ maxWidth: '300px' }}
+                    placeholder="Tìm theo tên bác sĩ"
+                    value={doctorFilter}
+                    onChange={(e) => setDoctorFilter(e.target.value)}
                 />
+                <Button variant="secondary" onClick={handleSearch}>Lọc</Button>
                 <Button onClick={() => { setEditId(null); setForm({ doctorId: '', dayOfWeek: 1, startTime: '', endTime: '', isActive: true }); setShowModal(true); }}>
                     Thêm mới
                 </Button>
@@ -172,14 +175,17 @@ const WorkingSlotTemplateManagement = () => {
                     <Modal.Title>{editId ? 'Cập nhật' : 'Thêm mới'} khung giờ</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    {console.log("form.doctorId =", form.doctorId)}
+                    {console.log("doctors =", doctors)}
                     <Form.Group className="mb-2">
                         <Form.Label>Bác sĩ</Form.Label>
-                        <Form.Select value={form.doctorId} onChange={(e) => setForm({ ...form, doctorId: e.target.value })}>
-                            <option value="">-- Chọn bác sĩ --</option>
-                            {doctors.map(doc => (
-                                <option key={doc.id} value={doc.id}>{doc.doctorName}</option>
-                            ))}
-                        </Form.Select>
+                        <Form.Control
+                            plaintext
+                            readOnly
+                            value={doctors.find(d => String(d.id) === String(form.doctorId))?.doctorName || 'Không xác định'}
+
+
+                        />
                     </Form.Group>
                     <Form.Group className="mb-2">
                         <Form.Label>Thứ</Form.Label>
