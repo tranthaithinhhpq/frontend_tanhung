@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import { Card, Button, Row, Col, Form, Pagination } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+
 
 const NewsList = () => {
     const [news, setNews] = useState([]);
@@ -9,6 +10,16 @@ const NewsList = () => {
     const [categories, setCategories] = useState([]);
     const [category, setCategory] = useState('');
     const [keyword, setKeyword] = useState('');
+
+    const location = useLocation();
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const catIdFromUrl = queryParams.get('categoryId');
+        if (catIdFromUrl) setCategory(+catIdFromUrl); // setCategory là state của categoryId
+        fetchCategories();
+        fetchNews(1, catIdFromUrl, '');
+    }, [location.search]);
 
     const history = useHistory();
 
@@ -35,10 +46,18 @@ const NewsList = () => {
         }
     };
 
+
+
     const handleCategoryChange = e => {
         const value = e.target.value ? +e.target.value : '';
+
         setCategory(value);
-        fetchNews(1, value, keyword);
+
+        if (value === '') {
+            history.push('/news'); // 👉 chuyển về /news để xóa categoryId khỏi URL
+        } else {
+            history.push(`/news?categoryId=${value}`); // 👉 cập nhật URL với category mới
+        }
     };
 
     const fetchCategories = async () => {
@@ -52,10 +71,18 @@ const NewsList = () => {
         }
     };
 
+
+
     useEffect(() => {
-        fetchCategories();
-        fetchNews();
-    }, []);
+        const queryParams = new URLSearchParams(location.search);
+        const catIdFromUrl = queryParams.get('categoryId');
+
+        const categoryValue = catIdFromUrl ? parseInt(catIdFromUrl) : '';
+
+        setCategory(categoryValue);        // Cập nhật filter theo URL
+        fetchCategories();                 // Lấy danh mục
+        fetchNews(1, categoryValue, keyword);  // Lấy dữ liệu theo category từ URL
+    }, [location.search]); // chạy lại mỗi khi URL search (query string) thay đổi
 
     const handleSearch = () => fetchNews(1);
 

@@ -17,10 +17,23 @@ const NavHeaderClient = () => {
     const [pricePages, setPricePages] = useState([]);
     const [logoImg, setLogoImg] = useState(null);
     const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
+    const [newsCategories, setNewsCategories] = useState([]);
 
 
     const [keyword, setKeyword] = useState('');
     const history = useHistory();
+
+    useEffect(() => {
+        const fetchNewsCategories = async () => {
+            try {
+                const res = await axios.get('/api/v1/news-categories');
+                if (res.EC === 0) setNewsCategories(res.DT);
+            } catch (err) {
+                console.error("Lỗi lấy danh mục tin tức:", err);
+            }
+        };
+        fetchNewsCategories();
+    }, []);
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -192,9 +205,34 @@ const NavHeaderClient = () => {
                             </li>
 
                             {/* Tin tức */}
+                            <li className="nav-item dropdown">
+                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Tin tức
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li><Link className="dropdown-item" to="/news">Tất cả tin tức</Link></li>
+                                    {newsCategories.map(cat => (
+                                        <li key={cat.id}>
+                                            <Link className="dropdown-item" to={`/news?categoryId=${cat.id}`}>{cat.name}</Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+
+                            {/* Thông tin thuốc */}
+                            <li className="nav-item dropdown">
+                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Thông tin thuốc
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <Link className="nav-link" to="/news">Tin tức</Link>
+                                </ul>
+                            </li>
+
+                            {/* Tin tức
                             <li className="nav-item">
                                 <Link className="nav-link" to="/news">Tin tức</Link>
-                            </li>
+                            </li> */}
 
                             {/* Đặt lịch */}
 
