@@ -12,6 +12,7 @@ const NewsCreate = ({ editData }) => {
     const [title, setTitle] = useState(editData?.title || "");
     const [content, setContent] = useState(editData?.content || "");
     const [previewMode, setPreviewMode] = useState(false);
+    const [group, setGroup] = useState(editData?.NewsCategory?.group || "news");
 
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -20,16 +21,28 @@ const NewsCreate = ({ editData }) => {
     const [previewImg, setPreviewImg] = useState(editData?.image ? `${BACKEND_URL}/${editData.image}` : "");
 
     useEffect(() => {
-        axios.get("/api/v1/news-categories").then(res => {
-            if (res.EC === 0) {
-                const opts = res.DT.map(c => ({ value: c.id, label: c.name }));
-                setCategories(opts);
-                if (editData?.categoryId) {
-                    setSelectedCategory(opts.find(o => o.value === editData.categoryId));
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get(`/api/v1/news-categories?group=${group}`);
+                if (res.EC === 0) {
+                    const filtered = res.DT.filter(c => c.group === group);
+                    const opts = filtered.map(c => ({ value: c.id, label: c.name }));
+                    setCategories(opts);
+
+                    if (editData?.categoryId) {
+                        const matched = opts.find(o => o.value === editData.categoryId);
+                        setSelectedCategory(matched || null);
+                    } else {
+                        setSelectedCategory(null); // clear khi đổi group
+                    }
                 }
+            } catch {
+                toast.error("Lỗi tải loại tin tức");
             }
-        }).catch(() => toast.error("Lỗi tải loại tin tức"));
-    }, [editData]);
+        };
+
+        fetchCategories();
+    }, [group, editData]);
 
     const handleSubmit = async () => {
         if (!title || !content || !selectedCategory) {
@@ -66,6 +79,14 @@ const NewsCreate = ({ editData }) => {
                     <div className="mb-3">
                         <label>Tiêu đề</label>
                         <input className="form-control" value={title} onChange={e => setTitle(e.target.value)} />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Nhóm</label>
+                        <select className="form-control" value={group} onChange={e => setGroup(e.target.value)}>
+                            <option value="news">Tin tức</option>
+                            <option value="medicine">Thông tin thuốc</option>
+                        </select>
                     </div>
 
                     <div className="mb-3">
@@ -107,6 +128,7 @@ const NewsCreate = ({ editData }) => {
                         <Card className="h-100 overflow-auto">
                             <Card.Body>
                                 <h2>{title || "(Tiêu đề xem trước)"}</h2>
+                                <p><strong>Nhóm:</strong> {group === 'medicine' ? 'Thông tin thuốc' : 'Tin tức'}</p>
                                 <p><strong>Loại tin tức:</strong> {selectedCategory?.label || "(Chưa chọn)"}</p>
                                 <p><strong>Trạng thái:</strong> {status === "draft" ? "Nháp" : "Công khai"}</p>
                                 {previewImg && <img src={previewImg} alt="preview" style={{ maxWidth: "100%", marginBottom: 10 }} />}

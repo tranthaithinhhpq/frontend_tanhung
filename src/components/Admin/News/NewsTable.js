@@ -78,6 +78,7 @@ const NewsTable = () => {
                         <th>Tiêu đề</th>
                         <th>Ảnh</th>
                         <th>Trạng thái</th>
+                        <th>Loại tin</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -95,6 +96,7 @@ const NewsTable = () => {
                                     <img src={`${BACKEND_URL}${item.image}`} alt="news" style={{ width: 100 }} />
                                 </td>
                                 <td>{item.status ? 'Hiển thị' : 'Ẩn'}</td>
+                                <td>{item.category?.group || 'N/A'}</td>
                                 <td>
                                     <i variant="warning" className="fa fa-pencil edit" onClick={() => history.push(`/admin/news/edit/${item.id}`)}></i>
                                     <i

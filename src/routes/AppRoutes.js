@@ -99,6 +99,11 @@ import NewsCategoryManagement from "../components/Admin/NewsCategory/NewsCategor
 // WorkingSlotTemplateManagement
 import WorkingSlotTemplateManagement from "../components/Admin/Doctor/WorkingSlotTemplateManagement";
 
+// MedicineInfoList
+import MedicineInfoList from "../components/Client/News/MedicineInfoList";
+
+
+
 
 
 
@@ -215,6 +220,11 @@ const AppRoutes = () => {
             <Route path="/news" exact component={NewsList} />
             <Route path="/news/:id" component={NewsDetail} />
             <Route path="/booking-history" component={BookingHistory} />
+
+            {/* News client */}
+            <Route path="/medicine-info" component={MedicineInfoList} />
+
+
 
             {/* Device client */}
             <Route path="/devices" exact component={DeviceGallery} />

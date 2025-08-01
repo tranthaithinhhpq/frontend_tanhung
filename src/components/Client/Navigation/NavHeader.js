@@ -23,16 +23,40 @@ const NavHeaderClient = () => {
     const [keyword, setKeyword] = useState('');
     const history = useHistory();
 
+    // useEffect(() => {
+    //     const fetchNewsCategories = async () => {
+    //         try {
+    //             const res = await axios.get('/api/v1/news-categories-nav', {
+    //                 params: { group: 'news' }
+    //             });
+    //             if (res.EC === 0) {
+    //                 setNewsCategories(res.DT);
+    //             }
+    //         } catch (err) {
+    //             console.error("Lỗi lấy danh mục tin tức", err);
+    //         }
+    //     };
+
+    //     fetchNewsCategories();
+    // }, []);
+
+
+
     useEffect(() => {
-        const fetchNewsCategories = async () => {
+        const fetchCategories = async () => {
             try {
-                const res = await axios.get('/api/v1/news-categories');
-                if (res.EC === 0) setNewsCategories(res.DT);
-            } catch (err) {
-                console.error("Lỗi lấy danh mục tin tức:", err);
+                const res = await axios.get('/api/v1/news-categories-nav', {
+                    params: { group: 'news' }
+                });
+                if (res.EC === 0) {
+                    setNewsCategories(res.DT);
+                }
+            } catch (error) {
+                console.error("Lỗi khi lấy danh mục tin tức:", error);
             }
         };
-        fetchNewsCategories();
+
+        fetchCategories();
     }, []);
 
     useEffect(() => {
@@ -206,20 +230,38 @@ const NavHeaderClient = () => {
 
                             {/* Tin tức */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a
+                                    href="#"
+                                    className="nav-link dropdown-toggle"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Tin tức
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/news">Tất cả tin tức</Link></li>
-                                    {newsCategories.map(cat => (
+                                    <li>
+                                        <Link className="dropdown-item" to="/news">
+                                            Tất cả tin tức
+                                        </Link>
+                                    </li>
+                                    {newsCategories.map((cat) => (
                                         <li key={cat.id}>
-                                            <Link className="dropdown-item" to={`/news?categoryId=${cat.id}`}>{cat.name}</Link>
+                                            <Link className="dropdown-item" to={`/news?categoryId=${cat.id}`}>
+                                                {cat.name}
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
                             </li>
 
-                            {/* Thông tin thuốc */}
+
+
+
+
+
+
+                            {/* Thông tin thuốc
                             <li className="nav-item dropdown">
                                 <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Thông tin thuốc
@@ -227,12 +269,12 @@ const NavHeaderClient = () => {
                                 <ul className="dropdown-menu">
                                     <Link className="nav-link" to="/news">Tin tức</Link>
                                 </ul>
-                            </li>
-
-                            {/* Tin tức
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/news">Tin tức</Link>
                             </li> */}
+
+                            {/* Tin tức */}
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/medicine-info">Thông tin thuốc</Link>
+                            </li>
 
                             {/* Đặt lịch */}
 
