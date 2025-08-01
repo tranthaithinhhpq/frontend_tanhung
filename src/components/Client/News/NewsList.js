@@ -30,7 +30,8 @@ const NewsList = () => {
                     page,
                     limit: pagination.limit,
                     categoryId: categoryParam || undefined,
-                    keyword: keywordParam || undefined
+                    keyword: keywordParam || undefined,
+                    group: 'news' // ✅ Thêm dòng này để lọc đúng group
                 }
             });
 
@@ -39,7 +40,12 @@ const NewsList = () => {
                 setPagination(res.DT.pagination);
             }
 
-            console.log("Backend nhận categoryId: ", categoryParam, "keyword: ", keywordParam);
+            console.log("Backend nhận: ", {
+                page,
+                categoryId: categoryParam,
+                keyword: keywordParam,
+                group: 'news'
+            });
 
         } catch (err) {
             console.error(err);
@@ -63,7 +69,7 @@ const NewsList = () => {
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/api/v1/news-categories', {
-                params: { group: 'news' }
+                params: { group: 'news' } // ✅ lọc đúng group
             });
             if (res.EC === 0) {
                 setCategories(res.DT);
@@ -72,6 +78,7 @@ const NewsList = () => {
             console.error(err);
         }
     };
+
 
 
 
@@ -104,6 +111,7 @@ const NewsList = () => {
 
             <Row className="mb-3">
                 <Col md={4}>
+
                     <Form.Control as="select" value={category} onChange={handleCategoryChange}>
                         <option value="">Tất cả loại tin</option>
                         {categories.map(c => (
