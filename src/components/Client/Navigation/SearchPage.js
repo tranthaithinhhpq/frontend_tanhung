@@ -52,7 +52,7 @@ const SearchPage = () => {
 
             {results && (
                 <div>
-                    <h5>Tin tức</h5>
+                    <h5>Tin tức & Thông tin thuốc</h5>
                     <ul>
                         {results.news.map(item => (
                             <li key={item.id}>

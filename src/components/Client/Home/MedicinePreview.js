@@ -1,3 +1,4 @@
+// FRONTEND: src/components/Client/Preview/MedicinePreview.js
 import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import Slider from 'react-slick';
@@ -5,38 +6,36 @@ import { Card } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import './Home.scss';
 
-// Mũi tên phải
 const NextArrow = (props) => (
     <div className="custom-arrow next" onClick={props.onClick}>
         <i className="bi bi-chevron-right"></i>
     </div>
 );
 
-// Mũi tên trái
 const PrevArrow = (props) => (
     <div className="custom-arrow prev" onClick={props.onClick}>
         <i className="bi bi-chevron-left"></i>
     </div>
 );
 
-const NewsPreview = () => {
-    const [topNews, setTopNews] = useState([]);
+const MedicinePreview = () => {
+    const [articles, setArticles] = useState([]);
     const history = useHistory();
 
     useEffect(() => {
-        const fetchNews = async () => {
+        const fetchMedicineArticles = async () => {
             try {
                 const res = await axios.get('/api/v1/client/news-preview', {
-                    params: { group: 'news' } // ✅ Chỉ lấy tin tức group = news
+                    params: { group: 'medicine' }
                 });
                 if (res.EC === 0 && res.DT?.news) {
-                    setTopNews(res.DT.news);
+                    setArticles(res.DT.news);
                 }
             } catch (err) {
-                console.error('Lỗi lấy tin tức:', err);
+                console.error('Lỗi lấy thông tin thuốc:', err);
             }
         };
-        fetchNews();
+        fetchMedicineArticles();
     }, []);
 
     const getImageUrl = (path) => {
@@ -57,38 +56,25 @@ const NewsPreview = () => {
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         responsive: [
-            {
-                breakpoint: 1200,
-                settings: { slidesToShow: 3, slidesToScroll: 1 }
-            },
-            {
-                breakpoint: 768,
-                settings: { slidesToShow: 2, slidesToScroll: 1 }
-            },
-            {
-                breakpoint: 576,
-                settings: { slidesToShow: 1, slidesToScroll: 1 }
-            }
+            { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+            { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+            { breakpoint: 576, settings: { slidesToShow: 1, slidesToScroll: 1 } }
         ]
     };
 
     return (
         <div className="container my-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="mb-0">Tin tức</h3>
-                <button className="btn btn-outline-dark" onClick={() => history.push('/news')}>
+                <h3 className="mb-0">Thông tin thuốc</h3>
+                <button className="btn btn-outline-dark" onClick={() => history.push('/medicine-info')}>
                     Xem tất cả
                 </button>
             </div>
 
             <Slider {...settings}>
-                {topNews.map(item => (
+                {articles.map(item => (
                     <div key={item.id} className="px-2">
-                        <Card
-                            className="news-card"
-                            onClick={() => history.push(`/news/${item.id}`)}
-                            style={{ cursor: 'pointer' }}
-                        >
+                        <Card className="news-card" onClick={() => history.push(`/news/${item.id}`)} style={{ cursor: 'pointer' }}>
                             <Card.Img variant="top" src={getImageUrl(item.image)} />
                             <Card.Body>
                                 <Card.Title style={{ fontSize: '1rem' }}>{item.title}</Card.Title>
@@ -104,4 +90,4 @@ const NewsPreview = () => {
     );
 };
 
-export default NewsPreview;
+export default MedicinePreview;

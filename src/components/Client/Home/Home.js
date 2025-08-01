@@ -7,6 +7,8 @@ import HomeIntroSections from './HomeIntroSections';
 import HomeIntroVideo from './HomeIntroVideo';
 import StatisticsSection from './StatisticsSection';
 import PartnerSlider from './PartnerSlider ';
+import MedicinePreview from './MedicinePreview';
+
 
 
 
@@ -119,6 +121,7 @@ const HomeClient = () => {
                 </div>
             </div>
             <NewsPreview />
+            <MedicinePreview />
             <HomeIntroSections />
             <HomeIntroVideo />
             <StatisticsSection />
