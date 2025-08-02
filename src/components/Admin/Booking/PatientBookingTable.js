@@ -42,7 +42,10 @@ const PatientBookingTable = () => {
     const statusOptions = [
         { value: 'pending', label: 'Chờ xác nhận' },
         { value: 'confirmed', label: 'Đã xác nhận' },
-        { value: 'done', label: 'Đã khám' },
+        { value: 'RESCHEDULED', label: 'Đã dời lịch' },
+        { value: 'CHECKED_IN', label: 'Đã đến khám' },
+        { value: 'done', label: 'Đã khám xong' },
+        { value: 'NO_SHOW', label: 'không đến' },
         { value: 'cancelled', label: 'Đã hủy' }
     ];
 
@@ -51,6 +54,8 @@ const PatientBookingTable = () => {
             'Bệnh nhân': item.name,
             'Ngày sinh': item.dob,
             'Điện thoại': item.phone,
+            'Email': item.email,
+            'Địa chỉ': item.address,
             'Bác sĩ': item.DoctorInfo?.doctorName,
             'Chuyên khoa': item.DoctorInfo?.Specialty?.name,
             'Ngày khám': item.scheduleTime?.split('T')[0],
@@ -80,7 +85,7 @@ const PatientBookingTable = () => {
 
 
     const fetchDoctors = async () => {
-        const res = await axios.get('/api/v1/doctor/list?page=1&limit=100');
+        const res = await axios.get('/api/v1/doctor/read?page=1&limit=100');
         if (res.EC === 0) {
             const options = res.DT.doctors.map(d => ({ value: d.id, label: d.doctorName }));
             setDoctors(options);
@@ -185,20 +190,6 @@ const PatientBookingTable = () => {
     };
 
 
-    const handleDelete = async () => {
-        try {
-            await axios.delete(`/api/v1/booking/${deleteId}`);
-            toast.success("Xóa thành công");
-            fetchBookings();
-        } catch (err) {
-            console.error(err);
-            toast.error("Lỗi khi xóa lịch");
-        } finally {
-            setShowConfirmModal(false);
-            setDeleteId(null);
-        }
-    };
-
     return (
 
         <div className="container py-4">
@@ -264,9 +255,11 @@ const PatientBookingTable = () => {
                 <Table striped bordered hover className="booking-table">
                     <thead>
                         <tr>
-                            <th>Bệnh nhân</th>
+                            <th>Tên bệnh nhân</th>
                             <th>Ngày sinh</th>
                             <th>Điện thoại</th>
+                            <th>Email</th>
+                            <th>Đia chỉ</th>
                             <th>Bác sĩ</th>
                             <th>Chuyên khoa</th>
                             <th>Ngày khám</th>
@@ -284,6 +277,8 @@ const PatientBookingTable = () => {
                                 <td>{item.name}</td>
                                 <td>{item.dob}</td>
                                 <td>{item.phone}</td>
+                                <td>{item.email}</td>
+                                <td>{item.address}</td>
                                 <td>{item.DoctorInfo?.doctorName || item.doctorId}</td>
                                 <td>{item.DoctorInfo?.Specialty?.name || ''}</td>
                                 <td>{item.scheduleTime?.split('T')[0]}</td>

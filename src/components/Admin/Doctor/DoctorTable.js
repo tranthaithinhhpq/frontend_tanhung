@@ -23,7 +23,7 @@ const DoctorTable = () => {
 
     const fetchDoctors = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/doctor/list?page=${currentPage}&limit=${currentLimit}`);
+            const res = await axios.get(`/api/v1/doctor/read?page=${currentPage}&limit=${currentLimit}`);
             if (res.EC === 0) {
                 setDoctors(res.DT.doctors || []);
                 setTotalPage(res.DT.totalPages || 0);

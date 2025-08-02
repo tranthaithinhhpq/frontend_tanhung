@@ -12,7 +12,6 @@ const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit, setCurrentLimit] = useState(5);
     const [totalPage, setTotalPage] = useState(0);
-
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
     const [dataModal, setDataModal] = useState({});
     const [isShowModalUser, setIsShowModalUser] = useState(false);

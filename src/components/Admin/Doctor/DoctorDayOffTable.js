@@ -38,7 +38,7 @@ const DoctorDayOffTable = () => {
 
     const fetchDoctors = async () => {
         try {
-            const res = await axios.get('/api/v1/doctor/list?page=1&limit=100');
+            const res = await axios.get('/api/v1/doctor/read?page=1&limit=100');
             if (res.EC === 0) {
                 const options = res.DT.doctors.map(d => ({ value: d.id, label: d.doctorName }));
                 setDoctors(options);

@@ -48,6 +48,31 @@ const Role = (props) => {
         return result;
     };
 
+    // const handleSave = async () => {
+    //     let invalidObj = Object.entries(listChilds).find(([key, child], index) => {
+    //         return child && !child.url;
+    //     });
+
+    //     if (!invalidObj) {
+    //         // call-api
+    //         let data = buildDataToPersist();
+    //         let res = await createRoles(data);
+    //         if (res && res.EC === 0) {
+    //             toast.success(res.EM);
+    //             console.log(childRef)
+    //             childRef.current.fetListRolesAgain();
+
+    //         }
+    //     } else {
+    //         // error
+    //         toast.error("Input URL must not be empty...");
+    //         let _listChilds = _.cloneDeep(listChilds);
+    //         const key = invalidObj[0];
+    //         _listChilds[key]["isValidUrl"] = false;
+    //         setListChilds(_listChilds);
+    //     }
+    // };
+
     const handleSave = async () => {
         let invalidObj = Object.entries(listChilds).find(([key, child], index) => {
             return child && !child.url;
@@ -59,11 +84,16 @@ const Role = (props) => {
             let res = await createRoles(data);
             if (res && res.EC === 0) {
                 toast.success(res.EM);
-                console.log(childRef)
+
+                // gọi lại list từ bảng
                 childRef.current.fetListRolesAgain();
+
+                // ✅ Reset input sau khi lưu
+                setListChilds({
+                    child1: { url: '', description: '', isValidUrl: true }
+                });
             }
         } else {
-            // error
             toast.error("Input URL must not be empty...");
             let _listChilds = _.cloneDeep(listChilds);
             const key = invalidObj[0];
@@ -71,6 +101,7 @@ const Role = (props) => {
             setListChilds(_listChilds);
         }
     };
+
 
 
 
@@ -129,3 +160,4 @@ const Role = (props) => {
     );
 };
 export default Role;
+

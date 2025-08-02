@@ -26,6 +26,8 @@ const deleteUser = (id) => {
     return axios.delete('/api/v1/user/delete', { data: { id } });
 };
 
+
+
 const fetchGroup = () => {
     return axios.get("/api/v1/group/read");
 

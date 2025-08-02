@@ -22,7 +22,14 @@ const assignRolesToGroup = (data) => {
     return axios.post('/api/v1/role/assign-to-group', { data });
 };
 
-
+const updateRole = async (role) => {
+    try {
+        return await axios.put('/api/v1/role/update', role);
+    } catch (err) {
+        console.error('❌ updateRole error:', err);
+        return { EC: -1, EM: 'Update failed' };
+    }
+};
 
 // Export để dùng ở nơi khác
-export { createRoles, fetchAllRole, deleteRole, fetchRolesByGroup, assignRolesToGroup };
+export { createRoles, fetchAllRole, deleteRole, fetchRolesByGroup, assignRolesToGroup, updateRole };

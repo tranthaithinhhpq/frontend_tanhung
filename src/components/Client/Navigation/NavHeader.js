@@ -257,15 +257,7 @@ const NavHeaderClient = () => {
                                 </ul>
                             </li>
 
-                            {/* Thông tin thuốc
-                            <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Thông tin thuốc
-                                </a>
-                                <ul className="dropdown-menu">
-                                    <Link className="nav-link" to="/news">Tin tức</Link>
-                                </ul>
-                            </li> */}
+
 
                             <li className="nav-item dropdown">
                                 <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
