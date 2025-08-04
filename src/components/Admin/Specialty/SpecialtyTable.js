@@ -18,7 +18,7 @@ const SpecialtyTable = () => {
 
     const fetchSpecialties = async () => {
         try {
-            const res = await axios.get('/api/v1/specialty/read');
+            const res = await axios.get('/api/v1/admin/specialty/read');
             if (res.EC === 0) {
                 setSpecialties(res.DT);
             } else {
@@ -37,7 +37,7 @@ const SpecialtyTable = () => {
     const handleDelete = async () => {
         if (!selectedSpecialty) return;
         try {
-            const res = await axios.delete(`/api/v1/specialty/${selectedSpecialty.id}`);
+            const res = await axios.delete(`/api/v1/admin/specialty/delete/${selectedSpecialty.id}`);
             if (res.EC === 0) {
                 toast.success('Xóa thành công');
                 fetchSpecialties();

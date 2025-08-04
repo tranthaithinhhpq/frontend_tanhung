@@ -20,7 +20,7 @@ const PageImageContentTable = () => {
 
     const fetchData = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/pageimagecontent?page=${currentPage}&limit=${limit}`);
+            const res = await axios.get(`/api/v1/admin/page-image-content/read?page=${currentPage}&limit=${limit}`);
             if (res.EC === 0) {
                 setItems(res.DT.rows || []);
                 setTotalPage(res.DT.totalPages || 0);
@@ -74,11 +74,11 @@ const PageImageContentTable = () => {
 
             let res;
             if (isEditMode) {
-                res = await axios.put(`/api/v1/pageimagecontent/${formData.id}`, form, {
+                res = await axios.put(`/api/v1/admin/page-image-content/update/${formData.id}`, form, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
-                res = await axios.post('/api/v1/pageimagecontent', form, {
+                res = await axios.post('/api/v1/admin/page-image-content/create', form, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             }
@@ -96,7 +96,7 @@ const PageImageContentTable = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Bạn có chắc muốn xoá?")) return;
         try {
-            const res = await axios.delete(`/api/v1/pageimagecontent/${id}`);
+            const res = await axios.delete(`/api/v1/admin/page-image-content/delete/${id}`);
             if (res.EC === 0) {
                 toast.success("Đã xoá");
                 fetchData();

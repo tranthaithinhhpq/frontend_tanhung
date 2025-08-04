@@ -17,7 +17,7 @@ const DeviceEdit = () => {
     const history = useHistory();
 
     useEffect(() => {
-        axios.get('/api/v1/device/read').then(res => {
+        axios.get('/api/v1/admin/device/update').then(res => {
             const device = res.DT.find(x => x.id === +id);
             if (device) {
                 setForm(device);
@@ -40,7 +40,7 @@ const DeviceEdit = () => {
         Object.entries(form).forEach(([key, value]) => data.append(key, value));
         if (image) data.append('image', image);
 
-        const res = await axios.put(`/api/v1/device/${id}`, data);
+        const res = await axios.put(`/api/v1/admin/device/update/${id}`, data);
         if (res.EC === 0) {
             toast.success('Cập nhật thiết bị thành công');
             history.push('/admin/device');

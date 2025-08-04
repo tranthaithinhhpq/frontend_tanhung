@@ -130,10 +130,10 @@ const ServicePriceTable = () => {
 
         try {
             if (isEditMode) {
-                await axios.put(`/api/v1/service-price/${editId}`, payload);
+                await axios.put(`/api/v1/admin/service-price/update/${editId}`, payload);
                 toast.success('Cập nhật thành công');
             } else {
-                await axios.post('/api/v1/service-price', payload);
+                await axios.post('/api/v1/admin/service-price/create', payload);
                 toast.success('Thêm mới thành công');
             }
             setShowModal(false);
@@ -164,7 +164,7 @@ const ServicePriceTable = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/v1/service-price/${deleteId}`);
+            await axios.delete(`/api/admin/v1/service-price/delete/${deleteId}`);
             toast.success('Xóa thành công');
             fetchServicePrices();
         } catch (err) {

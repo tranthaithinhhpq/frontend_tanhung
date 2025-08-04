@@ -111,41 +111,7 @@ const BookingCreate = () => {
         setSelectedTime(null);
     };
 
-    // Gửi lịch hẹn
-    // const handleSubmit = async () => {
-    //     if (!selectedDoctor || !selectedDate || !selectedTime) {
-    //         toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
-    //         return;
-    //     }
 
-    //     const data = {
-    //         ...form,
-    //         specialtyId: selectedSpecialty.value,
-    //         doctorId: selectedDoctor.value,
-    //         slotId: selectedTime.value,
-    //         servicePriceId: selectedService?.value,
-    //         serviceType: selectedService?.type || 'regular',  // 👈 Gửi lên nếu muốn biết loại giá
-    //         scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
-    //     };
-
-    //     try {
-    //         const res = await axios.post('/api/v1/booking/create', data);
-    //         if (res.EC === 0) {
-    //             toast.success("Đặt lịch thành công");
-    //             setForm({ name: '', phone: '', dob: '', address: '', email: '', reason: '' });
-    //             setSelectedSpecialty(null);
-    //             setSelectedDoctor(null);
-    //             setSelectedService(null);
-    //             setSelectedDate(null);
-    //             setSelectedTime(null);
-    //             setTimeSlots([]);
-    //         } else {
-    //             toast.error(res.EM || "Đặt lịch thất bại");
-    //         }
-    //     } catch (err) {
-    //         toast.error("Lỗi khi gửi yêu cầu đặt lịch");
-    //     }
-    // };
 
     const handleSubmit = async () => {
         if (!form.name.trim()) {
@@ -200,7 +166,7 @@ const BookingCreate = () => {
         };
 
         try {
-            const res = await axios.post('/api/v1/booking/create', data);
+            const res = await axios.post('/api/v1/admin/booking/create', data);
             if (res.EC === 0) {
                 toast.success("Đặt lịch thành công");
                 setForm({ name: '', phone: '', dob: '', address: '', email: '', reason: '' });

@@ -45,13 +45,13 @@ const DegreeManagement = () => {
         if (!form.name) return toast.error("Vui lòng nhập tên");
 
         if (editId) {
-            const res = await axios.put(`/api/v1/degree/${editId}`, form);
+            const res = await axios.put(`/api/v1/degree/edit/${editId}`, form);
             if (res.EC === 0) {
                 toast.success("Cập nhật thành công");
                 setEditId(null);
             } else toast.error(res.EM);
         } else {
-            const res = await axios.post('/api/v1/degree', form);
+            const res = await axios.post('/api/v1/degree/create', form);
             if (res.EC === 0) toast.success("Tạo mới thành công");
             else toast.error(res.EM);
         }

@@ -29,11 +29,11 @@ const PositionManagement = () => {
         if (!form.name) return toast.error("Vui lòng nhập tên");
 
         if (editId) {
-            const res = await axios.put(`/api/v1/position/${editId}`, form);
+            const res = await axios.put(`/api/v1/position/edit/${editId}`, form);
             if (res.EC === 0) toast.success("Cập nhật thành công");
             else toast.error(res.EM);
         } else {
-            const res = await axios.post(`/api/v1/position`, form);
+            const res = await axios.post(`/api/v1/position/create`, form);
             if (res.EC === 0) toast.success("Tạo mới thành công");
             else toast.error(res.EM);
         }

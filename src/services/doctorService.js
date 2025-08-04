@@ -5,7 +5,7 @@ const createDoctorInfo = (data) => {
 };
 
 const updateDoctorInfo = (id, data) => {
-    return axios.put(`/api/v1/doctor/${id}`, data, {
+    return axios.put(`/api/v1/doctor/edit/${id}`, data, {
         headers: {
             "Content-Type": "multipart/form-data"
         }

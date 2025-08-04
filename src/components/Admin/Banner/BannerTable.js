@@ -35,7 +35,7 @@ const BannerTable = () => {
 
     const fetchBanners = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/banner?page=${currentPage}&limit=${limit}`);
+            const res = await axios.get(`/api/v1/admin/banner/read?page=${currentPage}&limit=${limit}`);
             if (res.EC === 0) {
                 if (res.EC === 0) {
                     setBanners(res.DT.rows || []);
@@ -73,11 +73,11 @@ const BannerTable = () => {
 
             let res;
             if (isEditMode) {
-                res = await axios.put(`/api/v1/banner/${formData.id}`, form, {
+                res = await axios.put(`/api/v1/admin/banner/update/${formData.id}`, form, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
-                res = await axios.post('/api/v1/banner', form, {
+                res = await axios.post('/api/v1/admin/banner/create', form, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             }
@@ -139,7 +139,7 @@ const BannerTable = () => {
         if (!bannerToDelete) return;
 
         try {
-            const res = await axios.post('/api/v1/banner/delete', {
+            const res = await axios.post('/api/v1/admin/banner/delete', {
                 id: bannerToDelete.id,
                 imageDesktop: bannerToDelete.imageDesktop,
                 imageMobile: bannerToDelete.imageMobile,

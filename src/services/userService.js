@@ -13,28 +13,28 @@ const loginUser = (valueLogin, password) => {
 }
 
 const fetchAllUser = (page, limit) => {
-    return axios.get(`/api/v1/user/read?page=${page}&limit=${limit}`); // template string
+    return axios.get(`/api/v1/admin/user/read?page=${page}&limit=${limit}`); // template string
     // return axios.get
 }
 
-// return axios.post("/api/v1/user/delete", {data:{id: user.id}}{
+// return axios.post("/api/v1/admin/user/delete", {data:{id: user.id}}{
 
 // })
 
 const deleteUser = (id) => {
     // axios 0.27+ phải ghi rõ { data: { ... } }
-    return axios.delete('/api/v1/user/delete', { data: { id } });
+    return axios.delete('/api/v1/admin/user/delete', { data: { id } });
 };
 
 
 
 const fetchGroup = () => {
-    return axios.get("/api/v1/group/read");
+    return axios.get("/api/v1/admin/group/read");
 
 }
 
 const createNewUser = (formData) => {
-    return axios.post("/api/v1/user/create", formData, {
+    return axios.post("/api/v1/admin/user/create", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -44,11 +44,11 @@ const createNewUser = (formData) => {
 // UPDATE gửi multipart nếu có file, else gửi JSON
 const updateCurrentUser = (formDataOrJson, hasFile) => {
     if (hasFile) {
-        return axios.put('/api/v1/user/update', formDataOrJson, {
+        return axios.put('/api/v1/admin/user/update', formDataOrJson, {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
     }
-    return axios.put('/api/v1/user/update', formDataOrJson);
+    return axios.put('/api/v1/admin/user/update', formDataOrJson);
 };
 
 
@@ -62,12 +62,12 @@ const logoutUser = () => {
 
 
 const getDoctor = () => {
-    return axios.get(`/api/v1/user/read-doctor`); // template string
+    return axios.get(`/api/v1/admin/user/read-doctor`); // template string
 
 }
 
 const getDoctorInfoByUserId = (userId) => {
-    return axios.get(`/api/v1/doctor-info/${userId}`);
+    return axios.get(`/api/v1/admin/doctor-info/${userId}`);
 };
 
 

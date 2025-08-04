@@ -43,7 +43,7 @@ const DoctorTable = () => {
     const handleDelete = async () => {
         if (!selectedDoctor) return;
         try {
-            const res = await axios.delete(`/api/v1/doctor/${selectedDoctor.id}`);
+            const res = await axios.delete(`/api/v1/doctor/delete/${selectedDoctor.id}`);
             if (res.EC === 0) {
                 toast.success(res.EM || "Xóa thành công");
                 const nextPage = (doctors.length === 1 && currentPage > 1) ? currentPage - 1 : currentPage;

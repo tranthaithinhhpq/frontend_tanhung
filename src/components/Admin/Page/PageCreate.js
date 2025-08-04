@@ -48,7 +48,7 @@ const PageCreate = () => {
             formData.append('contentThumbnail', contentThumbnail);
             if (image) formData.append('image', image); // 👈 đây là file ảnh
 
-            const res = await axios.post('/api/v1/page', formData, {
+            const res = await axios.post('/api/v1/admin/page/create', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

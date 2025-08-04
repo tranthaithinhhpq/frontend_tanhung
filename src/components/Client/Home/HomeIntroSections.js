@@ -34,7 +34,7 @@ const HomeIntroSections = () => {
                 <div className="text col-md-6 p-4">
                     <h2>Hướng dẫn<br />Khách hàng</h2>
                     <p>Bạn cần khám chữa bệnh? Xem ngay hướng dẫn chi tiết từ đặt lịch, làm thủ tục đến thanh toán – đơn giản, nhanh chóng!</p>
-                    <Button variant="outline-dark">Xem hướng dẫn</Button>
+                    <Button variant="outline-dark">Xem thêm</Button>
                 </div>
                 <div className="image col-md-6 text-center">
                     <img

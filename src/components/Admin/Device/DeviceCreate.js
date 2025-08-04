@@ -24,7 +24,7 @@ const DeviceCreate = () => {
         Object.entries(form).forEach(([key, value]) => data.append(key, value));
         if (image) data.append('image', image);
 
-        const res = await axios.post('/api/v1/device', data);
+        const res = await axios.post('/api/v1/admin/device/create', data);
         if (res.EC === 0) {
             toast.success('Tạo thiết bị thành công');
             history.push('/admin/device');

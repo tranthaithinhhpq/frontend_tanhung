@@ -19,7 +19,7 @@ const DeviceTable = () => {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get(`/api/v1/device/paginate?page=${currentPage}&limit=${limit}`);
+            const res = await axios.get(`/api/v1/admin/device/read?page=${currentPage}&limit=${limit}`);
             if (res.EC === 0) {
                 setDevices(res.DT.devices);
                 setTotalPage(res.DT.totalPages);
@@ -48,7 +48,7 @@ const DeviceTable = () => {
     const confirmDelete = async () => {
         if (!selectedDevice) return;
 
-        const res = await axios.delete(`/api/v1/device/${selectedDevice.id}`);
+        const res = await axios.delete(`/api/v1/admin/device/delete/${selectedDevice.id}`);
         if (res.EC === 0) {
             toast.success('Xóa thành công');
             fetchData();

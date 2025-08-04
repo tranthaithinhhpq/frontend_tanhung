@@ -60,7 +60,7 @@ const DrugPriceTable = () => {
                     }
 
                     try {
-                        await axios.post('/api/v1/medicine', payload);
+                        await axios.post('/api/v1/admin/medicine/create', payload);
                         successCount++;
                     } catch (err) {
                         console.error('Lỗi tạo thuốc:', err);
@@ -84,7 +84,7 @@ const DrugPriceTable = () => {
 
     const fetchDrugs = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/medicine?page=${currentPage}&limit=${limit}&q=${searchText}`);
+            const res = await axios.get(`/api/v1/admin/medicine/read?page=${currentPage}&limit=${limit}&q=${searchText}`);
             if (res.EC === 0) {
                 setDrugs(res.DT.rows || []);
                 setTotalPage(res.DT.totalPages);
@@ -105,10 +105,10 @@ const DrugPriceTable = () => {
     const handleSave = async () => {
         try {
             if (isEditMode) {
-                await axios.put(`/api/v1/medicine/${editId}`, formData);
+                await axios.put(`/api/v1/admin/medicine/update/${editId}`, formData);
                 toast.success('Cập nhật thành công');
             } else {
-                await axios.post('/api/v1/medicine', formData);
+                await axios.post('/api/v1/admin/medicine/create', formData);
                 toast.success('Thêm mới thành công');
             }
             setShowModal(false);
@@ -127,7 +127,7 @@ const DrugPriceTable = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/v1/medicine/${deleteId}`);
+            await axios.delete(`/api/v1/admin/medicine/delete/${deleteId}`);
             toast.success('Xóa thành công');
             fetchDrugs();
         } catch (err) {
@@ -140,21 +140,6 @@ const DrugPriceTable = () => {
     return (
         <div className="container py-4">
             <h4>Quản lý bảng giá thuốc</h4>
-            {/* <div className="mb-3 d-flex justify-content-between align-items-center">
-                <Button onClick={() => {
-                    setShowModal(true);
-                    setIsEditMode(false);
-                    setFormData({ code: '', name: '', activeIngredient: '', concentration: '', unit: '', price: '', insurancePrice: '' });
-                }}>+ Thêm thuốc</Button>
-                <Form.Control
-                    type="text"
-                    placeholder="Tìm kiếm tên thuốc"
-                    value={searchText}
-                    onChange={e => { setSearchText(e.target.value); setCurrentPage(1); }}
-                    style={{ maxWidth: '300px' }}
-                />
-            </div> */}
-
             <div className="mb-3 d-flex justify-content-between align-items-center">
                 <div className="d-flex gap-2">
                     <Button onClick={() => {

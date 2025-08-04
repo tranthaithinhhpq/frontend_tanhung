@@ -28,7 +28,7 @@ const QuestionTable = () => {
 
     const fetchQuestions = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/question?page=${currentPage}&limit=${limit}`);
+            const res = await axios.get(`/api/v1/admin/question/read?page=${currentPage}&limit=${limit}`);
             if (res.EC === 0) {
                 setQuestions(res.DT.rows);
                 setTotalPage(res.DT.totalPages);
@@ -72,8 +72,8 @@ const QuestionTable = () => {
     const handleSave = async () => {
         try {
             const res = isEditMode
-                ? await axios.put(`/api/v1/question/${formData.id}`, formData)
-                : await axios.post(`/api/v1/question`, formData);
+                ? await axios.put(`/api/v1/admin/question/update/${formData.id}`, formData)
+                : await axios.post(`/api/v1/admin/question/create`, formData);
 
             if (res.EC === 0) {
                 toast.success(res.EM);
@@ -89,7 +89,7 @@ const QuestionTable = () => {
 
     const confirmDelete = async () => {
         try {
-            const res = await axios.post(`/api/v1/question/delete`, { id: questionToDelete.id });
+            const res = await axios.post(`/api/v1/admin/question/delete`, { id: questionToDelete.id });
             if (res.EC === 0) {
                 toast.success(res.EM);
                 fetchQuestions();

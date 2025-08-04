@@ -93,7 +93,7 @@ const PatientBookingTable = () => {
     };
 
     const fetchBookings = async () => {
-        let url = `/api/v1/booking?page=${currentPage}&limit=${limit}`;
+        let url = `/api/v1/admin/booking/read?page=${currentPage}&limit=${limit}`;
         if (filterSpecialty?.value) url += `&specialtyId=${filterSpecialty.value}`;
         if (filterStatus?.value) url += `&status=${filterStatus.value}`;
         if (filterDoctor?.value) url += `&doctorId=${filterDoctor.value}`;
@@ -147,22 +147,42 @@ const PatientBookingTable = () => {
         filterEndDate
     ]);
 
+    const handleDelete = async () => {
+        if (!deleteId) return;
 
-    const handlePageClick = (event) => {
-        setCurrentPage(+event.selected + 1);
+        try {
+            const res = await axios.delete(`/api/v1/admin/booking/delete/${deleteId}`);
+            if (res.EC === 0) {
+                toast.success("Xóa lịch khám thành công");
+                setShowConfirmModal(false);
+                setDeleteId(null);
+                fetchBookings(); // reload danh sách
+            } else {
+                toast.error(res.EM || "Xóa thất bại");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Lỗi khi xóa lịch khám");
+        }
     };
-    const isValidDate = (value) => {
-        const date = new Date(value);
-        return value && !isNaN(date.getTime());
-    };
-    const handleEdit = (booking) => {
-        setEditData({
-            ...booking,
-            dob: isValidDate(booking.dob) ? new Date(booking.dob) : null,
-            scheduleTime: isValidDate(booking.scheduleTime) ? new Date(booking.scheduleTime) : null,
-        });
-        setShowEditModal(true);
-    };
+
+
+
+    // const handlePageClick = (event) => {
+    //     setCurrentPage(+event.selected + 1);
+    // };
+    // const isValidDate = (value) => {
+    //     const date = new Date(value);
+    //     return value && !isNaN(date.getTime());
+    // };
+    // const handleEdit = (booking) => {
+    //     setEditData({
+    //         ...booking,
+    //         dob: isValidDate(booking.dob) ? new Date(booking.dob) : null,
+    //         scheduleTime: isValidDate(booking.scheduleTime) ? new Date(booking.scheduleTime) : null,
+    //     });
+    //     setShowEditModal(true);
+    // };
 
     const confirmDelete = (id) => {
         setDeleteId(id);
@@ -170,24 +190,6 @@ const PatientBookingTable = () => {
     };
 
 
-
-    const handleSaveEdit = async () => {
-        try {
-            const payload = {
-                ...editData,
-                dob: editData.dob ? editData.dob.toLocaleDateString('en-CA') : null, // yyyy-mm-dd
-                scheduleTime: editData.scheduleTime?.toISOString() || null,
-            };
-
-            await axios.put(`/api/v1/booking/${editData.id}`, payload);
-            toast.success("Cập nhật thành công");
-            setShowEditModal(false);
-            fetchBookings(); // refresh lại bảng
-        } catch (err) {
-            console.error(err);
-            toast.error("Lỗi khi cập nhật");
-        }
-    };
 
 
     return (
@@ -303,6 +305,21 @@ const PatientBookingTable = () => {
                         )}
                     </tbody>
                 </Table>
+
+                <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Xác nhận xóa</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa lịch khám này?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+                            Hủy
+                        </Button>
+                        <Button variant="danger" onClick={handleDelete}>
+                            Xác nhận xóa
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
 
 

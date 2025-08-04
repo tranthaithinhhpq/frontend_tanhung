@@ -29,7 +29,7 @@ const NewsTable = () => {
 
     const confirmDelete = async () => {
         try {
-            const res = await axios.delete(`/api/v1/news/${selectedArticle.id}`);
+            const res = await axios.delete(`/api/v1/news/delete/${selectedArticle.id}`);
             if (res.EC === 0) {
                 toast.success('Xóa thành công');
                 fetchArticles();

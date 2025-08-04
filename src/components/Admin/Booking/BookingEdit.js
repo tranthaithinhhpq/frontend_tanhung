@@ -34,7 +34,7 @@ const BookingEdit = () => {
     useEffect(() => {
         const fetchBooking = async () => {
             try {
-                const res = await axios.get(`/api/v1/booking/${id}`);
+                const res = await axios.get(`/api/v1/admin/booking/update/${id}`);
                 if (res.EC === 0) {
                     const b = res.DT;
                     setForm({
@@ -126,7 +126,7 @@ const BookingEdit = () => {
     useEffect(() => {
         const fetchBooking = async () => {
             try {
-                const res = await axios.get(`/api/v1/booking/${id}`);
+                const res = await axios.get(`/api/v1/admin/booking/update/${id}`);
                 if (res.EC === 0) {
                     const b = res.DT;
                     setForm({
@@ -227,7 +227,7 @@ const BookingEdit = () => {
         };
 
         try {
-            const res = await axios.put(`/api/v1/booking/${id}`, data);
+            const res = await axios.put(`/api/v1/admin/booking/update/${id}`, data);
             if (res.EC === 0) {
                 toast.success("Cập nhật lịch thành công");
                 history.push('/admin/booking');

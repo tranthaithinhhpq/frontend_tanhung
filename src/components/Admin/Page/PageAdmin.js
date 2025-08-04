@@ -27,7 +27,7 @@ const PageAdmin = () => {
 
     const fetchPages = async () => {
         try {
-            const res = await axios.get('/api/v1/page');
+            const res = await axios.get('/api/v1/admin/page/read');
             if (res.EC === 0) {
                 setPages(res.DT); // ← bạn phải gọi setPages
             } else {
@@ -42,14 +42,14 @@ const PageAdmin = () => {
     const handleSave = async () => {
         try {
             if (editMode) {
-                const res = await axios.put(`/api/v1/page/${currentPage.id}`, form);
+                const res = await axios.put(`/api/v1/admin/page/update/${currentPage.id}`, form);
                 if (res?.EC === 0) {
                     toast.success('Cập nhật thành công');
                     fetchPages();
                     setShowModal(false);
                 } else toast.error(res?.EM);
             } else {
-                const res = await axios.post('/api/v1/page', form);
+                const res = await axios.post('/api/v1/admin/page/create', form);
                 if (res?.EC === 0) {
                     toast.success('Tạo trang thành công');
                     fetchPages();
@@ -65,7 +65,7 @@ const PageAdmin = () => {
     const handleDelete = async (id) => {
         if (!window.confirm('Bạn có chắc muốn xoá?')) return;
         try {
-            const res = await axios.delete(`/api/v1/page/${id}`);
+            const res = await axios.delete(`/api/v1/admin/page/delete/${id}`);
             if (res?.EC === 0) {
                 toast.success('Xoá thành công');
                 fetchPages();
@@ -185,7 +185,7 @@ const PageAdmin = () => {
                         variant="danger"
                         onClick={async () => {
                             try {
-                                const res = await axios.delete(`/api/v1/page/${currentPage?.id}`);
+                                const res = await axios.delete(`/api/v1/admin/page/delete/${currentPage?.id}`);
                                 if (res?.EC === 0) {
                                     toast.success('Xoá thành công');
                                     fetchPages();
