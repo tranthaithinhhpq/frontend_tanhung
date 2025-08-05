@@ -15,7 +15,7 @@ const DegreeManagement = () => {
     const [showConfirm, setShowConfirm] = useState(false);
 
     const fetchData = async (page = 1) => {
-        const res = await axios.get(`/api/v1/degree/paginate?page=${page}&limit=5`);
+        const res = await axios.get(`/api/v1/admin/degree/paginate?page=${page}&limit=5`);
         if (res.EC === 0) {
             setDegrees(res.DT.rows);
             setPagination({ totalPages: res.DT.totalPages, currentPage: res.DT.currentPage });
@@ -28,7 +28,7 @@ const DegreeManagement = () => {
     };
 
     const handleDeleteConfirm = async () => {
-        const res = await axios.post('/api/v1/degree/delete', { id: degreeToDelete });
+        const res = await axios.post('/api/v1/admin/degree/delete', { id: degreeToDelete });
         if (res.EC === 0) {
             toast.success("Xóa thành công");
             fetchData(pagination.currentPage);
@@ -45,13 +45,13 @@ const DegreeManagement = () => {
         if (!form.name) return toast.error("Vui lòng nhập tên");
 
         if (editId) {
-            const res = await axios.put(`/api/v1/degree/edit/${editId}`, form);
+            const res = await axios.put(`/api/v1/admin/degree/edit/${editId}`, form);
             if (res.EC === 0) {
                 toast.success("Cập nhật thành công");
                 setEditId(null);
             } else toast.error(res.EM);
         } else {
-            const res = await axios.post('/api/v1/degree/create', form);
+            const res = await axios.post('/api/v1/admin/degree/create', form);
             if (res.EC === 0) toast.success("Tạo mới thành công");
             else toast.error(res.EM);
         }
@@ -62,7 +62,7 @@ const DegreeManagement = () => {
     };
 
     const handleDelete = async (id) => {
-        const res = await axios.post('/api/v1/degree/delete', { id });
+        const res = await axios.post('/api/v1/admin/degree/delete', { id });
         if (res.EC === 0) {
             toast.success("Xóa thành công");
             fetchData();

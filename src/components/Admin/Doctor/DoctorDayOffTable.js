@@ -38,7 +38,7 @@ const DoctorDayOffTable = () => {
 
     const fetchDoctors = async () => {
         try {
-            const res = await axios.get('/api/v1/doctor/read?page=1&limit=100');
+            const res = await axios.get('/api/v1/admin/doctor/read?page=1&limit=100');
             if (res.EC === 0) {
                 const options = res.DT.doctors.map(d => ({ value: d.id, label: d.doctorName }));
                 setDoctors(options);
@@ -50,7 +50,7 @@ const DoctorDayOffTable = () => {
 
     const fetchDayOffPaginate = useCallback(async () => {
         try {
-            let url = `/api/v1/doctor-day-off-paginate?page=${currentPage}&limit=${currentLimit}`;
+            let url = `/api/v1/admin/doctor-day-off/read?page=${currentPage}&limit=${currentLimit}`;
             if (filterDoctor?.value) url += `&doctorId=${filterDoctor.value}`;
             if (filterDate instanceof Date && !isNaN(filterDate.getTime())) {
                 const dateStr = filterDate.getFullYear() + '-' +
@@ -85,7 +85,7 @@ const DoctorDayOffTable = () => {
 
     const fetchSlots = async (doctorId, date) => {
         try {
-            const res = await axios.get('/api/v1/doctor-day-off/slots', {
+            const res = await axios.get('/api/v1/admin/doctor-day-off/create', {
                 params: {
                     doctorId,
                     date: date.getFullYear() + '-' +
@@ -132,7 +132,7 @@ const DoctorDayOffTable = () => {
         }
 
         try {
-            await axios.post('/api/v1/doctor-day-off', {
+            await axios.post('/api/v1/admin/doctor-day-off/create', {
                 doctorId,
                 date,
                 slotId: slotIds,
@@ -155,7 +155,7 @@ const DoctorDayOffTable = () => {
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`/api/v1/doctor-day-off/${deleteId}`);
+            await axios.delete(`/api/v1/admin/doctor-day-off/delete/${deleteId}`);
             toast.success("Xóa thành công");
             fetchDayOffPaginate();
         } catch (err) {

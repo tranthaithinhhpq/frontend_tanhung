@@ -40,7 +40,7 @@ const WorkingSlotTemplateManagement = () => {
     };
 
     const fetchData = async (page = 1, doctorName = '') => {
-        const res = await axios.get(`/api/v1/working-slot-template/paginate?page=${page}&limit=5&doctorName=${doctorName}`);
+        const res = await axios.get(`/api/v1/admin/working-slot-template/read?page=${page}&limit=5&doctorName=${doctorName}`);
         if (res.EC === 0) {
             setSlots(res.DT.rows);
             setPagination({ totalPages: res.DT.totalPages, currentPage: res.DT.currentPage });
@@ -56,8 +56,8 @@ const WorkingSlotTemplateManagement = () => {
         if (!doctorId || !startTime || !endTime) return toast.error('Vui lòng nhập đầy đủ');
 
         const res = editId
-            ? await axios.put(`/api/v1/working-slot-template/${editId}`, form)
-            : await axios.post(`/api/v1/working-slot-template`, form);
+            ? await axios.put(`/api/v1/admin/working-slot-template/update/${editId}`, form)
+            : await axios.post(`/api/v1/admin/working-slot-template/create`, form);
 
         if (res.EC === 0) toast.success(editId ? 'Cập nhật thành công' : 'Tạo mới thành công');
         else toast.error(res.EM);
@@ -69,7 +69,7 @@ const WorkingSlotTemplateManagement = () => {
     };
 
     const handleDelete = async () => {
-        const res = await axios.post(`/api/v1/working-slot-template/delete`, { id: deleteId });
+        const res = await axios.post(`/api/v1/admin/working-slot-template/delete`, { id: deleteId });
         if (res.EC === 0) toast.success('Xóa thành công');
         else toast.error(res.EM);
         setShowConfirm(false);

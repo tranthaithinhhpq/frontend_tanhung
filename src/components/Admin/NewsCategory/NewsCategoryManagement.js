@@ -14,7 +14,7 @@ const NewsCategoryManagement = () => {
     const [pagination, setPagination] = useState({ totalPages: 0, currentPage: 1 });
 
     const fetchData = async (page = 1) => {
-        const res = await axios.get(`/api/v1/news-category/paginate?page=${page}&limit=5`);
+        const res = await axios.get(`/api/v1/admin/news-category/read?page=${page}&limit=5`);
         if (res.EC === 0) {
             setList(res.DT.rows);
             setPagination({ totalPages: res.DT.totalPages, currentPage: res.DT.currentPage });
@@ -27,8 +27,8 @@ const NewsCategoryManagement = () => {
         if (!form.name) return toast.error("Vui lòng nhập tên");
 
         const res = editId
-            ? await axios.put(`/api/v1/news-category/${editId}`, form)
-            : await axios.post(`/api/v1/news-category`, form);
+            ? await axios.put(`/api/v1/admin/news-category/update/${editId}`, form)
+            : await axios.post(`/api/v1/admin/news-category/create`, form);
 
         if (res.EC === 0) toast.success(editId ? "Cập nhật thành công" : "Tạo mới thành công");
         else toast.error(res.EM);
@@ -40,7 +40,7 @@ const NewsCategoryManagement = () => {
     };
 
     const handleDelete = async () => {
-        const res = await axios.post(`/api/v1/news-category/delete`, { id: deleteId });
+        const res = await axios.post(`/api/v1/admin/news-category/delete`, { id: deleteId });
         if (res.EC === 0) {
             toast.success("Xóa thành công");
             fetchData(pagination.currentPage);
@@ -78,9 +78,22 @@ const NewsCategoryManagement = () => {
                                 <Button variant="warning" size="sm" onClick={() => { setForm(item); setEditId(item.id); setShowModal(true); }}>
                                     Sửa
                                 </Button>{' '}
-                                <Button variant="danger" size="sm" onClick={() => { setDeleteId(item.id); setShowConfirm(true); }}>
-                                    Xóa
-                                </Button>
+                                {["Thông tin dược lâm sàng", "Hướng dẫn dùng tin thuốc", "Hoạt động khoa dược"].includes(item.name) ? (
+                                    <Button variant="secondary" size="sm" disabled>
+                                        Xóa
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={() => {
+                                            setDeleteId(item.id);
+                                            setShowConfirm(true);
+                                        }}
+                                    >
+                                        Xóa
+                                    </Button>
+                                )}
                             </td>
                         </tr>
                     ))}

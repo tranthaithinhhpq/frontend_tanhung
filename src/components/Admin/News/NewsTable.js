@@ -29,7 +29,7 @@ const NewsTable = () => {
 
     const confirmDelete = async () => {
         try {
-            const res = await axios.delete(`/api/v1/news/delete/${selectedArticle.id}`);
+            const res = await axios.delete(`/api/v1/admin/news/delete/${selectedArticle.id}`);
             if (res.EC === 0) {
                 toast.success('Xóa thành công');
                 fetchArticles();
@@ -49,7 +49,7 @@ const NewsTable = () => {
 
     const fetchArticles = async () => {
         try {
-            const res = await axios.get(`/api/v1/news/paginate?page=${currentPage}&limit=${limit}`);
+            const res = await axios.get(`/api/v1/admin/news/paginate?page=${currentPage}&limit=${limit}`);
             console.log("res: ", res);
             if (res.EC === 0) {
                 setArticles(res.DT.articles);

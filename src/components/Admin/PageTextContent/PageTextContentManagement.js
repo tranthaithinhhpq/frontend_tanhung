@@ -14,7 +14,7 @@ const PageTextContentManagement = () => {
     const [pagination, setPagination] = useState({ totalPages: 0, currentPage: 1 });
 
     const fetchData = async (page = 1) => {
-        const res = await axios.get(`/api/v1/page-text-content/paginate?page=${page}&limit=5`);
+        const res = await axios.get(`/api/v1/admin/page-text-content/read?page=${page}&limit=5`);
         if (res.EC === 0) {
             setList(res.DT.rows);
             setPagination({ totalPages: res.DT.totalPages, currentPage: res.DT.currentPage });
@@ -27,8 +27,8 @@ const PageTextContentManagement = () => {
         if (!form.section || !form.title) return toast.error("Vui lòng nhập đầy đủ");
 
         const res = editId
-            ? await axios.put(`/api/v1/page-text-content/${editId}`, form)
-            : await axios.post(`/api/v1/page-text-content`, form);
+            ? await axios.put(`/api/v1/admin/page-text-content/update/${editId}`, form)
+            : await axios.post(`/api/v1/admin/page-text-content/create`, form);
 
         if (res.EC === 0) toast.success(editId ? "Cập nhật thành công" : "Tạo mới thành công");
         else toast.error(res.EM);
@@ -40,7 +40,7 @@ const PageTextContentManagement = () => {
     };
 
     const handleDelete = async () => {
-        const res = await axios.post(`/api/v1/page-text-content/delete`, { id: deleteId });
+        const res = await axios.post(`/api/v1/admin/page-text-content/delete`, { id: deleteId });
         if (res.EC === 0) {
             toast.success("Xóa thành công");
             fetchData(pagination.currentPage);

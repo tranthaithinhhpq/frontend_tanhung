@@ -129,7 +129,7 @@ const NewsEdit = () => {
         const formData = new FormData();
         formData.append("image", file);
         try {
-            const res = await axios.post("/api/v1/upload", formData);
+            const res = await axios.post("/api/v1/admin/upload", formData);
             const imageUrl = buildImageUrl(res.path);
             const range = quill.getSelection();
             quill.insertEmbed(range?.index || 0, "image", imageUrl);
@@ -153,7 +153,7 @@ const NewsEdit = () => {
         if (image) formData.append("image", image);
 
         try {
-            const res = await axios.put(`/api/v1/news/edit/${id}`, formData);
+            const res = await axios.put(`/api/v1/admin/news/edit/${id}`, formData);
             if (res.EC === 0) {
                 toast.success("Cập nhật thành công");
                 history.push("/admin/news");

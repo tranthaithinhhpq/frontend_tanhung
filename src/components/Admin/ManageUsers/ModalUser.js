@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 
 import {
-    fetchGroup,
+    fetchGroupUser,
     createNewUser,
     updateCurrentUser
 } from '../../../services/userService';
@@ -55,7 +55,7 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
     /* ---------- load nhóm ---------- */
     useEffect(() => {
         (async () => {
-            const res = await fetchGroup();
+            const res = await fetchGroupUser();
             if (res?.EC === 0) {
                 setGroupList(res.DT);
                 if (res.DT.length && action === 'CREATE')

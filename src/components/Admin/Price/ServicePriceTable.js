@@ -34,7 +34,7 @@ const ServicePriceTable = () => {
 
     const fetchSpecialties = async () => {
         try {
-            const res = await axios.get('/api/v1/specialty/read');
+            const res = await axios.get('/api/v1/admin/specialty/read');
             if (res.EC === 0) {
                 const options = res.DT.map(sp => ({ value: sp.id, label: sp.name }));
                 setSpecialties(options);
@@ -46,7 +46,7 @@ const ServicePriceTable = () => {
 
     const fetchServicePrices = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/service-price/read?page=${currentPage}&limit=${limit}`);
+            const res = await axios.get(`/api/v1/admin/service-price/read?page=${currentPage}&limit=${limit}`);
             if (res.EC === 0) {
                 setServicePrices(res.DT.rows || []); // an toàn hơn
                 setTotalPage(res.DT.totalPages);
@@ -87,7 +87,7 @@ const ServicePriceTable = () => {
                         continue;
                     }
 
-                    await axios.post('/api/v1/service-price', {
+                    await axios.post('/api/v1/admin/service-price', {
                         name,
                         group,
                         price,
@@ -164,7 +164,7 @@ const ServicePriceTable = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/admin/v1/service-price/delete/${deleteId}`);
+            await axios.delete(`/api/v1/admin/service-price/delete/${deleteId}`);
             toast.success('Xóa thành công');
             fetchServicePrices();
         } catch (err) {

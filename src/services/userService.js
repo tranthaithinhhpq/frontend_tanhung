@@ -30,6 +30,10 @@ const deleteUser = (id) => {
 
 const fetchGroup = () => {
     return axios.get("/api/v1/admin/group/read");
+}
+
+const fetchGroupUser = () => {
+    return axios.get("/api/v1/admin/user/create");
 
 }
 
@@ -73,6 +77,6 @@ const getDoctorInfoByUserId = (userId) => {
 
 
 export {
-    registerNewUser, loginUser, fetchAllUser, deleteUser, fetchGroup, createNewUser, updateCurrentUser, getUserAccount,
+    registerNewUser, loginUser, fetchAllUser, deleteUser, fetchGroup, fetchGroupUser, createNewUser, updateCurrentUser, getUserAccount,
     logoutUser, getDoctor, getDoctorInfoByUserId
 };

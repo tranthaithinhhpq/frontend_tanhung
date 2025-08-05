@@ -14,7 +14,7 @@ const PositionManagement = () => {
     const [pagination, setPagination] = useState({ totalPages: 0, currentPage: 1 });
 
     const fetchData = async (page = 1) => {
-        const res = await axios.get(`/api/v1/position/paginate?page=${page}&limit=5`);
+        const res = await axios.get(`/api/v1/admin/position/read?page=${page}&limit=5`);
         if (res.EC === 0) {
             setPositions(res.DT.rows);
             setPagination({ totalPages: res.DT.totalPages, currentPage: res.DT.currentPage });
@@ -29,11 +29,11 @@ const PositionManagement = () => {
         if (!form.name) return toast.error("Vui lòng nhập tên");
 
         if (editId) {
-            const res = await axios.put(`/api/v1/position/edit/${editId}`, form);
+            const res = await axios.put(`/api/v1/admin/position/update/${editId}`, form);
             if (res.EC === 0) toast.success("Cập nhật thành công");
             else toast.error(res.EM);
         } else {
-            const res = await axios.post(`/api/v1/position/create`, form);
+            const res = await axios.post(`/api/v1/admin/position/create`, form);
             if (res.EC === 0) toast.success("Tạo mới thành công");
             else toast.error(res.EM);
         }
@@ -45,7 +45,7 @@ const PositionManagement = () => {
     };
 
     const handleDelete = async () => {
-        const res = await axios.post('/api/v1/position/delete', { id: positionToDelete });
+        const res = await axios.post('/api/v1/admin/position/delete', { id: positionToDelete });
         if (res.EC === 0) {
             toast.success("Xóa thành công");
             fetchData(pagination.currentPage);
