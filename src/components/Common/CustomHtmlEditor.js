@@ -3,27 +3,21 @@ import { Button, Modal, Form } from "react-bootstrap";
 import './CustomHtmlEditor.scss';
 import axios from "../../setup/axios";
 
-
 const CustomHtmlEditor = ({ value, onChange }) => {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
     const editorRef = useRef(null);
     const fileInputRef = useRef(null);
+    const pdfInputRef = useRef(null);
     const [showTableModal, setShowTableModal] = useState(false);
     const [rows, setRows] = useState(2);
     const [cols, setCols] = useState(2);
-    const pdfInputRef = useRef(null);
-
-    // useEffect(() => {
-    //     if (editorRef.current && editorRef.current.innerHTML !== value) {
-    //         editorRef.current.innerHTML = value;
-    //     }
-    // }, []); // chỉ set innerHTML 1 lần khi mounted
+    const [textColor, setTextColor] = useState("#000000");
 
     useEffect(() => {
         if (editorRef.current && editorRef.current.innerHTML !== value) {
             editorRef.current.innerHTML = value;
         }
-    }, [value]); // Cập nhật mỗi khi prop value thay đổi
+    }, [value]);
 
     const execCommand = (command, value = null) => {
         document.execCommand(command, false, value);
@@ -33,12 +27,10 @@ const CustomHtmlEditor = ({ value, onChange }) => {
     const insertImage = async (file) => {
         const formData = new FormData();
         formData.append("file", file);
-
         try {
             const res = await axios.post("/api/v1/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
-
             const imageUrl = `${BACKEND_URL}/${res.path}`;
             const img = document.createElement("img");
             img.src = imageUrl;
@@ -51,7 +43,6 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 if (newWidth) img.style.width = newWidth;
                 onChange(editorRef.current.innerHTML);
             };
-
             insertNodeAtCaret(img);
             onChange(editorRef.current.innerHTML);
         } catch (err) {
@@ -59,16 +50,13 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         }
     };
 
-
     const insertPDF = async (file) => {
         const formData = new FormData();
         formData.append("file", file);
-
         try {
             const res = await axios.post("/api/v1/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
-
             const pdfUrl = `${BACKEND_URL}/${res.path}`;
             const embed = document.createElement("embed");
             embed.src = pdfUrl;
@@ -76,7 +64,6 @@ const CustomHtmlEditor = ({ value, onChange }) => {
             embed.width = "100%";
             embed.height = "600px";
             embed.style.margin = "12px 0";
-
             insertNodeAtCaret(embed);
             onChange(editorRef.current.innerHTML);
         } catch (err) {
@@ -84,14 +71,12 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         }
     };
 
-
     const insertNodeAtCaret = (node) => {
         const sel = window.getSelection();
         if (!sel || sel.rangeCount === 0) return;
         const range = sel.getRangeAt(0);
         range.deleteContents();
         range.insertNode(node);
-        // đặt lại con trỏ sau node mới
         range.setStartAfter(node);
         range.setEndAfter(node);
         sel.removeAllRanges();
@@ -133,9 +118,69 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         setShowTableModal(false);
     };
 
+    const addCaptionToLastImage = () => {
+        const editor = editorRef.current;
+        if (!editor) return;
+
+        const images = editor.querySelectorAll('img');
+        if (images.length === 0) {
+            alert("Không tìm thấy ảnh nào để chú thích");
+            return;
+        }
+
+        const lastImage = images[images.length - 1];
+        const captionText = prompt("Nhập chú thích cho ảnh:");
+        if (!captionText) return;
+
+        const width = prompt("Nhập chiều rộng chú thích (vd: 100%, 300px):", lastImage.style.width || "100%");
+
+        const caption = document.createElement("div");
+        caption.innerText = captionText;
+        caption.style.fontStyle = "italic";
+        caption.style.fontSize = "14px";
+        caption.style.textAlign = "center";
+        caption.style.backgroundColor = "#f0f0f0";
+        caption.style.padding = "4px 8px";
+        caption.style.marginTop = "-8px";
+        caption.style.width = width || "100%";
+        caption.style.marginLeft = "auto";
+        caption.style.marginRight = "auto";
+
+        lastImage.insertAdjacentElement('afterend', caption);
+        onChange(editor.innerHTML);
+    };
+
+
     const handleInput = () => {
         onChange(editorRef.current.innerHTML);
     };
+
+    const alignLastImage = (align) => {
+        const editor = editorRef.current;
+        if (!editor) return;
+        const images = editor.querySelectorAll("img");
+        if (images.length === 0) {
+            alert("Không tìm thấy ảnh nào để căn chỉnh");
+            return;
+        }
+
+        const lastImage = images[images.length - 1];
+        lastImage.style.display = align === "center" ? "block" : "inline-block";
+        lastImage.style.marginLeft = align === "left" ? "0" : align === "center" ? "auto" : "auto";
+        lastImage.style.marginRight = align === "right" ? "0" : align === "center" ? "auto" : "auto";
+        lastImage.style.textAlign = align;
+
+        // căn luôn chú thích bên dưới nếu có
+        const nextSibling = lastImage.nextElementSibling;
+        if (nextSibling && nextSibling.innerText && nextSibling.style.fontStyle === "italic") {
+            nextSibling.style.textAlign = align;
+            nextSibling.style.marginLeft = align === "center" ? "auto" : "0";
+            nextSibling.style.marginRight = align === "center" ? "auto" : "0";
+        }
+
+        onChange(editor.innerHTML);
+    };
+
 
     return (
         <div className="mb-3 wysiwyg-wrapper">
@@ -152,6 +197,16 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 <Button size="sm" onClick={() => fileInputRef.current.click()}>Ảnh</Button>
                 <Button size="sm" onClick={() => pdfInputRef.current.click()}>PDF</Button>
                 <Button size="sm" onClick={() => setShowTableModal(true)}>Bảng</Button>
+                <div className="d-flex align-items-center gap-2">
+                    <Form.Control type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} title="Chọn màu" style={{ width: '40px', height: '30px', padding: 0 }} />
+                    <Form.Control type="text" value={textColor} onChange={(e) => setTextColor(e.target.value)} placeholder="#000000" style={{ width: '80px', height: '30px' }} />
+                    <Button size="sm" onClick={() => execCommand("foreColor", textColor)}>Màu chữ</Button>
+                </div>
+                <Button size="sm" onClick={() => execCommand("fontSize", prompt("Nhập cỡ chữ (1-7):"))}>Cỡ chữ</Button>
+                <Button size="sm" onClick={addCaptionToLastImage}>Chú thích ảnh</Button>
+                <Button size="sm" onClick={() => alignLastImage("left")}>Ảnh trái</Button>
+                <Button size="sm" onClick={() => alignLastImage("center")}>Ảnh giữa</Button>
+                <Button size="sm" onClick={() => alignLastImage("right")}>Ảnh phải</Button>
             </div>
 
             <div
@@ -163,25 +218,8 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 style={{ minHeight: 300, overflowY: "auto", textAlign: "left" }}
             ></div>
 
-            <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                accept="image/*"
-                onChange={(e) => {
-                    if (e.target.files[0]) insertImage(e.target.files[0]);
-                }}
-            />
-
-            <input
-                type="file"
-                ref={pdfInputRef}
-                style={{ display: "none" }}
-                accept="application/pdf"
-                onChange={(e) => {
-                    if (e.target.files[0]) insertPDF(e.target.files[0]);
-                }}
-            />
+            <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={(e) => e.target.files[0] && insertImage(e.target.files[0])} />
+            <input type="file" ref={pdfInputRef} style={{ display: "none" }} accept="application/pdf" onChange={(e) => e.target.files[0] && insertPDF(e.target.files[0])} />
 
             <Modal show={showTableModal} onHide={() => setShowTableModal(false)} centered>
                 <Modal.Header closeButton>
@@ -190,21 +228,11 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 <Modal.Body>
                     <Form.Group className="mb-3">
                         <Form.Label>Số dòng</Form.Label>
-                        <Form.Control
-                            type="number"
-                            min={1}
-                            value={rows}
-                            onChange={(e) => setRows(parseInt(e.target.value) || 1)}
-                        />
+                        <Form.Control type="number" min={1} value={rows} onChange={(e) => setRows(parseInt(e.target.value) || 1)} />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Số cột</Form.Label>
-                        <Form.Control
-                            type="number"
-                            min={1}
-                            value={cols}
-                            onChange={(e) => setCols(parseInt(e.target.value) || 1)}
-                        />
+                        <Form.Control type="number" min={1} value={cols} onChange={(e) => setCols(parseInt(e.target.value) || 1)} />
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
@@ -217,5 +245,3 @@ const CustomHtmlEditor = ({ value, onChange }) => {
 };
 
 export default CustomHtmlEditor;
-
-

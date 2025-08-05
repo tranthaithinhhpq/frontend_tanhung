@@ -67,7 +67,7 @@ const PageTextContentManagement = () => {
                         <th>Tiêu đề</th>
                         <th>Nội dung</th>
                         <th>Thứ tự</th>
-                        <th>Hành động</th>
+                        <th style={{ minWidth: '110px' }}>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,7 +119,11 @@ const PageTextContentManagement = () => {
                 <Modal.Body>
                     <Form.Group className="mb-3">
                         <Form.Label>Section *</Form.Label>
-                        <Form.Control value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} />
+                        <Form.Control
+                            value={form.section}
+                            onChange={(e) => setForm({ ...form, section: e.target.value })}
+                            disabled={!!editId} // 👈 Chỉ cho nhập khi đang tạo mới
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Tiêu đề *</Form.Label>

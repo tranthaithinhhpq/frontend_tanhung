@@ -196,7 +196,7 @@ const AppRoutes = () => {
 
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
-            <Route path="/admin/register" component={Register} />
+            {/* <Route path="/admin/register" component={Register} /> */}
 
             {/* DegreeManagement Admin */}
             <Route path="/admin/degree" component={DegreeManagement} />

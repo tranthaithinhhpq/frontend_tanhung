@@ -20,6 +20,7 @@ const NavHeaderClient = () => {
     const [newsCategories, setNewsCategories] = useState([]);
 
 
+
     const [keyword, setKeyword] = useState('');
     const history = useHistory();
 
@@ -143,33 +144,29 @@ const NavHeaderClient = () => {
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)' // tùy chọn đổ bóng
         }}>
             {/* Top bar chứa địa chỉ, cấp cứu, tổng đài */}
-            <div className="top-bar text-light py-2" style={{ backgroundColor: '#222', position: 'sticky', top: 0, zIndex: 1050 }}>
-                <div className="container d-flex justify-content-between align-items-center flex-wrap" style={{ fontSize: '14px' }}>
-                    {/* Địa chỉ bên trái */}
-                    <div className="d-flex align-items-center">
-                        <i className="fa fa-map-marker me-2" aria-hidden="true"></i>
-                        {topbarContent.address?.trim() ? topbarContent.address : "871 Trần Xuân Soạn - P. Tân Hưng - Quận 7 - Tp. Hồ Chí Minh"}
-
-                    </div>
-
-                    {/* Tổng đài + cấp cứu bên phải */}
-                    <div className="d-flex align-items-center gap-4">
-
+            {windowWidth >= 992 && (
+                <div className="top-bar text-light py-2" style={{ backgroundColor: '#222', position: 'sticky', top: 0, zIndex: 1050 }}>
+                    <div className="container d-flex justify-content-between align-items-center flex-wrap" style={{ fontSize: '14px' }}>
+                        {/* Địa chỉ bên trái */}
                         <div className="d-flex align-items-center">
-                            <i className="fa fa-ambulance me-2" aria-hidden="true"></i>
-                            Cấp cứu: {topbarContent.emergency || 'Cấp cứu: 0901 34 69 34'}
+                            <i className="fa fa-map-marker me-2" aria-hidden="true"></i>
+                            {topbarContent.address?.trim() ? topbarContent.address : "871 Trần Xuân Soạn - P. Tân Hưng - Quận 7 - Tp. Hồ Chí Minh"}
                         </div>
 
-
-                        <div className="d-flex align-items-center">
-                            <i className="fa fa-phone me-2" aria-hidden="true"></i>
-                            Tổng đài: {topbarContent.phone || '(028) 377 606 48'}
+                        {/* Tổng đài + cấp cứu bên phải */}
+                        <div className="d-flex align-items-center gap-4">
+                            <div className="d-flex align-items-center">
+                                <i className="fa fa-ambulance me-2" aria-hidden="true"></i>
+                                Cấp cứu: {topbarContent.emergency || 'Cấp cứu: 0901 34 69 34'}
+                            </div>
+                            <div className="d-flex align-items-center">
+                                <i className="fa fa-phone me-2" aria-hidden="true"></i>
+                                Tổng đài: {topbarContent.phone || '(028) 377 606 48'}
+                            </div>
                         </div>
-
-
                     </div>
                 </div>
-            </div>
+            )}
 
             <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar">
                 <div className="container-fluid">
@@ -179,7 +176,7 @@ const NavHeaderClient = () => {
                         </Navbar.Brand>
                     </Link>
 
-                    {!(windowWidth >= 992 && windowWidth <= 1200) && (
+                    {!(windowWidth >= 992 && windowWidth <= 1250) && (
                         <Link to="/" className="brand-link ms-1 me-1">
                             <div className="brand-text">
                                 <span className="brand-name-1">Bệnh viện Đa Khoa Tân Hưng</span>

@@ -7,18 +7,30 @@ const HomeIntroSections = () => {
     const [sections, setSections] = useState({});
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTextSections = async () => {
             try {
                 const res = await axios.get('/api/v1/client/home-sections');
                 if (res.EC === 0) {
-                    console.log("res dt shot: ", res.DT);
-                    setSections(res.DT);
+                    setSections(prev => ({ ...prev, ...res.DT }));
                 }
             } catch (err) {
-                console.error('Lỗi lấy dữ liệu section:', err);
+                console.error('Lỗi lấy dữ liệu văn bản:', err);
             }
         };
-        fetchData();
+
+        const fetchImageSections = async () => {
+            try {
+                const res = await axios.get('/api/v1/client/home-sections-img');
+                if (res.EC === 0) {
+                    setSections(prev => ({ ...prev, ...res.DT }));
+                }
+            } catch (err) {
+                console.error('Lỗi lấy dữ liệu ảnh:', err);
+            }
+        };
+
+        fetchTextSections();
+        fetchImageSections();
     }, []);
 
     const getImage = (sec) => {
@@ -32,8 +44,8 @@ const HomeIntroSections = () => {
             {/* SHOT 1 */}
             <div className="intro-block shot-1 row align-items-center my-4">
                 <div className="text col-md-6 p-4">
-                    <h2>Hướng dẫn<br />Khách hàng</h2>
-                    <p>Bạn cần khám chữa bệnh? Xem ngay hướng dẫn chi tiết từ đặt lịch, làm thủ tục đến thanh toán – đơn giản, nhanh chóng!</p>
+                    <h2>{sections["home-title-1"]?.[0]?.contentText || "Tiêu đề 1 mặc định"}</h2>
+                    <p>{sections["home-content-1"]?.[0]?.contentText || "Nội dung 1 mặc định"}</p>
                     <Button variant="outline-dark">Xem thêm</Button>
                 </div>
                 <div className="image col-md-6 text-center">
@@ -49,12 +61,9 @@ const HomeIntroSections = () => {
             {/* SHOT 2 */}
             <div className="intro-block shot-2 row align-items-center flex-md-row-reverse my-4">
                 <div className="text col-md-6 p-4">
-                    <h2>Giá trị cốt lõi<br />của bệnh viện</h2>
-                    <p>
-                        Bệnh viện Đa khoa Tân Hưng là nơi chăm sóc sức khỏe uy tín với đội ngũ bác sĩ giỏi, thiết bị hiện đại và dịch vụ tận tâm,
-                        mang đến trải nghiệm khám chữa bệnh an toàn, chất lượng và chuyên nghiệp cho mọi khách hàng.
-                    </p>
-                    <Button variant="outline-dark">Xem giới thiệu</Button>
+                    <h2>{sections["home-title-2"]?.[0]?.contentText || "Tiêu đề 2 mặc định"}</h2>
+                    <p>{sections["home-content-2"]?.[0]?.contentText || "Nội dung 2 mặc định"}</p>
+                    <Button variant="outline-dark">Xem thêm</Button>
                 </div>
                 <div className="image col-md-6 text-center">
                     <img
