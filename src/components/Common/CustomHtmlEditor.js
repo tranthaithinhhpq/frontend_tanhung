@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import './CustomHtmlEditor.scss';
 import axios from "../../setup/axios";
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const CustomHtmlEditor = ({ value, onChange }) => {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
@@ -14,10 +15,60 @@ const CustomHtmlEditor = ({ value, onChange }) => {
     const [textColor, setTextColor] = useState("#000000");
 
     useEffect(() => {
-        if (editorRef.current && editorRef.current.innerHTML !== value) {
-            editorRef.current.innerHTML = value;
-        }
-    }, [value]);
+        const editor = editorRef.current;
+        const handlePaste = () => {
+            setTimeout(() => {
+                const tables = editorRef.current.querySelectorAll("table");
+
+                tables.forEach((table) => {
+                    table.style.borderCollapse = "collapse";
+                    table.style.width = "100%";
+                    table.border = "1";
+
+                    // Chuyển dòng đầu tiên thành <thead>
+                    const rows = table.querySelectorAll("tr");
+                    if (rows.length > 0) {
+                        const firstRow = rows[0];
+                        const headerCells = firstRow.querySelectorAll("td, th");
+
+                        const thead = document.createElement("thead");
+                        const headerRow = document.createElement("tr");
+
+                        headerCells.forEach(cell => {
+                            const th = document.createElement("th");
+                            th.innerHTML = cell.innerHTML;
+                            th.style.border = "1px solid #ccc";
+                            th.style.padding = "8px";
+                            th.style.whiteSpace = "nowrap";
+                            th.style.position = "sticky";
+                            th.style.top = "0";
+                            th.style.background = "#f9f9f9";
+                            th.style.zIndex = "1";
+                            th.classList.add("editor-th"); // gợi ý phân biệt nếu cần
+                            headerRow.appendChild(th);
+                        });
+
+                        thead.appendChild(headerRow);
+                        table.insertBefore(thead, table.firstChild);
+                        firstRow.remove(); // xóa dòng cũ
+                    }
+
+                    // Format lại các <td>
+                    const dataCells = table.querySelectorAll("td");
+                    dataCells.forEach(cell => {
+                        cell.style.border = "1px solid #ccc";
+                        cell.style.padding = "8px";
+                        cell.style.whiteSpace = "nowrap";
+                    });
+                });
+
+                onChange(editorRef.current.innerHTML);
+            }, 100);
+        };
+
+        editor.addEventListener("paste", handlePaste);
+        return () => editor.removeEventListener("paste", handlePaste);
+    }, []);
 
     const execCommand = (command, value = null) => {
         document.execCommand(command, false, value);
@@ -150,9 +201,20 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         onChange(editor.innerHTML);
     };
 
-
     const handleInput = () => {
-        onChange(editorRef.current.innerHTML);
+        const editor = editorRef.current;
+        const tables = editor.querySelectorAll("table");
+        tables.forEach(table => {
+            const parent = table.parentElement;
+            if (!parent.classList.contains("table-scroll-wrapper")) {
+                const wrapper = document.createElement("div");
+                wrapper.className = "table-scroll-wrapper";
+                parent.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
+        });
+
+        onChange(editor.innerHTML);
     };
 
     const alignLastImage = (align) => {
@@ -170,7 +232,6 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         lastImage.style.marginRight = align === "right" ? "0" : align === "center" ? "auto" : "auto";
         lastImage.style.textAlign = align;
 
-        // căn luôn chú thích bên dưới nếu có
         const nextSibling = lastImage.nextElementSibling;
         if (nextSibling && nextSibling.innerText && nextSibling.style.fontStyle === "italic") {
             nextSibling.style.textAlign = align;
@@ -180,7 +241,6 @@ const CustomHtmlEditor = ({ value, onChange }) => {
 
         onChange(editor.innerHTML);
     };
-
 
     return (
         <div className="mb-3 wysiwyg-wrapper">
@@ -209,14 +269,20 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 <Button size="sm" onClick={() => alignLastImage("right")}>Ảnh phải</Button>
             </div>
 
-            <div
-                ref={editorRef}
-                className="editor-area form-control"
-                contentEditable
-                suppressContentEditableWarning={true}
-                onInput={handleInput}
-                style={{ minHeight: 300, overflowY: "auto", textAlign: "left" }}
-            ></div>
+            <Scrollbars style={{ height: 400, width: '100%' }} autoHide>
+                <div
+                    ref={editorRef}
+                    className="editor-area form-control"
+                    contentEditable
+                    suppressContentEditableWarning={true}
+                    onInput={handleInput}
+                    style={{
+                        minHeight: 300,
+                        overflow: "visible",
+                        textAlign: "left"
+                    }}
+                ></div>
+            </Scrollbars>
 
             <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={(e) => e.target.files[0] && insertImage(e.target.files[0])} />
             <input type="file" ref={pdfInputRef} style={{ display: "none" }} accept="application/pdf" onChange={(e) => e.target.files[0] && insertPDF(e.target.files[0])} />
@@ -245,3 +311,4 @@ const CustomHtmlEditor = ({ value, onChange }) => {
 };
 
 export default CustomHtmlEditor;
+

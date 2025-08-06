@@ -121,8 +121,38 @@ const DoctorDetailPage = () => {
                 </div>
             </div>
 
-            {/* Xem lịch khám */}
+            {/* Xem lịch khám
             <div className="card p-4 shadow-sm mb-4">
+                <h5 className="mb-3">Xem lịch khám</h5>
+                <div className="mb-3">
+                    <label>Chọn ngày:</label>
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        includeDates={availableDates}
+                        minDate={new Date()}
+                        maxDate={new Date(new Date().setDate(new Date().getDate() + 30))}
+                        placeholderText="Chọn ngày khả dụng"
+                        className="form-control"
+
+
+                    />
+                </div>
+                {slotsOfSelectedDate.length > 0 ? (
+                    <div className="d-flex flex-wrap gap-2">
+                        {slotsOfSelectedDate.map(slot => (
+                            <span key={slot.slotId} className="badge bg-info text-dark p-2">
+                                {slot.time}
+                            </span>
+                        ))}
+                    </div>
+                ) : selectedDate ? (
+                    <p className="text-muted">Không có khung giờ khả dụng trong ngày này.</p>
+                ) : null}
+            </div> */}
+
+            {/* Xem lịch khám */}
+            <div className="p-3 border rounded shadow-sm mb-4 bg-white">
                 <h5 className="mb-3">Xem lịch khám</h5>
                 <div className="mb-3">
                     <label>Chọn ngày:</label>
@@ -149,6 +179,9 @@ const DoctorDetailPage = () => {
                 ) : null}
             </div>
 
+
+
+
             {/* Nội dung markdown */}
             <div className="card p-4 shadow-sm mb-5">
                 <div className="ql-editor" dangerouslySetInnerHTML={{ __html: doctor.markdownContent || 'Không có nội dung' }} />
@@ -165,13 +198,13 @@ const DoctorDetailPage = () => {
                     nextArrow={<NextArrow />}
                     prevArrow={<PrevArrow />}
                     slidesToShow={4}
-                    slidesToScroll={4}
+                    slidesToScroll={1}
                     responsive={[
                         {
                             breakpoint: 1200,
                             settings: {
                                 slidesToShow: 3,
-                                slidesToScroll: 3,
+                                slidesToScroll: 1,
                                 infinite: otherDoctors.length > 3
                             }
                         },
@@ -179,7 +212,7 @@ const DoctorDetailPage = () => {
                             breakpoint: 992,
                             settings: {
                                 slidesToShow: 2,
-                                slidesToScroll: 2,
+                                slidesToScroll: 1,
                                 infinite: otherDoctors.length > 2
                             }
                         },

@@ -15,3 +15,64 @@
     border: 1px solid black;
     padding: 8px;
 }
+
+.table-scroll-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.wysiwyg-wrapper table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+.wysiwyg-wrapper th,
+.wysiwyg-wrapper td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    white-space: nowrap;
+    /* tránh xuống dòng */
+}
+
+.wysiwyg-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    z-index: 1;
+}
+
+.editor-area {
+    overflow: visible !important; // tránh conflict với Scrollbars
+}
+
+.table-scroll-wrapper {
+    max-width: 100%;
+    overflow: auto; // cho phép cuộn dọc và ngang
+    max-height: 500px; // giới hạn chiều cao để bật cuộn dọc
+}
+
+.table-scroll-wrapper table {
+    width: max-content; // đảm bảo bảng không bị bóp
+    min-width: 100%;
+}
+
+.wysiwyg-wrapper table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+.wysiwyg-wrapper th,
+.wysiwyg-wrapper td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    white-space: nowrap;
+}
+
+.wysiwyg-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    z-index: 1;
+}
