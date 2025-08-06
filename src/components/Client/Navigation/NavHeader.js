@@ -5,6 +5,7 @@ import axios from '../../../setup/axios';
 import fallbackLogo from '../../../logo.png';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import zlt from '../../../zlt.png';
 
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
@@ -145,7 +146,7 @@ const NavHeaderClient = () => {
         }}>
             {/* Top bar chứa địa chỉ, cấp cứu, tổng đài */}
             {windowWidth >= 992 && (
-                <div className="top-bar text-light py-2" style={{ backgroundColor: '#222', position: 'sticky', top: 0, zIndex: 1050 }}>
+                <div className="top-bar text-light py-2" style={{ backgroundColor: '#007BFF', position: 'sticky', top: 0, zIndex: 1050 }}>
                     <div className="container d-flex justify-content-between align-items-center flex-wrap" style={{ fontSize: '14px' }}>
                         {/* Địa chỉ bên trái */}
                         <div className="d-flex align-items-center">
@@ -155,15 +156,30 @@ const NavHeaderClient = () => {
 
                         {/* Tổng đài + cấp cứu bên phải */}
                         <div className="d-flex align-items-center gap-4">
+                            {/* Cấp cứu */}
                             <div className="d-flex align-items-center">
                                 <i className="fa fa-ambulance me-2" aria-hidden="true"></i>
-                                Cấp cứu: {topbarContent.emergency || 'Cấp cứu: 0901 34 69 34'}
+                                {topbarContent.emergency || 'Cấp cứu: 0901 34 69 34'}
                             </div>
+
+                            {/* Tổng đài */}
                             <div className="d-flex align-items-center">
                                 <i className="fa fa-phone me-2" aria-hidden="true"></i>
-                                Tổng đài: {topbarContent.phone || '(028) 377 606 48'}
+                                {topbarContent.phone || '(028) 377 606 48'}
+                            </div>
+
+                            {/* Icon Facebook + Zalo */}
+                            <div className="d-flex align-items-center gap-2 ms-3">
+                                <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener noreferrer">
+                                    <i className="fa fa-facebook-f text-white fs-5"></i>
+                                </a>
+                                <a href="https://zalo.me/1234567890" target="_blank" rel="noopener noreferrer">
+                                    {/* <img src="/assets/icons/zalo-icon.svg" alt="Zalo" style={{ width: 20, height: 20 }} /> */}
+                                    <img src={zlt} alt="Zalo" style={{ width: 20, height: 20 }} />
+                                </a>
                             </div>
                         </div>
+
                     </div>
                 </div>
             )}

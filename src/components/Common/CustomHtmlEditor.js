@@ -9,6 +9,13 @@ const CustomHtmlEditor = ({ value, onChange }) => {
     const editorRef = useRef(null);
     const fileInputRef = useRef(null);
     const pdfInputRef = useRef(null);
+
+    useEffect(() => {
+        if (editorRef.current && typeof value === "string") {
+            editorRef.current.innerHTML = value;
+        }
+    }, [value]);
+
     const [showTableModal, setShowTableModal] = useState(false);
     const [rows, setRows] = useState(2);
     const [cols, setCols] = useState(2);
