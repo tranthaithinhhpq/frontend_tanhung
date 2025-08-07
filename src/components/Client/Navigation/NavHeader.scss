@@ -1,153 +1,153 @@
-.navbar-wrapper {
-    font-family: sans-serif;
+// .navbar-wrapper {
+//     font-family: sans-serif;
 
-    .top-bar {
-        background: #3163ff;
-        color: white;
-        display: flex;
-        justify-content: space-between;
-        padding: 4px 20px;
-        font-size: 14px;
+//     .top-bar {
+//         background: #3163ff;
+//         color: white;
+//         display: flex;
+//         justify-content: space-between;
+//         padding: 4px 20px;
+//         font-size: 14px;
 
-        .left,
-        .right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+//         .left,
+//         .right {
+//             display: flex;
+//             align-items: center;
+//             gap: 10px;
 
-            a {
-                color: white;
-                text-decoration: none;
+//             a {
+//                 color: white;
+//                 text-decoration: none;
 
-                &.business-btn {
-                    background: #ffe600;
-                    color: #000;
-                    padding: 3px 10px;
-                    border-radius: 20px;
-                    font-weight: bold;
-                    display: flex;
-                    align-items: center;
-                    gap: 4px;
-                }
-            }
-        }
-    }
+//                 &.business-btn {
+//                     background: #ffe600;
+//                     color: #000;
+//                     padding: 3px 10px;
+//                     border-radius: 20px;
+//                     font-weight: bold;
+//                     display: flex;
+//                     align-items: center;
+//                     gap: 4px;
+//                 }
+//             }
+//         }
+//     }
 
-    .main-nav {
-        background: white;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 20px;
-        border-bottom: 1px solid #eee;
+//     .main-nav {
+//         background: white;
+//         display: flex;
+//         justify-content: space-between;
+//         align-items: center;
+//         padding: 12px 20px;
+//         border-bottom: 1px solid #eee;
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #3163ff;
-        }
+//         .logo {
+//             font-size: 24px;
+//             font-weight: bold;
+//             color: #3163ff;
+//         }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-            align-items: center;
+//         .nav-links {
+//             display: flex;
+//             list-style: none;
+//             gap: 20px;
+//             align-items: center;
 
-            li {
-                position: relative;
-                cursor: pointer;
-                padding: 5px 0;
+//             li {
+//                 position: relative;
+//                 cursor: pointer;
+//                 padding: 5px 0;
 
-                svg {
-                    margin-left: 5px;
-                    font-size: 12px;
-                }
+//                 svg {
+//                     margin-left: 5px;
+//                     font-size: 12px;
+//                 }
 
-                .dropdown {
-                    position: absolute;
-                    top: calc(100% + 10px); // đẩy dropdown xuống 10px để chừa chỗ cho mũi tên
-                    left: 0;
-                    min-width: 180px;
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                    animation: slideDown 0.3s ease forwards;
-                    z-index: 10;
-                    padding: 8px 0;
-                    list-style: none; // ✅ bỏ dấu chấm tròn mặc định
+//                 .dropdown {
+//                     position: absolute;
+//                     top: calc(100% + 10px); // đẩy dropdown xuống 10px để chừa chỗ cho mũi tên
+//                     left: 0;
+//                     min-width: 180px;
+//                     background: white;
+//                     border-radius: 8px;
+//                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+//                     animation: slideDown 0.3s ease forwards;
+//                     z-index: 10;
+//                     padding: 8px 0;
+//                     list-style: none; // ✅ bỏ dấu chấm tròn mặc định
 
-                    &::before {
-                        content: "";
-                        position: absolute;
-                        top: -8px;
-                        left: 20px;
-                        width: 0;
-                        height: 0;
-                        border-left: 8px solid transparent;
-                        border-right: 8px solid transparent;
-                        border-bottom: 8px solid white;
-                    }
+//                     &::before {
+//                         content: "";
+//                         position: absolute;
+//                         top: -8px;
+//                         left: 20px;
+//                         width: 0;
+//                         height: 0;
+//                         border-left: 8px solid transparent;
+//                         border-right: 8px solid transparent;
+//                         border-bottom: 8px solid white;
+//                     }
 
-                    li {
-                        padding: 10px 16px;
-                        border-bottom: 1px solid #eee;
-                        white-space: nowrap;
+//                     li {
+//                         padding: 10px 16px;
+//                         border-bottom: 1px solid #eee;
+//                         white-space: nowrap;
 
-                        &:last-child {
-                            border-bottom: none;
-                        }
+//                         &:last-child {
+//                             border-bottom: none;
+//                         }
 
-                        &:hover {
-                            background-color: #f5f5f5;
-                        }
-                    }
-                }
+//                         &:hover {
+//                             background-color: #f5f5f5;
+//                         }
+//                     }
+//                 }
 
-            }
+//             }
 
-            .search-icon {
-                font-size: 18px;
-            }
-        }
-    }
-}
+//             .search-icon {
+//                 font-size: 18px;
+//             }
+//         }
+//     }
+// }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
+// @keyframes slideDown {
+//     from {
+//         opacity: 0;
+//         transform: translateY(-10px);
+//     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+//     to {
+//         opacity: 1;
+//         transform: translateY(0);
+//     }
+// }
 
-.dropdown-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    background: #f0f5ff;
-    border-radius: 50%;
-    position: relative;
-    margin-left: 6px;
+// .dropdown-icon {
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: center;
+//     width: 22px;
+//     height: 22px;
+//     background: #f0f5ff;
+//     border-radius: 50%;
+//     position: relative;
+//     margin-left: 6px;
 
-    &::after {
-        content: '';
-        width: 6px;
-        height: 6px;
-        border: solid #2d5eff;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-        display: inline-block;
-        margin-top: 2px;
-    }
-}
+//     &::after {
+//         content: '';
+//         width: 6px;
+//         height: 6px;
+//         border: solid #2d5eff;
+//         border-width: 0 2px 2px 0;
+//         transform: rotate(45deg);
+//         display: inline-block;
+//         margin-top: 2px;
+//     }
+// }
 
-li:hover .dropdown-icon::after {
-    transform: rotate(-135deg); // hướng lên
-    transition: transform 0.2s ease;
-}
+// li:hover .dropdown-icon::after {
+//     transform: rotate(-135deg); // hướng lên
+//     transition: transform 0.2s ease;
+// }

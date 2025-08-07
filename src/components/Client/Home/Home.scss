@@ -7,7 +7,7 @@
     .banner-wrapper {
         position: relative;
         width: 100%;
-        padding-bottom: 31.25%; // Tỷ lệ 1920x600 = 600/1920 = 31.25%
+        padding-bottom: 25%; // Tỷ lệ 1920x480 = 600/1920 = 31.25%
 
         @media (max-width: 1200px) {
             padding-bottom: 56.25%; // Tỷ lệ 16:9 cho thiết bị nhỏ hơn
@@ -77,37 +77,55 @@
 }
 
 .service-card {
-    background-color: #fff;
+    background: #fff;
     border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    // border: 1px solid #f0f0f0;
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
     .icon {
-        font-size: 36px;
-        transition: color 0.3s ease;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 1.75rem;
+        color: #fff;
 
-        .doctor {
-            color: #007BFF;
+        &.doctor {
+            background-color: #0d6efd; // blue
         }
 
-        .booking {
-            color: #10B981
+        &.booking {
+            background-color: #198754; // green
         }
 
-        .specialty {
-            color: #F97316
+        &.specialty {
+            background-color: #fd7e14; // orange
         }
 
-        .price {
-            color: #8B5CF6
+        &.price {
+            background-color: #6f42c1; // purple
         }
+    }
 
+    h5 {
+        font-weight: bold;
+        margin-top: 1rem;
+    }
 
+    p {
+        font-size: 0.9rem;
+        color: #555;
     }
 }
+
 
 .service-card:hover {
     transform: translateY(-4px);

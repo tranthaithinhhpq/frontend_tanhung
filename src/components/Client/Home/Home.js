@@ -78,7 +78,7 @@ const HomeClient = () => {
                     ))}
                 </div>
             </div>
-            <div className="container my-4">
+            {/* <div className="container my-4">
                 <div className="row g-4">
                     <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
                         <div className="card h-100 text-center p-3">
@@ -119,7 +119,53 @@ const HomeClient = () => {
                         </div>
                     </div>
                 </div>
+            </div> */}
+
+            <div className="container my-4">
+                <div className="row gx-4 gy-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="service-card text-center p-4 h-100">
+                            <div className="icon doctor">
+                                <i className="bi bi-person-badge fs-2"></i>
+                            </div>
+                            <h5 className="mt-3 mb-2">Bác sĩ</h5>
+                            <p className="small">Tìm hiểu thông tin bác sĩ chuyên khoa, kinh nghiệm, và lịch làm việc.</p>
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="service-card text-center p-4 h-100">
+                            <div className="icon booking">
+                                <i className="bi bi-calendar-check fs-2"></i>
+                            </div>
+                            <h5 className="mt-3 mb-2">Đặt lịch khám</h5>
+                            <p className="small">Chủ động chọn ngày khám, bác sĩ và chuyên khoa bạn cần.</p>
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="service-card text-center p-4 h-100">
+                            <div className="icon specialty">
+                                <i className="bi bi-hospital fs-2"></i>
+                            </div>
+                            <h5 className="mt-3 mb-2">Chuyên khoa</h5>
+                            <p className="small">Hệ thống chuyên khoa toàn diện, chất lượng cao.</p>
+                        </div>
+                    </div>
+
+                    <div className="col-12 col-sm-6 col-lg-3">
+                        <div className="service-card text-center p-4 h-100">
+                            <div className="icon price">
+                                <i className="bi bi-receipt fs-2"></i>
+                            </div>
+                            <h5 className="mt-3 mb-2">Bảng giá</h5>
+                            <p className="small">Tra cứu chi phí khám chữa bệnh rõ ràng, minh bạch.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
             <NewsPreview />
             <MedicinePreview />
             <HomeIntroSections />

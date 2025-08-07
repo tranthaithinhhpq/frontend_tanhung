@@ -6,6 +6,7 @@ import fallbackLogo from '../../../logo.png';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import zlt from '../../../zlt.png';
+import { FaFacebookF, FaTiktok, FaYoutube, FaInstagram, FaCalendarAlt, FaPhone, FaChevronDown } from 'react-icons/fa';
 
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
@@ -19,6 +20,12 @@ const NavHeaderClient = () => {
     const [logoImg, setLogoImg] = useState(null);
     const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
     const [newsCategories, setNewsCategories] = useState([]);
+
+    const [activeMenu, setActiveMenu] = useState(null);
+
+    const toggleDropdown = (menu) => {
+        setActiveMenu(activeMenu === menu ? null : menu);
+    };
 
 
 
@@ -177,6 +184,8 @@ const NavHeaderClient = () => {
                                     {/* <img src="/assets/icons/zalo-icon.svg" alt="Zalo" style={{ width: 20, height: 20 }} /> */}
                                     <img src={zlt} alt="Zalo" style={{ width: 20, height: 20 }} />
                                 </a>
+                                <Link className="business-btn" to="/booking"><FaCalendarAlt />Đặt lịch khám</Link>
+                                {/* <a href="booking" className="business-btn"><FaCalendarAlt /> Đặt lịch khám</a> */}
                             </div>
                         </div>
 
@@ -217,52 +226,47 @@ const NavHeaderClient = () => {
                         <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                             {/* Giới thiệu */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Giới thiệu
+                                <a href="#" className="nav-link nav-link-small">
+                                    {/* Giới thiệu */}
+                                    Giới thiệu <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/doctors">Đội ngũ bác sĩ</Link></li>
-                                    <li><Link className="dropdown-item" to="/specialties">Chuyên khoa</Link></li>
-                                    <li><Link className="dropdown-item" to="/devices">Trang thiết bị</Link></li>
+                                    <li><Link className="dropdown-child" to="/doctors">Đội ngũ bác sĩ</Link></li>
+                                    <li><Link className="dropdown-child" to="/specialties">Chuyên khoa</Link></li>
+                                    <li><Link className="dropdown-child" to="/devices">Trang thiết bị</Link></li>
                                     {aboutPages.map((page) => (
-                                        <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                        <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>
                                     ))}
                                 </ul>
                             </li>
 
                             {/* Khách hàng */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Khách hàng
+                                <a href="#" className="nav-link nav-link-small">
+                                    Khách hàng <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
 
                                     {clientPages.map((page) => (
-                                        <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                        <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>
                                     ))}
                                 </ul>
                             </li>
 
                             {/* Tin tức */}
                             <li className="nav-item dropdown">
-                                <a
-                                    href="#"
-                                    className="nav-link dropdown-toggle"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    Tin tức
+                                <a href="#" className="nav-link nav-link-small">
+                                    Tin tức <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link className="dropdown-item" to="/news">
+                                        <Link className="dropdown-child" to="/news">
                                             Tất cả tin tức
                                         </Link>
                                     </li>
                                     {newsCategories.map((cat) => (
                                         <li key={cat.id}>
-                                            <Link className="dropdown-item" to={`/news?categoryId=${cat.id}`}>
+                                            <Link className="dropdown-child" to={`/news?categoryId=${cat.id}`}>
                                                 {cat.name}
                                             </Link>
                                         </li>
@@ -270,30 +274,19 @@ const NavHeaderClient = () => {
                                 </ul>
                             </li>
 
-
-
-
-
-
-
-
-
-
-
-
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Thông tin thuốc
+                                <a href="#" className="nav-link nav-link-small">
+                                    Thông tin thuốc <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link className="dropdown-item" to="/medicine-info">
+                                        <Link className="dropdown-child" to="/medicine-info">
                                             Tất cả thông tin thuốc
                                         </Link>
                                     </li>
                                     {medicineCategories.map((cat) => (
                                         <li key={cat.id}>
-                                            <Link className="dropdown-item" to={`/medicine-info?categoryId=${cat.id}`}>
+                                            <Link className="dropdown-child" to={`/medicine-info?categoryId=${cat.id}`}>
                                                 {cat.name}
                                             </Link>
                                         </li>
@@ -304,12 +297,12 @@ const NavHeaderClient = () => {
                             {/* Đặt lịch */}
 
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Đặt lịch khám
+                                <a href="#" className="nav-link nav-link-small">
+                                    Đặt lịch khám <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/booking">Đặt lịch khám</Link></li>
-                                    <li><Link className="dropdown-item" to="/booking-history">Lịch sử đặt khám</Link></li>
+                                    <li><Link className="dropdown-child" to="/booking">Đặt lịch khám</Link></li>
+                                    <li><Link className="dropdown-child" to="/booking-history">Lịch sử đặt khám</Link></li>
 
                                 </ul>
                             </li>
@@ -317,27 +310,27 @@ const NavHeaderClient = () => {
 
 
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Bảng giá
+                                <a href="#" className="nav-link nav-link-small">
+                                    Bảng giá <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/service-prices">Bảng giá dịch vụ</Link></li>
-                                    <li><Link className="dropdown-item" to="/drug-prices">Bảng giá thuốc</Link></li>
+                                    <li><Link className="dropdown-child" to="/service-prices">Bảng giá dịch vụ</Link></li>
+                                    <li><Link className="dropdown-child" to="/drug-prices">Bảng giá thuốc</Link></li>
                                     {pricePages.map((page) => (
-                                        <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                        <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>
                                     ))}
                                 </ul>
                             </li>
 
                             {/* Liên hệ */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Liên hệ
+                                <a href="#" className="nav-link nav-link-small">
+                                    Liên hệ <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li><Link className="dropdown-item" to="/question">Hỏi & đáp</Link></li>
+                                    <li><Link className="dropdown-child" to="/question">Hỏi & đáp</Link></li>
                                     {contactPages.map((page) => (
-                                        <li key={page.slug}><Link className="dropdown-item" to={`/${page.slug}`}>{page.title}</Link></li>
+                                        <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>
                                     ))}
                                 </ul>
                             </li>
@@ -365,93 +358,4 @@ const NavHeaderClient = () => {
 };
 
 export default NavHeaderClient;
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import './NavHeader.scss';
-// import { FaFacebookF, FaTiktok, FaYoutube, FaInstagram, FaBuilding, FaPhone, FaChevronDown } from 'react-icons/fa';
-
-
-// const NavHeaderClient = () => {
-//     const [activeMenu, setActiveMenu] = useState(null);
-
-//     const toggleDropdown = (menu) => {
-//         setActiveMenu(activeMenu === menu ? null : menu);
-//     };
-
-//     return (
-//         <div className="navbar-wrapper">
-//             {/* Top bar */}
-//             <div className="top-bar">
-//                 <div className="left">
-//                     <span>Tìm hiểu thêm:</span>
-//                     <a href="#"><FaFacebookF /></a>
-//                     <a href="#"><FaTiktok /></a>
-//                     <a href="#"><FaYoutube /></a>
-//                     <a href="#"><FaInstagram /></a>
-//                     <a href="#" className="business-btn"><FaBuilding /> Doanh nghiệp</a>
-//                 </div>
-//                 <div className="right">
-//                     <a href="#">Điểm lấy mẫu</a>
-//                     <a href="#">Tra cứu kết quả</a>
-//                     <a href="#">Ứng dụng đối tác</a>
-//                     <a href="#"><FaPhone /> 19001717</a>
-//                     <a href="#">English</a>
-//                 </div>
-//             </div>
-
-//             {/* Main Nav */}
-//             <nav className="main-nav">
-//                 <div className="logo">+Diag</div>
-
-//                 <ul className="nav-links">
-//                     <li onMouseEnter={() => toggleDropdown("xn")} onMouseLeave={() => toggleDropdown(null)}>
-//                         Xét nghiệm <span className="dropdown-icon"></span>
-//                         {activeMenu === "xn" && (
-//                             <ul className="dropdown">
-//                                 <li>Huyết học</li>
-//                                 <li>Sinh hóa</li>
-//                                 <li>Vi sinh</li>
-//                             </ul>
-//                         )}
-//                     </li>
-
-//                     <li onMouseEnter={() => toggleDropdown("pk")} onMouseLeave={() => toggleDropdown(null)}>
-//                         Phòng khám <FaChevronDown />
-//                         {activeMenu === "pk" && (
-//                             <ul className="dropdown">
-//                                 <li>Nội tổng quát</li>
-//                                 <li>Nhi khoa</li>
-//                                 <li>Da liễu</li>
-//                             </ul>
-//                         )}
-//                     </li>
-
-//                     <li>Lấy mẫu tại nhà</li>
-//                     <li>Tiêm chủng</li>
-//                     <li>Bảo hiểm</li>
-//                     <li>Khuyến mãi</li>
-//                     <li>Về DIAG</li>
-//                     <li>Blog <FaChevronDown /></li>
-//                     <li className="search-icon">🔍</li>
-//                 </ul>
-//             </nav>
-//         </div>
-//     );
-// };
-
-// export default NavHeaderClient;
-
-
-
-
 
