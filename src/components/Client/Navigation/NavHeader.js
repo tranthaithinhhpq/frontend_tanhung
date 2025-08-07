@@ -20,12 +20,8 @@ const NavHeaderClient = () => {
     const [logoImg, setLogoImg] = useState(null);
     const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
     const [newsCategories, setNewsCategories] = useState([]);
+    const [showSearch, setShowSearch] = useState(false); // 👈 mới
 
-    const [activeMenu, setActiveMenu] = useState(null);
-
-    const toggleDropdown = (menu) => {
-        setActiveMenu(activeMenu === menu ? null : menu);
-    };
 
 
 
@@ -138,6 +134,11 @@ const NavHeaderClient = () => {
         e.preventDefault();
         if (!keyword.trim()) return;
         history.push(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+
+    };
+
+    const handleSearchRedirect = () => {
+        history.push('/search');
     };
 
     return (
@@ -152,7 +153,7 @@ const NavHeaderClient = () => {
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)' // tùy chọn đổ bóng
         }}>
             {/* Top bar chứa địa chỉ, cấp cứu, tổng đài */}
-            {windowWidth >= 992 && (
+            {windowWidth >= 1200 && (
                 <div className="top-bar text-light py-2" style={{ backgroundColor: '#007BFF', position: 'sticky', top: 0, zIndex: 1050 }}>
                     <div className="container d-flex justify-content-between align-items-center flex-wrap" style={{ fontSize: '14px' }}>
                         {/* Địa chỉ bên trái */}
@@ -201,7 +202,7 @@ const NavHeaderClient = () => {
                         </Navbar.Brand>
                     </Link>
 
-                    {!(windowWidth >= 992 && windowWidth <= 1250) && (
+                    {!(windowWidth >= 992 && windowWidth <= 1390) && (
                         <Link to="/" className="brand-link ms-1 me-1">
                             <div className="brand-text">
                                 <span className="brand-name-1">Bệnh viện Đa Khoa Tân Hưng</span>
@@ -226,8 +227,13 @@ const NavHeaderClient = () => {
                         <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                             {/* Giới thiệu */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
-                                    {/* Giới thiệu */}
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Giới thiệu <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -242,7 +248,13 @@ const NavHeaderClient = () => {
 
                             {/* Khách hàng */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Khách hàng <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -255,7 +267,13 @@ const NavHeaderClient = () => {
 
                             {/* Tin tức */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Tin tức <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -275,7 +293,13 @@ const NavHeaderClient = () => {
                             </li>
 
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Thông tin thuốc <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -297,7 +321,13 @@ const NavHeaderClient = () => {
                             {/* Đặt lịch */}
 
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Đặt lịch khám <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -310,7 +340,13 @@ const NavHeaderClient = () => {
 
 
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Bảng giá <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -324,7 +360,13 @@ const NavHeaderClient = () => {
 
                             {/* Liên hệ */}
                             <li className="nav-item dropdown">
-                                <a href="#" className="nav-link nav-link-small">
+                                <a
+                                    className="nav-link nav-link-small "
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     Liên hệ <span className="dropdown-icon"></span>
                                 </a>
                                 <ul className="dropdown-menu">
@@ -336,19 +378,33 @@ const NavHeaderClient = () => {
                             </li>
                         </ul>
 
-                        <form className="d-flex" onSubmit={handleSearch}>
-                            <input
-                                className="form-control me-2"
-                                type="search"
-                                placeholder="Tìm kiếm"
-                                aria-label="Search"
-                                value={keyword}
-                                onChange={(e) => setKeyword(e.target.value)}
-                            />
-                            <button className="btn btn-dark" type="submit">
-                                <i className="bi bi-search"></i>
-                            </button>
-                        </form>
+
+                        {/* Search */}
+                        <div className="d-flex align-items-center">
+                            {windowWidth >= 1200 || showSearch ? (
+                                <form className="d-flex" onSubmit={handleSearch}>
+
+                                    <input
+                                        className="form-control me-2"
+                                        type="search"
+                                        placeholder="Tìm kiếm"
+                                        aria-label="Search"
+                                        value={keyword}
+                                        onChange={(e) => setKeyword(e.target.value)}
+                                    />
+                                    <button className="btn btn-dark" type="submit">
+                                        <i className="bi bi-search"></i>
+                                    </button>
+                                </form>
+                            ) : (
+                                <button
+                                    className="btn btn-outline-dark ms-2"
+                                    onClick={handleSearchRedirect}
+                                >
+                                    <i className="bi bi-search"></i>
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </nav>
