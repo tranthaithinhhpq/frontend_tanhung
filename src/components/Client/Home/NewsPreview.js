@@ -1,9 +1,13 @@
+
+
+// FRONTEND: src/components/Client/Preview/NewsPreview.js
 import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import Slider from 'react-slick';
 import { Card } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import './Home.scss';
+import '../News/NewsList.scss'; // ✅ dùng chung SCSS chiều cao
+import './Home.scss';           // arrow & style khác
 
 // Mũi tên phải
 const NextArrow = (props) => (
@@ -11,7 +15,6 @@ const NextArrow = (props) => (
         <i className="bi bi-chevron-right"></i>
     </div>
 );
-
 // Mũi tên trái
 const PrevArrow = (props) => (
     <div className="custom-arrow prev" onClick={props.onClick}>
@@ -26,49 +29,27 @@ const NewsPreview = () => {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const res = await axios.get('/api/v1/client/news-preview', {
-                    params: { group: 'news' } // ✅ Chỉ lấy tin tức group = news
-                });
-                if (res.EC === 0 && res.DT?.news) {
-                    setTopNews(res.DT.news);
-                }
-            } catch (err) {
-                console.error('Lỗi lấy tin tức:', err);
-            }
+                const res = await axios.get('/api/v1/client/news-preview', { params: { group: 'news' } });
+                if (res.EC === 0 && res.DT?.news) setTopNews(res.DT.news);
+            } catch (err) { console.error('Lỗi lấy tin tức:', err); }
         };
         fetchNews();
     }, []);
 
     const getImageUrl = (path) => {
         if (!path) return '/default-news.jpg';
-        if (path.startsWith('/images')) {
-            return `${process.env.REACT_APP_BACKEND_URL}${path}`;
-        }
+        if (path.startsWith('/images')) return `${process.env.REACT_APP_BACKEND_URL}${path}`;
         return `${process.env.REACT_APP_BACKEND_URL}/images/${path}`;
     };
 
     const settings = {
-        dots: false,
-        infinite: true,
-        speed: 500,
-        arrows: true,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        nextArrow: <NextArrow />,
-        prevArrow: <PrevArrow />,
+        dots: false, infinite: true, speed: 500, arrows: true,
+        slidesToShow: 4, slidesToScroll: 1,
+        nextArrow: <NextArrow />, prevArrow: <PrevArrow />,
         responsive: [
-            {
-                breakpoint: 1200,
-                settings: { slidesToShow: 3, slidesToScroll: 1 }
-            },
-            {
-                breakpoint: 768,
-                settings: { slidesToShow: 2, slidesToScroll: 1 }
-            },
-            {
-                breakpoint: 576,
-                settings: { slidesToShow: 1, slidesToScroll: 1 }
-            }
+            { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+            { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+            { breakpoint: 576, settings: { slidesToShow: 1, slidesToScroll: 1 } },
         ]
     };
 
@@ -81,18 +62,27 @@ const NewsPreview = () => {
                 </button>
             </div>
 
-            <Slider {...settings}>
+            <Slider {...settings} className="news-slider">
                 {topNews.map(item => (
-                    <div key={item.id} className="px-2">
+                    <div key={item.id} className="px-2 slide-item">
                         <Card
-                            className="news-card"
+                            className="news-card w-100 h-100 d-flex flex-column"
                             onClick={() => history.push(`/news/${item.id}`)}
                             style={{ cursor: 'pointer' }}
                         >
-                            <Card.Img variant="top" src={getImageUrl(item.image)} />
-                            <Card.Body>
-                                <Card.Title style={{ fontSize: '1rem' }}>{item.title}</Card.Title>
-                                <Card.Text style={{ fontSize: '0.85rem' }}>
+                            <div className="thumb-wrap">
+                                <Card.Img
+                                    variant="top"
+                                    className="card-img-top"
+                                    src={getImageUrl(item.image)}
+                                    alt={item.title}
+                                />
+                            </div>
+                            <Card.Body className="d-flex flex-column">
+                                <Card.Title className="title" style={{ fontSize: '1rem' }}>
+                                    {item.title}
+                                </Card.Title>
+                                <Card.Text className="date mt-auto" style={{ fontSize: '0.85rem' }}>
                                     {new Date(item.createdAt).toLocaleDateString()}
                                 </Card.Text>
                             </Card.Body>

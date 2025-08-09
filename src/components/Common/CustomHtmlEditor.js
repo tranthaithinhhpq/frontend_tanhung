@@ -9,10 +9,103 @@ const CustomHtmlEditor = ({ value, onChange }) => {
     const editorRef = useRef(null);
     const fileInputRef = useRef(null);
     const pdfInputRef = useRef(null);
+    const isLocalChangeRef = useRef(false);
 
+    const [useOuterScroll, setUseOuterScroll] = useState(true);
+
+    // --- thêm state ---
+    const [showPasteModal, setShowPasteModal] = useState(false);
+    const [allowTableScroll, setAllowTableScroll] = useState(true);
+
+    // --- helpers ---
+    const wrapTableForScroll = (table) => {
+        const parent = table.parentElement;
+        if (parent && parent.classList.contains("table-scroll-wrapper")) return;
+        const wrapper = document.createElement("div");
+        wrapper.className = "table-scroll-wrapper";
+        parent.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+    };
+
+    const unwrapTableScroll = (table) => {
+        const parent = table.parentElement;
+        if (parent && parent.classList.contains("table-scroll-wrapper")) {
+            parent.replaceWith(table);
+        }
+    };
+
+    const formatTables = (useScroll) => {
+        const editor = editorRef.current;
+        const tables = editor.querySelectorAll("table");
+
+        tables.forEach((table) => {
+            table.style.borderCollapse = "collapse";
+            table.style.width = "100%";
+            table.border = "1";
+
+            // chuyển dòng đầu thành thead nếu chưa có
+            if (!table.querySelector("thead")) {
+                const firstRow = table.querySelector("tr");
+                if (firstRow) {
+                    const headerCells = firstRow.querySelectorAll("td, th");
+                    const thead = document.createElement("thead");
+                    const headerRow = document.createElement("tr");
+                    headerCells.forEach(cell => {
+                        const th = document.createElement("th");
+                        th.innerHTML = cell.innerHTML;
+                        th.style.border = "1px solid #ccc";
+                        th.style.padding = "8px";
+                        th.style.whiteSpace = useScroll ? "nowrap" : "normal";
+                        th.style.position = "sticky";
+                        th.style.top = "0";
+                        th.style.background = "#f9f9f9";
+                        th.style.zIndex = "1";
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.insertBefore(thead, table.firstChild);
+                    firstRow.remove();
+                }
+            }
+
+            // định dạng td
+            table.querySelectorAll("td").forEach(cell => {
+                cell.style.border = "1px solid #ccc";
+                cell.style.padding = "8px";
+                cell.style.whiteSpace = useScroll ? "nowrap" : "normal";
+            });
+
+            // xử lý scroll wrapper
+            if (useScroll) {
+                table.classList.remove("no-scroll");
+                wrapTableForScroll(table);
+            } else {
+                unwrapTableScroll(table);
+                table.classList.add("no-scroll");
+            }
+        });
+
+        isLocalChangeRef.current = true;
+        onChange(editor.innerHTML);
+    };
+
+    // --- sửa useEffect nhận value ---
     useEffect(() => {
-        if (editorRef.current && typeof value === "string") {
+        if (!editorRef.current) return;
+        // bỏ qua nếu thay đổi đến từ editor (tránh reset caret)
+        if (isLocalChangeRef.current) {
+            isLocalChangeRef.current = false;
+            return;
+        }
+        if (typeof value === "string" && editorRef.current.innerHTML !== value) {
             editorRef.current.innerHTML = value;
+            // đặt caret về cuối thay vì đầu
+            const sel = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(editorRef.current);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
         }
     }, [value]);
 
@@ -25,60 +118,24 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         const editor = editorRef.current;
         const handlePaste = () => {
             setTimeout(() => {
-                const tables = editorRef.current.querySelectorAll("table");
-
-                tables.forEach((table) => {
-                    table.style.borderCollapse = "collapse";
-                    table.style.width = "100%";
-                    table.border = "1";
-
-                    // Chuyển dòng đầu tiên thành <thead>
-                    const rows = table.querySelectorAll("tr");
-                    if (rows.length > 0) {
-                        const firstRow = rows[0];
-                        const headerCells = firstRow.querySelectorAll("td, th");
-
-                        const thead = document.createElement("thead");
-                        const headerRow = document.createElement("tr");
-
-                        headerCells.forEach(cell => {
-                            const th = document.createElement("th");
-                            th.innerHTML = cell.innerHTML;
-                            th.style.border = "1px solid #ccc";
-                            th.style.padding = "8px";
-                            th.style.whiteSpace = "nowrap";
-                            th.style.position = "sticky";
-                            th.style.top = "0";
-                            th.style.background = "#f9f9f9";
-                            th.style.zIndex = "1";
-                            th.classList.add("editor-th"); // gợi ý phân biệt nếu cần
-                            headerRow.appendChild(th);
-                        });
-
-                        thead.appendChild(headerRow);
-                        table.insertBefore(thead, table.firstChild);
-                        firstRow.remove(); // xóa dòng cũ
-                    }
-
-                    // Format lại các <td>
-                    const dataCells = table.querySelectorAll("td");
-                    dataCells.forEach(cell => {
-                        cell.style.border = "1px solid #ccc";
-                        cell.style.padding = "8px";
-                        cell.style.whiteSpace = "nowrap";
-                    });
-                });
-
-                onChange(editorRef.current.innerHTML);
-            }, 100);
+                const hasTable = editor.querySelectorAll("table").length > 0;
+                if (hasTable) {
+                    setShowPasteModal(true); // hỏi người dùng
+                } else {
+                    // không có bảng thì thôi
+                    isLocalChangeRef.current = true;
+                    onChange(editor.innerHTML);
+                }
+            }, 0);
         };
 
         editor.addEventListener("paste", handlePaste);
         return () => editor.removeEventListener("paste", handlePaste);
     }, []);
 
-    const execCommand = (command, value = null) => {
-        document.execCommand(command, false, value);
+    const execCommand = (cmd, val = null) => {
+        document.execCommand(cmd, false, val);
+        isLocalChangeRef.current = true;
         onChange(editorRef.current.innerHTML);
     };
 
@@ -102,6 +159,8 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 onChange(editorRef.current.innerHTML);
             };
             insertNodeAtCaret(img);
+            setUseOuterScroll(false);          // 👈 tắt thanh cuộn editor
+            isLocalChangeRef.current = true;
             onChange(editorRef.current.innerHTML);
         } catch (err) {
             console.error("❌ Upload ảnh lỗi:", err);
@@ -119,10 +178,13 @@ const CustomHtmlEditor = ({ value, onChange }) => {
             const embed = document.createElement("embed");
             embed.src = pdfUrl;
             embed.type = "application/pdf";
-            embed.width = "100%";
-            embed.height = "600px";
+            embed.style.display = "block";
+            embed.style.width = "100%";
+            embed.height = "600px";            // giữ khung xem PDF
             embed.style.margin = "12px 0";
             insertNodeAtCaret(embed);
+            setUseOuterScroll(false);          // 👈 tắt thanh cuộn editor
+            isLocalChangeRef.current = true;
             onChange(editorRef.current.innerHTML);
         } catch (err) {
             console.error("❌ Upload PDF lỗi:", err);
@@ -208,21 +270,26 @@ const CustomHtmlEditor = ({ value, onChange }) => {
         onChange(editor.innerHTML);
     };
 
+    // --- trong mọi nơi gọi onChange từ editor, set cờ trước khi onChange ---
     const handleInput = () => {
         const editor = editorRef.current;
         const tables = editor.querySelectorAll("table");
         tables.forEach(table => {
-            const parent = table.parentElement;
-            if (!parent.classList.contains("table-scroll-wrapper")) {
-                const wrapper = document.createElement("div");
-                wrapper.className = "table-scroll-wrapper";
-                parent.insertBefore(wrapper, table);
-                wrapper.appendChild(table);
+            if (allowTableScroll) {
+                if (!table.parentElement.classList.contains("table-scroll-wrapper")) {
+                    wrapTableForScroll(table);
+                }
+                table.classList.remove("no-scroll");
+            } else {
+                unwrapTableScroll(table);
+                table.classList.add("no-scroll");
             }
         });
 
+        isLocalChangeRef.current = true;
         onChange(editor.innerHTML);
     };
+
 
     const alignLastImage = (align) => {
         const editor = editorRef.current;
@@ -311,6 +378,31 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowTableModal(false)}>Hủy</Button>
                     <Button variant="primary" onClick={generateTable}>Chèn bảng</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showPasteModal} onHide={() => setShowPasteModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Bạn đang muốn dùng bảng?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Khi dán nội dung có bảng, bạn muốn bật cuộn ngang để giữ nguyên bố cục?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => {
+                        setShowPasteModal(false);
+                        setAllowTableScroll(false);
+                        formatTables(false); // KHÔNG: bỏ thanh cuộn (xuống dòng)
+                    }}>
+                        Không
+                    </Button>
+                    <Button variant="primary" onClick={() => {
+                        setShowPasteModal(false);
+                        setAllowTableScroll(true);
+                        formatTables(true); // PHẢI: giữ logic + có thanh cuộn
+                    }}>
+                        Phải
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>

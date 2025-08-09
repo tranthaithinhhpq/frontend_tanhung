@@ -60,6 +60,7 @@ const SpecialtyTable = () => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
+                        <th>STT</th>
                         <th>Ảnh (4x3)</th>
                         <th>Tên chuyên khoa</th>
                         <th>Mô tả</th>
@@ -70,6 +71,7 @@ const SpecialtyTable = () => {
                     {specialties.length > 0 ? (
                         specialties.map((sp) => (
                             <tr key={sp.id}>
+                                <td className="align-middle">{sp.displayOrder}</td>
                                 <td className="align-middle">
                                     <Image
                                         src={buildImgSrc(sp.image)}

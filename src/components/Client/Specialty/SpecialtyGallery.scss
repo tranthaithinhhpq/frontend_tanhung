@@ -1,42 +1,82 @@
+// .specialty-card {
+//     border: none;
+//     border-radius: 16px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+//     transition: transform 0.25s ease, box-shadow 0.25s ease;
+//     cursor: pointer;
+//     overflow: hidden;
+//     background-color: #fff;
+
+//     &:hover {
+//         transform: translateY(-6px);
+//         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+//     }
+
+//     .card-img-top {
+//         object-fit: cover;
+//         aspect-ratio: 4/3;
+//         transition: transform 0.3s ease;
+//     }
+
+//     &:hover .card-img-top {
+//         transform: scale(1.05);
+//     }
+
+//     .card-body {
+//         padding: 1rem;
+//         text-align: center;
+
+//         .card-title {
+//             font-weight: 600;
+//             font-size: 1.05rem;
+//             margin-bottom: 0.5rem;
+//         }
+
+//         .card-text {
+//             font-size: 0.875rem;
+//             color: #666;
+//             height: 40px;
+//             overflow: hidden;
+//         }
+//     }
+// }
+
+
+.specialty-wrapper {
+    text-align: center;
+    cursor: pointer;
+}
+
 .specialty-card {
     border: none;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    cursor: pointer;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     background-color: #fff;
 
     &:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     }
 
     .card-img-top {
         object-fit: cover;
         aspect-ratio: 4/3;
+        padding: 14px;
+        ;
+
         transition: transform 0.3s ease;
     }
 
     &:hover .card-img-top {
         transform: scale(1.05);
     }
+}
 
-    .card-body {
-        padding: 1rem;
-        text-align: center;
-
-        .card-title {
-            font-weight: 600;
-            font-size: 1.05rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-text {
-            font-size: 0.875rem;
-            color: #666;
-            height: 40px;
-            overflow: hidden;
-        }
-    }
+.specialty-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    color: #333;
 }

@@ -198,7 +198,7 @@ const NavHeaderClient = () => {
                 <div className="container-fluid">
                     <Link className="navbar-brand fw-bold logo" to="/">
                         <Navbar.Brand as={Link} to="/">
-                            <img src={logoImg || fallbackLogo} width="35" height="35" alt="Logo bệnh viện" />
+                            <img src={logoImg || fallbackLogo} width="50" height="50" alt="Logo bệnh viện" />
                         </Navbar.Brand>
                     </Link>
 
@@ -238,7 +238,7 @@ const NavHeaderClient = () => {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li><Link className="dropdown-child" to="/doctors">Đội ngũ bác sĩ</Link></li>
-                                    <li><Link className="dropdown-child" to="/specialties">Chuyên khoa</Link></li>
+                                    <li><Link className="dropdown-child" to="/specialties">Khoa - Phòng</Link></li>
                                     <li><Link className="dropdown-child" to="/devices">Trang thiết bị</Link></li>
                                     {aboutPages.map((page) => (
                                         <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>

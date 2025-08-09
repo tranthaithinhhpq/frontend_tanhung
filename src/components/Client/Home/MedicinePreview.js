@@ -1,17 +1,19 @@
+
+
 // FRONTEND: src/components/Client/Preview/MedicinePreview.js
 import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import Slider from 'react-slick';
 import { Card } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import './Home.scss';
+import '../News/NewsList.scss'; // ✅ dùng chung với NewsList
+import './Home.scss';           // (giữ lại nếu đang dùng cho arrow)
 
 const NextArrow = (props) => (
     <div className="custom-arrow next" onClick={props.onClick}>
         <i className="bi bi-chevron-right"></i>
     </div>
 );
-
 const PrevArrow = (props) => (
     <div className="custom-arrow prev" onClick={props.onClick}>
         <i className="bi bi-chevron-left"></i>
@@ -25,24 +27,16 @@ const MedicinePreview = () => {
     useEffect(() => {
         const fetchMedicineArticles = async () => {
             try {
-                const res = await axios.get('/api/v1/client/news-preview', {
-                    params: { group: 'medicine' }
-                });
-                if (res.EC === 0 && res.DT?.news) {
-                    setArticles(res.DT.news);
-                }
-            } catch (err) {
-                console.error('Lỗi lấy thông tin thuốc:', err);
-            }
+                const res = await axios.get('/api/v1/client/news-preview', { params: { group: 'medicine' } });
+                if (res.EC === 0 && res.DT?.news) setArticles(res.DT.news);
+            } catch (err) { console.error('Lỗi lấy thông tin thuốc:', err); }
         };
         fetchMedicineArticles();
     }, []);
 
     const getImageUrl = (path) => {
         if (!path) return '/default-news.jpg';
-        if (path.startsWith('/images')) {
-            return `${process.env.REACT_APP_BACKEND_URL}${path}`;
-        }
+        if (path.startsWith('/images')) return `${process.env.REACT_APP_BACKEND_URL}${path}`;
         return `${process.env.REACT_APP_BACKEND_URL}/images/${path}`;
     };
 
@@ -71,14 +65,18 @@ const MedicinePreview = () => {
                 </button>
             </div>
 
-            <Slider {...settings}>
+            <Slider {...settings} className="news-slider">
                 {articles.map(item => (
-                    <div key={item.id} className="px-2">
-                        <Card className="news-card" onClick={() => history.push(`/news/${item.id}`)} style={{ cursor: 'pointer' }}>
-                            <Card.Img variant="top" src={getImageUrl(item.image)} />
-                            <Card.Body>
-                                <Card.Title style={{ fontSize: '1rem' }}>{item.title}</Card.Title>
-                                <Card.Text style={{ fontSize: '0.85rem' }}>
+                    <div key={item.id} className="px-2 slide-item">
+                        <Card className="news-card w-100 h-100 d-flex flex-column" onClick={() => history.push(`/news/${item.id}`)} style={{ cursor: 'pointer' }}>
+                            <div className="thumb-wrap">
+                                <Card.Img variant="top" className="card-img-top" src={getImageUrl(item.image)} alt={item.title} />
+                            </div>
+                            <Card.Body className="d-flex flex-column">
+                                <Card.Title className="title" style={{ fontSize: '1rem' }}>
+                                    {item.title}
+                                </Card.Title>
+                                <Card.Text className="date mt-auto" style={{ fontSize: '0.85rem' }}>
                                     {new Date(item.createdAt).toLocaleDateString()}
                                 </Card.Text>
                             </Card.Body>

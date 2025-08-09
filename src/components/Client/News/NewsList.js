@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import { Card, Button, Row, Col, Form, Pagination } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
+import './NewsList.scss';
 
 
 const NewsList = () => {
@@ -134,25 +135,37 @@ const NewsList = () => {
 
             <Row>
                 {news.map(item => (
-                    <Col md={4} key={item.id} className="mb-4">
-                        <Card>
+                    <Col md={4} key={item.id} className="mb-4 d-flex">
+                        <Card className="news-card w-100 h-100 d-flex flex-column">
+                            <div className="thumb-wrap">
+                                <Card.Img
+                                    variant="top"
+                                    src={
+                                        item.image
+                                            ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
+                                            : '/default-news.jpg'
+                                    }
+                                    className="card-img-top"
+                                    alt={item.title}
+                                />
+                            </div>
 
-                            <Card.Img
-                                variant="top"
-                                src={
-                                    item.image
-                                        ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
-                                        : '/default-news.jpg'
-                                }
-                            />
-                            {console.log("check item image: ", item.image)}
-                            <Card.Body>
-                                <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
-                                    {item.content.replace(/<[^>]+>/g, '').substring(0, 100)}...
+                            <Card.Body className="d-flex flex-column">
+                                <Card.Title className="title">{item.title}</Card.Title>
+
+                                <Card.Text className="excerpt flex-grow-1">
+                                    {item.content.replace(/<[^>]+>/g, '').substring(0, 250)}
                                 </Card.Text>
-                                <Card.Text><small className="text-muted">Ngày đăng: {new Date(item.createdAt).toLocaleDateString()}</small></Card.Text>
-                                <Button onClick={() => history.push(`/news/${item.id}`)}>Xem chi tiết</Button>
+
+                                <Card.Text className="date">
+                                    <small className="text-muted">
+                                        Ngày đăng: {new Date(item.createdAt).toLocaleDateString()}
+                                    </small>
+                                </Card.Text>
+
+                                <Button className="mt-auto" onClick={() => history.push(`/news/${item.id}`)}>
+                                    Xem chi tiết
+                                </Button>
                             </Card.Body>
                         </Card>
                     </Col>

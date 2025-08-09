@@ -11,7 +11,7 @@ const SpecialtyEdit = () => {
     const { id } = useParams();
     const history = useHistory();
 
-    const [form, setForm] = useState({ name: '', description: '', markdownContent: '', image: '' });
+    const [form, setForm] = useState({ name: '', description: '', markdownContent: '', image: '', displayOrder: '' });
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState('');
     const [previewMode, setPreviewMode] = useState(false);
@@ -43,6 +43,7 @@ const SpecialtyEdit = () => {
         data.append('name', form.name);
         data.append('description', form.description);
         data.append('markdownContent', form.markdownContent);
+        data.append('displayOrder', form.displayOrder);
         if (image) data.append('image', image);
 
         const res = await axios.put(`/api/v1/admin/specialty/update/${id}`, data);
@@ -60,6 +61,15 @@ const SpecialtyEdit = () => {
             <Row>
                 <Col md={previewMode ? 6 : 12}>
                     <Form onSubmit={handleSubmit}>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Thứ tự sắp xếp</Form.Label>
+                            <Form.Control
+                                value={form.displayOrder}
+                                onChange={(e) => setForm({ ...form, displayOrder: e.target.value })}
+                            />
+                        </Form.Group>
+
                         <Form.Group className="mb-3">
                             <Form.Label>Tên chuyên khoa</Form.Label>
                             <Form.Control

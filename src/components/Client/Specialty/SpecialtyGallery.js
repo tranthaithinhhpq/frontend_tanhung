@@ -17,28 +17,31 @@ const SpecialtyGallery = () => {
     }, []);
 
     return (
-        <div className="container py-4">
-            <h4 className="mb-4">Danh sách chuyên khoa</h4>
-            <Row>
-                {specialties.map(sp => (
-                    <Col key={sp.id} lg={3} md={4} sm={6} xs={12} className="mb-4">
-                        <Card
-                            className="specialty-card h-100"
-                            onClick={() => history.push(`/specialty/${sp.id}`)}
-                        >
-                            <Card.Img
-                                variant="top"
-                                src={`${BACKEND_URL}${sp.image}`}
-                                className="card-img-top"
-                            />
-                            <Card.Body>
-                                <Card.Title>{sp.name}</Card.Title>
-                                <Card.Text>{sp.description}</Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
+        <div className="container-xxl py-4 ">
+            <h4 className="mb-4">Danh sách khoa phòng</h4>
+            <div className="row g-2 row-cols-3 row-cols-sm-4 row-cols-lg-6 row-cols-xxl-8 justify-content-center">
+                {specialties
+                    .slice() // tạo bản sao để không thay đổi mảng gốc
+                    .sort((a, b) => a.displayOrder - b.displayOrder) // sắp xếp id từ bé đến lớn
+                    .map(sp => (
+                        <div className="col" key={sp.displayOrder}>
+                            <div
+                                className="specialty-wrapper"
+                                onClick={() => history.push(`/specialty/${sp.id}`)}
+                            >
+                                <Card className="specialty-card">
+                                    <Card.Img
+                                        variant="top"
+                                        src={`${BACKEND_URL}${sp.image}`}
+                                        className="card-img-top"
+                                    />
+                                </Card>
+                                <div className="specialty-name">{sp.name}</div>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
         </div>
     );
 };

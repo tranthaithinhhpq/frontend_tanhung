@@ -76,3 +76,8 @@
     background: #f9f9f9;
     z-index: 1;
 }
+
+.wysiwyg-wrapper table.no-scroll td,
+.wysiwyg-wrapper table.no-scroll th {
+    white-space: normal !important; // override nowrap mặc định
+}
