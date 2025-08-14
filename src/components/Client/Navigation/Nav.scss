@@ -267,272 +267,38 @@ li:hover .dropdown-icon::after {
     }
 }
 
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+}
 
-// // === Global overrides ===
-// .navbar {
-//     .nav-link {
-//         color: rgba(0, 0, 0, 0.75) !important;
-//         transition: color 0.15s ease-in-out;
+/* Top bar – bắt buộc nền xanh ở production */
+.top-bar {
+    background-color: #0d6efd !important;
+    /* blue */
+    color: #fff !important;
+    width: 100%;
+    position: relative;
+    z-index: 1001;
+    /* nằm trên mọi nền trắng phía sau */
+}
 
-//         &:hover,
-//         &:focus {
-//             color: #000 !important;
-//         }
-//     }
+.top-bar__inner {
+    font-size: 14px;
+}
 
-//     .dropdown-toggle::after {
-//         border-top-color: currentColor !important;
-//     }
-// }
+/* Nếu có rule nào áp dụng opacity cho .text-light, chặn lại: */
+.top-bar.text-light {
+    --bs-text-opacity: 1 !important;
+}
 
-// .custom-navbar {
-//     z-index: 1030 !important;
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     background-color: #fff;
-//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-// }
-
-// .business-btn {
-//     background: #ffe600;
-//     color: #000;
-//     text-decoration: none;
-//     padding: 3px 10px;
-//     border-radius: 20px;
-//     font-weight: bold;
-//     display: flex;
-//     align-items: center;
-//     gap: 4px;
-// }
-
-// .dropdown-icon {
-//     display: inline-flex;
-//     align-items: center;
-//     justify-content: center;
-//     width: 22px;
-//     height: 22px;
-//     background: #f0f5ff;
-//     border-radius: 50%;
-//     position: relative;
-//     margin-left: 6px;
-
-//     &::after {
-//         content: '';
-//         width: 6px;
-//         height: 6px;
-//         border: solid #2d5eff;
-//         border-width: 0 2px 2px 0;
-//         transform: rotate(45deg);
-//         display: inline-block;
-//         margin-top: 2px;
-//     }
-// }
-
-// li:hover .dropdown-icon::after {
-//     transform: rotate(-135deg);
-//     transition: transform 0.2s ease;
-// }
-
-// .nav-link-small {
-//     font-size: 0.9rem !important;
-//     font-weight: bold !important;
-// }
-
-// // Desktop ≥991px
-// @media screen and (min-width: 991px) {
-//     .navbar-brand {
-//         margin-right: 0 !important;
-//     }
-
-//     .brand-link {
-//         text-decoration: none;
-//         color: inherit;
-
-//         .brand-text {
-//             display: flex;
-//             flex-direction: column;
-//             align-items: flex-start;
-//             line-height: 1.2;
-//             cursor: pointer;
-
-//             .brand-name-1 {
-//                 color: #3071f9;
-//                 font-weight: bold !important;
-//             }
-
-//             .brand-name-2 {
-//                 color: #000;
-//                 font-size: 0.875rem;
-//             }
-//         }
-//     }
-
-//     .nav-item.dropdown {
-//         position: relative;
-
-//         .dropdown-toggle {
-//             padding-bottom: 12px;
-//         }
-
-//         .dropdown-menu {
-//             position: absolute;
-//             top: 100%;
-//             left: 0;
-//             min-width: 180px;
-//             background: white;
-//             border-radius: 8px;
-//             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-//             animation: slideDown 0.3s ease forwards;
-//             z-index: 1000;
-//             padding: 8px 0;
-//             list-style: none;
-//             display: none;
-
-//             &::before {
-//                 content: "";
-//                 position: absolute;
-//                 top: -8px;
-//                 left: 20px;
-//                 width: 0;
-//                 height: 0;
-//                 border-left: 8px solid transparent;
-//                 border-right: 8px solid transparent;
-//                 border-bottom: 8px solid white;
-//                 pointer-events: none;
-//             }
-
-//             .dropdown-child {
-//                 display: block;
-//                 padding: 10px 16px;
-//                 width: 100%;
-//                 color: #000;
-//                 text-decoration: none;
-
-//                 &:hover {
-//                     background-color: #f5f5f5;
-//                 }
-//             }
-
-//             li {
-//                 padding: 0;
-//                 border-bottom: 1px solid #eee;
-//                 white-space: nowrap;
-
-//                 &:last-child {
-//                     border-bottom: none;
-//                 }
-//             }
-//         }
-
-//         // Hover only áp dụng cho desktop
-//         &:hover .dropdown-menu {
-//             display: block !important;
-//         }
-
-//         &:hover .dropdown-toggle::after {
-//             border-top: 0;
-//             border-bottom: 0.3em solid;
-//         }
-//     }
-// }
-
-// // Mobile/Tablet <991px
-// @media screen and (max-width: 991px) {
-//     .navbar-brand {
-//         margin-right: 0 !important;
-//     }
-
-//     .brand-link {
-//         text-decoration: none;
-//         color: inherit;
-
-//         .brand-text {
-//             display: flex;
-//             flex-direction: column;
-//             align-items: center;
-//             line-height: 1.2;
-//             cursor: pointer;
-
-//             .brand-name-1 {
-//                 color: #3071f9;
-//             }
-
-//             .brand-name-2 {
-//                 color: #000;
-//                 font-size: 0.875rem;
-//             }
-//         }
-//     }
-
-//     .navbar .dropdown-menu {
-//         position: static !important;
-//         float: none;
-//         background: #f9f9f9;
-//         border-radius: 0;
-//         box-shadow: none;
-//         padding: 0;
-
-//         .dropdown-child {
-//             display: block;
-//             padding: 10px 16px;
-//             color: #000;
-//             text-decoration: none;
-
-//             &:hover {
-//                 background-color: #f0f0f0;
-//             }
-//         }
-//     }
-
-//     .dropdown-toggle.show::after {
-//         border-top: 0;
-//         border-bottom: 0.3em solid;
-//     }
-// }
-
-// @keyframes slideDown {
-//     from {
-//         opacity: 0;
-//         transform: translateY(-10px);
-//     }
-
-//     to {
-//         opacity: 1;
-//         transform: translateY(0);
-//     }
-// }
-
-// .search-wrapper {
-//     display: flex;
-//     align-items: center;
-//     position: relative;
-
-//     .search-toggle {
-//         display: none;
-//         margin-left: 10px;
-//     }
-
-//     .search-form {
-//         display: flex;
-//     }
-
-//     @media (max-width: 1199.98px) {
-//         .search-toggle {
-//             display: inline-flex;
-//             align-items: center;
-//             justify-content: center;
-//         }
-
-//         .search-form {
-//             position: absolute;
-//             top: 100%;
-//             left: 0;
-//             width: 100%;
-//             padding-top: 5px;
-//             z-index: 9999;
-//             background: white;
-//         }
-//     }
-// }
+/* Navbar ngay dưới */
+.custom-navbar {
+    position: relative;
+    z-index: 1000;
+}

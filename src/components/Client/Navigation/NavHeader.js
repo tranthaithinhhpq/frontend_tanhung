@@ -154,7 +154,7 @@ const NavHeaderClient = () => {
         }}>
             {/* Top bar chứa địa chỉ, cấp cứu, tổng đài */}
             {windowWidth >= 1200 && (
-                <div className="top-bar text-light py-2" style={{ backgroundColor: '#007BFF', position: 'sticky', top: 0, zIndex: 1050 }}>
+                <div className="top-bar text-light py-2">
                     <div className="container d-flex justify-content-between align-items-center flex-wrap" style={{ fontSize: '14px' }}>
                         {/* Địa chỉ bên trái */}
                         <div className="d-flex align-items-center">

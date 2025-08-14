@@ -3,22 +3,10 @@ import { toast } from 'react-toastify';
 
 // Tạo instance của axios
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_URL,
-    withCredentials: true
+    baseURL: "",
+    withCredentials: true,
+    timeout: 20000,
 });
-
-// ✅ Gắn token vào mọi request (Interceptor Request)
-// instance.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem('jwt');
-//         if (token) {
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => Promise.reject(error)
-// );
-
 
 
 instance.interceptors.request.use(config => {
@@ -26,9 +14,6 @@ instance.interceptors.request.use(config => {
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
-
-
-
 
 
 // ✅ Xử lý lỗi response (Interceptor Response)
