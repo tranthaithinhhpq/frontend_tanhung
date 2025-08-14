@@ -2,12 +2,21 @@
 .navbar {
     .nav-link {
         color: rgba(0, 0, 0, 0.75) !important;
-        transition: color 0.15s ease-in-out;
+        // padding: 8px 12px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease, color 0.2s ease;
 
-        &:hover,
-        &:focus {
-            color: #000 !important;
+        &:hover {
+            color: #fff !important;
+            background-color: #2d5eff !important; // xanh
         }
+
+
+        &:active {
+            background-color: initial !important;
+        }
+
+
     }
 
     .dropdown-toggle::after {
@@ -88,7 +97,7 @@ li:hover .dropdown-icon::after {
             cursor: pointer;
 
             .brand-name-1 {
-                color: #3071f9;
+                color: red;
                 font-weight: bold !important;
             }
 
@@ -104,6 +113,12 @@ li:hover .dropdown-icon::after {
 
         .dropdown-toggle {
             padding-bottom: 12px;
+        }
+
+        &.show {
+            >.dropdown-menu {
+                display: block !important;
+            }
         }
 
         .dropdown-menu {
@@ -139,9 +154,13 @@ li:hover .dropdown-icon::after {
                 width: 100%;
                 color: #000;
                 text-decoration: none;
+                transition: background-color 0.1s ease, color 0.1s ease;
 
                 &:hover {
-                    background-color: #f5f5f5;
+                    // background-color: #f5f5f5;
+                    color: #fff !important;
+                    background-color: #2d5eff !important;
+
                 }
             }
 
@@ -159,11 +178,14 @@ li:hover .dropdown-icon::after {
         // Hover only áp dụng cho desktop
         &:hover .dropdown-menu {
             display: block !important;
+
+
         }
 
         &:hover .dropdown-toggle::after {
             border-top: 0;
             border-bottom: 0.3em solid;
+
         }
     }
 }
@@ -186,7 +208,7 @@ li:hover .dropdown-icon::after {
             cursor: pointer;
 
             .brand-name-1 {
-                color: #3071f9;
+                color: red;
             }
 
             .brand-name-2 {
@@ -203,6 +225,12 @@ li:hover .dropdown-icon::after {
         border-radius: 0;
         box-shadow: none;
         padding: 0;
+
+        &.show {
+            >.dropdown-menu {
+                display: block !important;
+            }
+        }
 
         .dropdown-child {
             display: block;

@@ -227,15 +227,17 @@ const NavHeaderClient = () => {
                         <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                             {/* Giới thiệu */}
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/tam-nhin-va-su-menh"
                                 >
                                     Giới thiệu <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
                                     <li><Link className="dropdown-child" to="/doctors">Đội ngũ bác sĩ</Link></li>
                                     <li><Link className="dropdown-child" to="/specialties">Khoa - Phòng</Link></li>
@@ -248,15 +250,18 @@ const NavHeaderClient = () => {
 
                             {/* Khách hàng */}
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/quyen-va-trach-nhiem"
                                 >
                                     Khách hàng <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
+
                                 <ul className="dropdown-menu">
 
                                     {clientPages.map((page) => (
@@ -267,21 +272,18 @@ const NavHeaderClient = () => {
 
                             {/* Tin tức */}
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/news"
                                 >
                                     Tin tức <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
-                                    <li>
-                                        <Link className="dropdown-child" to="/news">
-                                            Tất cả tin tức
-                                        </Link>
-                                    </li>
                                     {newsCategories.map((cat) => (
                                         <li key={cat.id}>
                                             <Link className="dropdown-child" to={`/news?categoryId=${cat.id}`}>
@@ -293,21 +295,19 @@ const NavHeaderClient = () => {
                             </li>
 
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/medicine-info"
                                 >
                                     Thông tin thuốc <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
-                                    <li>
-                                        <Link className="dropdown-child" to="/medicine-info">
-                                            Tất cả thông tin thuốc
-                                        </Link>
-                                    </li>
                                     {medicineCategories.map((cat) => (
                                         <li key={cat.id}>
                                             <Link className="dropdown-child" to={`/medicine-info?categoryId=${cat.id}`}>
@@ -321,15 +321,17 @@ const NavHeaderClient = () => {
                             {/* Đặt lịch */}
 
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/booking"
                                 >
                                     Đặt lịch khám <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
                                     <li><Link className="dropdown-child" to="/booking">Đặt lịch khám</Link></li>
                                     <li><Link className="dropdown-child" to="/booking-history">Lịch sử đặt khám</Link></li>
@@ -340,15 +342,17 @@ const NavHeaderClient = () => {
 
 
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/service-prices"
                                 >
                                     Bảng giá <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
                                     <li><Link className="dropdown-child" to="/service-prices">Bảng giá dịch vụ</Link></li>
                                     <li><Link className="dropdown-child" to="/drug-prices">Bảng giá thuốc</Link></li>
@@ -360,15 +364,18 @@ const NavHeaderClient = () => {
 
                             {/* Liên hệ */}
                             <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link nav-link-small "
+
+                                <Link
+                                    className="nav-link nav-link-small"
                                     href="#"
                                     role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                                    {...(windowWidth < 992
+                                        ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                        : {})}
+                                    to="/question"
                                 >
                                     Liên hệ <span className="dropdown-icon"></span>
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
                                     <li><Link className="dropdown-child" to="/question">Hỏi & đáp</Link></li>
                                     {contactPages.map((page) => (
