@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
 import { Button } from 'react-bootstrap';
 import './Home.scss';
+import { Link } from 'react-router-dom';
 
 const HomeIntroSections = () => {
     const [sections, setSections] = useState({});
@@ -46,7 +47,10 @@ const HomeIntroSections = () => {
                 <div className="text col-md-6 p-4">
                     <h2>{sections["home-title-1"]?.[0]?.contentText || "Tiêu đề 1 mặc định"}</h2>
                     <p>{sections["home-content-1"]?.[0]?.contentText || "Nội dung 1 mặc định"}</p>
-                    <Button variant="outline-dark">Xem thêm</Button>
+
+                    <Link to={`/${sections["home-title-1"]?.[0]?.title || ''}`}>
+                        <Button variant="outline-dark">Xem thêm</Button>
+                    </Link>
                 </div>
                 <div className="image col-md-6 text-center">
                     <img
@@ -63,7 +67,9 @@ const HomeIntroSections = () => {
                 <div className="text col-md-6 p-4">
                     <h2>{sections["home-title-2"]?.[0]?.contentText || "Tiêu đề 2 mặc định"}</h2>
                     <p>{sections["home-content-2"]?.[0]?.contentText || "Nội dung 2 mặc định"}</p>
-                    <Button variant="outline-dark">Xem thêm</Button>
+                    <Link to={`/${sections["home-title-2"]?.[0]?.title || ''}`}>
+                        <Button variant="outline-dark">Xem thêm</Button>
+                    </Link>
                 </div>
                 <div className="image col-md-6 text-center">
                     <img

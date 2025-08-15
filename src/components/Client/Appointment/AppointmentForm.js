@@ -117,41 +117,6 @@ const AppointmentForm = () => {
         setSelectedTime(null);
     };
 
-    // ✅ Submit lịch khám
-    // const handleSubmit = async () => {
-    //     if (!selectedDoctor || !selectedDate || !selectedTime) {
-    //         toast.error("Vui lòng chọn đầy đủ bác sĩ, ngày và giờ khám");
-    //         return;
-    //     }
-
-    //     const data = {
-    //         ...form,
-    //         specialtyId: selectedSpecialty.value,
-    //         doctorId: selectedDoctor.value,
-    //         slotId: selectedTime.value,
-    //         servicePriceId: selectedService?.value,
-    //         serviceType: selectedService?.type || 'regular',
-    //         scheduleTime: moment(`${format(selectedDate, "yyyy-MM-dd")} ${selectedTime.time}`, "YYYY-MM-DD HH:mm").toISOString()
-    //     };
-
-    //     try {
-    //         const res = await axios.post('/api/v1/booking/create', data);
-    //         if (res.EC === 0) {
-    //             toast.success("Đặt lịch thành công");
-    //             setForm({ name: '', phone: '', dob: '', address: '', email: '', reason: '' });
-    //             setSelectedSpecialty(null);
-    //             setSelectedDoctor(null);
-    //             setSelectedDate(null);
-    //             setSelectedTime(null);
-    //             setTimeSlots([]);
-    //         } else {
-    //             toast.error(res.EM || "Đặt lịch thất bại");
-    //         }
-    //     } catch (err) {
-    //         console.error("❌ Lỗi gửi lịch hẹn:", err);
-    //         toast.error("Lỗi khi gửi yêu cầu đặt lịch");
-    //     }
-    // };
 
     const handleSubmit = async () => {
         // ✅ Kiểm tra các trường bắt buộc

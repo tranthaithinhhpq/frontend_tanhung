@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap";
+
 .footer {
     background-color: #2f353c; // 🎯 cùng màu với .statistics-section
     color: #fff;
@@ -41,4 +43,20 @@
         height: 150px;
         border-radius: 6px;
     }
+}
+
+.booking-btn {
+    @extend .mt-3; // sử dụng Bootstrap margin-top
+    position: fixed;
+    bottom: 40px;
+    right: 10px;
+    background-color: #28a745;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
 }

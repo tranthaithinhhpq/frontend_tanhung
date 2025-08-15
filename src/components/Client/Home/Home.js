@@ -8,9 +8,7 @@ import HomeIntroVideo from './HomeIntroVideo';
 import StatisticsSection from './StatisticsSection';
 import PartnerSlider from './PartnerSlider ';
 import MedicinePreview from './MedicinePreview';
-
-
-
+import { Link } from 'react-router-dom';
 
 
 const HomeClient = () => {
@@ -78,89 +76,58 @@ const HomeClient = () => {
                     ))}
                 </div>
             </div>
-            {/* <div className="container my-4">
-                <div className="row g-4">
-                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
-                        <div className="card h-100 text-center p-3">
-                            <div className='icon'>
-                                <i className="bi bi-person-badge fs-1 mb-2 icon doctor"></i>
-                            </div>
-                            <h5>Bác sĩ</h5>
-                            <p className="small">Tìm hiểu thông tin bác sĩ chuyên khoa, kinh nghiệm, và lịch làm việc.</p>
-                        </div>
-                    </div>
-                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
-                        <div className="card h-100 text-center p-3">
-                            <div className='icon'>
-                                <i className="bi bi-calendar-check fs-1 mb-2 icon booking"></i>
-                            </div>
-                            <h5>Đặt lịch khám</h5>
 
-
-                            <p className="small">Chủ động chọn ngày khám, bác sĩ và chuyên khoa bạn cần.</p>
-                        </div>
-                    </div>
-                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
-                        <div className="card h-100 text-center p-3">
-                            <div className='icon'>
-                                <i className="bi bi-hospital fs-1 mb-2 specialty"></i>
-                            </div>
-
-                            <h5>Chuyên khoa</h5>
-                            <p className="small">Hệ thống chuyên khoa toàn diện, chất lượng cao.</p>
-                        </div>
-                    </div>
-                    <div className="col-12 col-sm-12 col-md-6 col-xl-3 service-card">
-                        <div className="card h-100 text-center p-3">
-                            <div className='icon'><i className="bi bi-receipt fs-1 mb-2 price"></i></div>
-
-                            <h5>Bảng giá</h5>
-                            <p className="small">Tra cứu chi phí khám chữa bệnh rõ ràng, minh bạch.</p>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
 
             <div className="container my-4">
                 <div className="row gx-4 gy-4">
                     <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="service-card text-center p-4 h-100">
-                            <div className="icon doctor">
-                                <i className="bi bi-person-badge fs-2"></i>
+                        <Link to="/doctors" className="text-decoration-none text-dark">
+                            <div className="service-card text-center p-4 h-100">
+                                <div className="icon doctor">
+                                    <i className="bi bi-person-badge fs-2"></i>
+                                </div>
+                                <h5 className="mt-3 mb-2">Bác sĩ</h5>
+                                <p className="small">
+                                    Tìm hiểu thông tin bác sĩ chuyên khoa, kinh nghiệm, và lịch làm việc.
+                                </p>
                             </div>
-                            <h5 className="mt-3 mb-2">Bác sĩ</h5>
-                            <p className="small">Tìm hiểu thông tin bác sĩ chuyên khoa, kinh nghiệm, và lịch làm việc.</p>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="service-card text-center p-4 h-100">
-                            <div className="icon booking">
-                                <i className="bi bi-calendar-check fs-2"></i>
+                        <Link to="/booking" className="text-decoration-none text-dark">
+                            <div className="service-card text-center p-4 h-100">
+                                <div className="icon booking">
+                                    <i className="bi bi-calendar-check fs-2"></i>
+                                </div>
+                                <h5 className="mt-3 mb-2">Đặt lịch khám</h5>
+                                <p className="small">Chủ động chọn ngày khám, bác sĩ và chuyên khoa bạn cần.</p>
                             </div>
-                            <h5 className="mt-3 mb-2">Đặt lịch khám</h5>
-                            <p className="small">Chủ động chọn ngày khám, bác sĩ và chuyên khoa bạn cần.</p>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="service-card text-center p-4 h-100">
-                            <div className="icon specialty">
-                                <i className="bi bi-hospital fs-2"></i>
+                        <Link to="/booking" className="text-decoration-none text-dark">
+                            <div className="service-card text-center p-4 h-100">
+                                <div className="icon specialty">
+                                    <i className="bi bi-hospital fs-2"></i>
+                                </div>
+                                <h5 className="mt-3 mb-2">Chuyên khoa</h5>
+                                <p className="small">Hệ thống chuyên khoa toàn diện, chất lượng cao.</p>
                             </div>
-                            <h5 className="mt-3 mb-2">Chuyên khoa</h5>
-                            <p className="small">Hệ thống chuyên khoa toàn diện, chất lượng cao.</p>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="col-12 col-sm-6 col-lg-3">
-                        <div className="service-card text-center p-4 h-100">
-                            <div className="icon price">
-                                <i className="bi bi-receipt fs-2"></i>
+                        <Link to="/service-prices" className="text-decoration-none text-dark">
+                            <div className="service-card text-center p-4 h-100">
+                                <div className="icon price">
+                                    <i className="bi bi-receipt fs-2"></i>
+                                </div>
+                                <h5 className="mt-3 mb-2">Bảng giá</h5>
+                                <p className="small">Tra cứu chi phí khám chữa bệnh rõ ràng, minh bạch.</p>
                             </div>
-                            <h5 className="mt-3 mb-2">Bảng giá</h5>
-                            <p className="small">Tra cứu chi phí khám chữa bệnh rõ ràng, minh bạch.</p>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </div>

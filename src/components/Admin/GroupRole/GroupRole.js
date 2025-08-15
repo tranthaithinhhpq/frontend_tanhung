@@ -153,7 +153,7 @@ const GroupRole = () => {
                                 {userGroups.length > 0 &&
                                     userGroups.map((item, index) => {
                                         return (
-                                            <option key={`group-${index}`} value={item.id}>{item.name}</option>
+                                            <option key={`group-${index}`} value={item.id}>{item.description}</option>
                                         );
                                     })}
                             </select>

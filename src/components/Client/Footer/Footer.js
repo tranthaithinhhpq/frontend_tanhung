@@ -3,6 +3,7 @@ import './Footer.scss';
 import axios from '../../../setup/axios';
 import { FaMapMarkerAlt, FaPhone, FaAmbulance, FaFacebookMessenger } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import zlt from '../../../zlt.png';
 
 const Footer = () => {
     const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
@@ -90,14 +91,14 @@ const Footer = () => {
                     <div className="col-md-3 footer-column">
                         <h5 className="footer-title">Đường đến Bệnh viện</h5>
                         <iframe
-                            title="map"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.7497603133666!2d106.70672607590614!3d10.752471259633652!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1557b29ab7%3A0xd0377fc0e489146c!2zODcxIMSQLiBUcuG6p24gWHXDom4gU8OgbiwgUGjGsOG7nW5nIDcsIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCwgVmlldG5hbQ!5e0!3m2!1svi!2s!4v1721253000000!5m2!1svi!2s"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.5643973528265!2d106.6963562!3d10.7512252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f0952bc150f%3A0xb0b097cad42d2a08!2zQuG6o25oIHZp4buHbiDEkGEga2hvYSBUw6JuIEjGsG5n!5e0!3m2!1svi!2s!4v1692096000000!5m2!1svi!2s"
                             width="100%"
-                            height="200"
+                            height="250"
                             style={{ border: 0 }}
                             allowFullScreen=""
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
+                            title="Bản đồ Bệnh viện Đa khoa Tân Hưng"
                         ></iframe>
                     </div>
                 </div>
@@ -128,25 +129,10 @@ const Footer = () => {
             </div>
 
 
-            {/* Nút Facebook nổi */}
-            <a
-                href="https://www.facebook.com/benhvientanhung"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                    position: 'fixed',
-                    bottom: '80px',
-                    right: '10px',
-                    backgroundColor: '#1877f2',
-                    color: '#fff',
-                    padding: '10px',
-                    borderRadius: '50%',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-                    zIndex: 1000
-                }}
-            >
-                <FaFacebookMessenger size={20} />
-            </a>
+
+
+
+
         </footer>
     );
 };

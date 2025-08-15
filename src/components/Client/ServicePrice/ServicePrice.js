@@ -91,20 +91,18 @@ const ClientServicePriceTable = () => {
                     <thead className="table-dark">
                         <tr>
                             <th>Tên dịch vụ</th>
-                            <th>Nhóm</th>
                             <th>Giá thường</th>
                             <th>Giá BHYT</th>
-                            <th>Chuyên khoa</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         {data.length > 0 ? data.map(item => (
                             <tr key={item.id}>
                                 <td>{item.name}</td>
-                                <td>{item.group}</td>
                                 <td>{item.price.toLocaleString()}đ</td>
                                 <td>{item.priceInsurance ? `${item.priceInsurance.toLocaleString()}đ` : '-'}</td>
-                                <td>{item.Specialty?.name}</td>
+
                             </tr>
                         )) : (
                             <tr><td colSpan="5" className="text-center">Không có dữ liệu</td></tr>

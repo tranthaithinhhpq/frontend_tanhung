@@ -68,11 +68,12 @@ footer {
     }
 }
 
-.modal {
-    z-index: 1055 !important;
-    /* lớn hơn navbar */
+.modal,
+.modal-dialog,
+.modal-content {
+    z-index: 9999 !important;
 }
 
 .modal-backdrop {
-    z-index: 1050 !important;
+    z-index: 9998 !important;
 }
