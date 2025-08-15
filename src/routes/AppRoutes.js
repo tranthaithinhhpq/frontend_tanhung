@@ -18,6 +18,7 @@ import NewsDetail from "../components/Client/News/NewsDetail";
 import DoctorTable from "../components/Admin/Doctor/DoctorTable";
 import DoctorEdit from "../components/Admin/Doctor/DoctorEdit";
 import DoctorCreate from "../components/Admin/Doctor/DoctorCreate";
+import ImageManager from "../components/Admin/Image/ImageManager";
 
 
 // Specialty (admin)
@@ -132,6 +133,9 @@ const AppRoutes = () => {
 
             {/* Admin - WorkingSlotTemplateManagement */}
             <PrivateRoutes path="/admin/working-slot-template" component={WorkingSlotTemplateManagement} />
+
+            {/* Admin - ImageManager */}
+            <PrivateRoutes path="/admin/image-manager" component={ImageManager} />
 
 
             {/* Admin - Position */}

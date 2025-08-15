@@ -143,6 +143,7 @@ const NavHeader = () => {
                                 <li><Link className="dropdown-item" to="/admin/pagetext">Web text</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/page-video-content">Web video</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/banner">Banner</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/image-manager">Kho ảnh</Link></li>
                             </ul>
                         </li>
 
