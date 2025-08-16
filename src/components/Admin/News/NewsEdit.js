@@ -18,7 +18,9 @@ const NewsEdit = () => {
     const history = useHistory();
 
     const [title, setTitle] = useState("");
+
     const [content, setContent] = useState("");
+    const [order, setOrder] = useState("");
     const [status, setStatus] = useState("draft");
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -43,17 +45,10 @@ const NewsEdit = () => {
                 setTitle(data.title);
                 setContent(data.content);
                 setStatus(data.status || "draft");
-
-                // Log category info
-                console.log("📌 Category from article:", data.category);
-
+                setOrder(data.order || "");
                 const currentGroup = data.category?.group || "news";
-                console.log("✅ Set group =", currentGroup);
                 setGroup(currentGroup);
-
                 const catId = data.categoryId;
-                console.log("🔎 categoryId =", catId);
-
                 await fetchCategories(catId, currentGroup);
 
                 if (data.image) {
@@ -148,6 +143,7 @@ const NewsEdit = () => {
         formData.append("title", title);
         formData.append("content", content);
         formData.append("group", group);
+        formData.append("order", order);
         formData.append("categoryId", selectedCategory.value);
         formData.append("status", status);
         if (image) formData.append("image", image);
@@ -176,6 +172,16 @@ const NewsEdit = () => {
                             className="form-control"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Thứ tự (Order)</label>
+                        <input
+                            className="form-control"
+                            value={order}
+                            onChange={(e) => setOrder(e.target.value)}
+                            placeholder="Nhập order, ví dụ: 1 hoặc featured"
                         />
                     </div>
 
@@ -271,6 +277,7 @@ const NewsEdit = () => {
                                 <p><strong>Nhóm:</strong> {group === "news" ? "Tin tức" : "Thông tin thuốc"}</p>
                                 <p><strong>Loại:</strong> {selectedCategory?.label || "Chưa chọn"}</p>
                                 <p><strong>Trạng thái:</strong> {status === "draft" ? "Nháp" : "Công khai"}</p>
+                                <p><strong>Order:</strong> {order || "Chưa đặt"}</p>
                                 {previewImg && (
                                     <img
                                         src={previewImg}

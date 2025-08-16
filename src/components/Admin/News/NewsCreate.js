@@ -14,7 +14,7 @@ const NewsCreate = ({ editData }) => {
     const [content, setContent] = useState(editData?.content || "");
     const [previewMode, setPreviewMode] = useState(false);
     const [group, setGroup] = useState(editData?.NewsCategory?.group || "news");
-
+    const [order, setOrder] = useState(editData?.order || 0);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [status, setStatus] = useState(editData?.status || "draft");
@@ -56,7 +56,8 @@ const NewsCreate = ({ editData }) => {
         formData.append("content", content);
         formData.append("categoryId", selectedCategory.value);
         formData.append("status", status);
-        formData.append("group", group); // ✅ thêm group
+        formData.append("order", order);
+        formData.append("group", group);
         if (image) formData.append("image", image);
 
         try {
@@ -112,6 +113,11 @@ const NewsCreate = ({ editData }) => {
                     </div>
 
                     <div className="mb-3">
+                        <label>Thứ tự</label>
+                        <input className="form-control" value={order} onChange={e => setOrder(e.target.value)} />
+                    </div>
+
+                    <div className="mb-3">
                         <label>Trạng thái</label>
                         <select className="form-control" value={status} onChange={e => setStatus(e.target.value)}>
                             <option value="draft">Nháp</option>
@@ -152,6 +158,7 @@ const NewsCreate = ({ editData }) => {
                                 <p><strong>Nhóm:</strong> {group === "medicine" ? "Thông tin thuốc" : "Tin tức"}</p>
                                 <p><strong>Loại tin tức:</strong> {selectedCategory?.label || "(Chưa chọn)"}</p>
                                 <p><strong>Trạng thái:</strong> {status === "draft" ? "Nháp" : "Công khai"}</p>
+                                <p><strong>Tag:</strong> {order}</p>
                                 {previewImg && (
                                     <img
                                         src={previewImg}

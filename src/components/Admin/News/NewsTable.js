@@ -75,35 +75,43 @@ const NewsTable = () => {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Tiêu đề</th>
                         <th>Ảnh</th>
+                        <th>Tiêu đề</th>
                         <th>Trạng thái</th>
-                        <th>Loại tin</th>
-                        <th>Thao tác</th>
+                        <th>Nhóm</th>
+                        <th>Thứ tự</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
                     {articles.length === 0 ? (
                         <tr>
-                            <td colSpan={5} className="text-center">Không có dữ liệu</td>
+                            <td colSpan={7} className="text-center">Không có dữ liệu</td>
                         </tr>
                     ) : (
                         articles.map((item, idx) => (
                             <tr key={item.id}>
                                 <td>{idx + 1}</td>
-                                <td>{item.title}</td>
                                 <td>
                                     <img src={`${BACKEND_URL}${item.image}`} alt="news" style={{ width: 100 }} />
                                 </td>
-                                <td>{item.status ? 'Hiển thị' : 'Ẩn'}</td>
+                                <td>{item.title}</td>
+
+                                {/* ✅ fix status string */}
+                                <td>{item.status === 'published' ? 'Hiển thị' : 'Ẩn'}</td>
                                 <td>{item.category?.group || 'N/A'}</td>
+                                {/* ✅ hiển thị tag */}
+                                <td>{item.order || 0}</td>
                                 <td>
-                                    <i variant="warning" className="fa fa-pencil edit" onClick={() => history.push(`/admin/news/edit/${item.id}`)}></i>
+                                    <i
+                                        variant="warning"
+                                        className="fa fa-pencil edit"
+                                        onClick={() => history.push(`/admin/news/edit/${item.id}`)}
+                                    ></i>
                                     <i
                                         variant="danger"
                                         className="fa fa-trash-o delete"
                                         onClick={() => openDeleteModal(item)}
-
                                     ></i>
                                 </td>
                             </tr>

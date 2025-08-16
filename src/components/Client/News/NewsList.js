@@ -7,10 +7,14 @@ import './NewsList.scss';
 
 const NewsList = () => {
     const [news, setNews] = useState([]);
-    const [pagination, setPagination] = useState({ page: 1, limit: 5, total: 0 });
+    const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0 });
     const [categories, setCategories] = useState([]);
     const [category, setCategory] = useState('');
     const [keyword, setKeyword] = useState('');
+
+    const latestNews = news.length > 0 ? news[0] : null;
+    const highlightNews = news.slice(1, 4);
+    const popularNews = news.slice(4);
 
     const location = useLocation();
 
@@ -133,44 +137,106 @@ const NewsList = () => {
                 </Col>
             </Row>
 
-            <Row>
-                {news.map(item => (
-                    <Col md={4} key={item.id} className="mb-4 d-flex">
-                        <Card className="news-card w-100 h-100 d-flex flex-column">
-                            <div className="thumb-wrap">
-                                <Card.Img
-                                    variant="top"
-                                    src={
-                                        item.image
-                                            ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
-                                            : '/default-news.jpg'
-                                    }
-                                    className="card-img-top"
-                                    alt={item.title}
-                                />
-                            </div>
-
-                            <Card.Body className="d-flex flex-column">
-                                <Card.Title className="title">{item.title}</Card.Title>
-
-                                <Card.Text className="excerpt flex-grow-1">
-                                    {item.content.replace(/<[^>]+>/g, '').substring(0, 250)}
-                                </Card.Text>
-
-                                <Card.Text className="date">
-                                    <small className="text-muted">
-                                        Ngày đăng: {new Date(item.createdAt).toLocaleDateString()}
-                                    </small>
-                                </Card.Text>
-
-                                <Button className="mt-auto" onClick={() => history.push(`/news/${item.id}`)}>
-                                    Xem chi tiết
-                                </Button>
-                            </Card.Body>
+            {/* Tin mới nhất - layout ngang */}
+            {latestNews && (
+                <Row className="mb-4 align-items-stretch">
+                    <Col md={6}>
+                        <Card className="h-100 border-0">
+                            <Card.Img
+                                src={
+                                    latestNews.image
+                                        ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${latestNews.image}`)
+                                        : '/default-news.jpg'
+                                }
+                                alt={latestNews.title}
+                                className="w-100 h-100"
+                                style={{ objectFit: 'cover', borderRadius: '8px' }}
+                            />
                         </Card>
                     </Col>
-                ))}
-            </Row>
+                    <Col md={6} className="d-flex flex-column justify-content-center">
+                        <h2 className="fw-bold">{latestNews.title}</h2>
+                        <p className="text-muted">
+                            Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString()}
+                        </p>
+                        <p>
+                            {latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
+                        </p>
+                        <Button
+                            variant="primary"
+                            onClick={() => history.push(`/news/${latestNews.id}`)}
+                            className="mt-2 align-self-start"
+                        >
+                            Xem chi tiết
+                        </Button>
+                    </Col>
+                </Row>
+            )}
+
+            {/* Nổi bật */}
+            {highlightNews.length > 0 && (
+                <>
+                    <h4 className="mb-3">Nổi bật</h4>
+                    <Row>
+                        {highlightNews.map(item => (
+                            <Col md={4} key={item.id} className="mb-4">
+                                <Card className="news-card">
+                                    <Card.Img
+                                        src={
+                                            item.image
+                                                ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
+                                                : '/default-news.jpg'
+                                        }
+                                        alt={item.title}
+                                    />
+                                    <Card.Body>
+                                        <Card.Title className="title">{item.title}</Card.Title>
+                                        <Card.Text className="date">
+                                            <small className="text-muted">
+                                                {new Date(item.createdAt).toLocaleDateString()}
+                                            </small>
+                                        </Card.Text>
+                                        <Button onClick={() => history.push(`/news/${item.id}`)}>Xem chi tiết</Button>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </>
+            )}
+
+            {/* Phổ biến */}
+            {popularNews.length > 0 && (
+                <>
+                    <h4 className="mb-3">Phổ biến</h4>
+                    <Row>
+                        {popularNews.map(item => (
+                            <Col md={4} key={item.id} className="mb-4">
+                                <Card className="news-card small">
+                                    <Card.Img
+                                        src={
+                                            item.image
+                                                ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
+                                                : '/default-news.jpg'
+                                        }
+                                        alt={item.title}
+                                    />
+                                    <Card.Body>
+                                        <Card.Title className="title small">{item.title}</Card.Title>
+                                        <Card.Text className="date">
+                                            <small className="text-muted">
+                                                {new Date(item.createdAt).toLocaleDateString()}
+                                            </small>
+                                        </Card.Text>
+                                        <Button size="sm" onClick={() => history.push(`/news/${item.id}`)}>Chi tiết</Button>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </>
+            )}
+
 
             <Pagination>
                 <Pagination.Prev disabled={pagination.page === 1} onClick={() => fetchNews(pagination.page - 1)} />

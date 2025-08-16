@@ -48,3 +48,26 @@
         margin-bottom: .5rem;
     }
 }
+
+.news-featured {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+
+    img {
+        border-radius: 8px;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+}

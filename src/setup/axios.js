@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 // Tạo instance của axios
 const instance = axios.create({
+    // baseURL: "",
     baseURL: process.env.REACT_APP_BACKEND_URL,
     withCredentials: true,
     timeout: 20000,
