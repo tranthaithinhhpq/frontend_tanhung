@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Form, InputGroup } from 'react-bootstrap';
 import axios from '../../../setup/axios';
 import ReactPaginate from 'react-paginate';
 import { useHistory } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+// (Đặt cạnh các import khác)
+import Select from 'react-select';
+
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -16,6 +20,38 @@ const NewsTable = () => {
     const history = useHistory();
     const [showModal, setShowModal] = useState(false);
     const [selectedArticle, setSelectedArticle] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [loadingCategories, setLoadingCategories] = useState(false);
+    const categoryOptions = categories.map(c => ({
+        value: c.id,
+        label: c.name
+    }));
+
+    const fetchCategories = async () => {
+        try {
+            setLoadingCategories(true);
+            const res = await axios.get('/api/v1/newscategory/list');
+            // Kỳ vọng res có dạng { EC: 0, DT: [...] }
+            if (res.EC === 0) {
+                setCategories(res.DT || []);
+            } else {
+                toast.error(res.EM || 'Không tải được danh mục');
+            }
+        } catch (e) {
+            console.error('Load categories failed', e);
+            toast.error('Lỗi tải danh mục');
+        } finally {
+            setLoadingCategories(false);
+        }
+    };
+
+    // Gọi 1 lần khi mount
+    useEffect(() => {
+        fetchCategories();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     const openDeleteModal = (article) => {
         setSelectedArticle(article);
@@ -43,21 +79,46 @@ const NewsTable = () => {
         closeDeleteModal();
     };
 
+    const handleChangeCategory = (option) => {
+        setSelectedCategory(option); // useEffect ở Block 6 sẽ tự fetch lại
+    };
+
+    const clearCategory = () => {
+        setSelectedCategory(null); // cũng sẽ tự fetch lại
+    };
+
     useEffect(() => {
-        fetchArticles();
+        setCurrentPage(1);
+        fetchArticles(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCategory]);
+
+    useEffect(() => {
+        fetchArticles(currentPage);
     }, [currentPage]);
 
-    const fetchArticles = async () => {
+    // (Đặt trong component NewsTable) — thay thế hàm fetchArticles cũ
+    const fetchArticles = async (page = currentPage) => {
         try {
-            const res = await axios.get(`/api/v1/admin/news/paginate?page=${currentPage}&limit=${limit}`);
-            console.log("res: ", res);
+            const params = new URLSearchParams({
+                page: page.toString(),
+                limit: limit.toString(),
+            });
+
+            if (selectedCategory?.value) {
+                params.set('categoryId', selectedCategory.value);
+            }
+
+            const res = await axios.get(`/api/v1/admin/news/paginate?${params.toString()}`);
             if (res.EC === 0) {
                 setArticles(res.DT.articles);
                 setTotalPage(res.DT.totalPages);
-                console.log("DATA:", res.DT.articles);
+            } else {
+                toast.error(res.EM || 'Lỗi khi tải dữ liệu');
             }
         } catch (e) {
             console.error('Fetch failed', e);
+            toast.error('Lỗi khi tải dữ liệu');
         }
     };
 
@@ -71,6 +132,24 @@ const NewsTable = () => {
             <Button className="mb-3" onClick={() => history.push('/admin/news/create')}>
                 <i className="fa fa-plus-circle"></i> Thêm mới
             </Button>
+
+            <div className="d-flex align-items-center mb-3 gap-2">
+                <div style={{ minWidth: 260 }}>
+                    <Select
+                        isClearable
+                        isLoading={loadingCategories}
+                        options={categoryOptions}
+                        value={selectedCategory}
+                        onChange={handleChangeCategory}
+                        placeholder="Lọc theo danh mục..."
+                        noOptionsMessage={() => 'Không có dữ liệu'}
+                    />
+                </div>
+
+                <Button variant="outline-secondary" onClick={clearCategory}>
+                    Xóa lọc
+                </Button>
+            </div>
             <Table bordered hover>
                 <thead>
                     <tr>
@@ -79,6 +158,7 @@ const NewsTable = () => {
                         <th>Tiêu đề</th>
                         <th>Trạng thái</th>
                         <th>Nhóm</th>
+                        <th>Danh mục</th>
                         <th>Thứ tự</th>
                         <th>Hành động</th>
                     </tr>
@@ -86,7 +166,7 @@ const NewsTable = () => {
                 <tbody>
                     {articles.length === 0 ? (
                         <tr>
-                            <td colSpan={7} className="text-center">Không có dữ liệu</td>
+                            <td colSpan={8} className="text-center">Không có dữ liệu</td>
                         </tr>
                     ) : (
                         articles.map((item, idx) => (
@@ -100,6 +180,7 @@ const NewsTable = () => {
                                 {/* ✅ fix status string */}
                                 <td>{item.status === 'published' ? 'Hiển thị' : 'Ẩn'}</td>
                                 <td>{item.category?.group || 'N/A'}</td>
+                                <td>{item.category?.name || 'N/A'}</td>
                                 {/* ✅ hiển thị tag */}
                                 <td>{item.order || 0}</td>
                                 <td>
