@@ -12,9 +12,8 @@ const DeviceDetailPage = () => {
     useEffect(() => {
         const fetchDevice = async () => {
             try {
-                const res = await axios.get('/api/v1/device/read');
-                const found = res.DT.find((item) => item.id === +id);
-                if (found) setDevice(found);
+                const res = await axios.get(`/api/v1/device/detail/${id}`);
+                setDevice(res.DT);  // set trực tiếp
             } catch (err) {
                 console.error('Error fetching device detail:', err);
             }

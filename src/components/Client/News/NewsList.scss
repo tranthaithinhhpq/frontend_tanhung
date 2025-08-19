@@ -61,6 +61,8 @@
         height: 100%;
     }
 
+
+
     h2 {
         font-size: 1.8rem;
         margin-bottom: 10px;
@@ -70,4 +72,16 @@
         font-size: 1rem;
         line-height: 1.5;
     }
+}
+
+.no-hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    transition: none !important;
+}
+
+.no-hover:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    /* bỏ shadow hover */
+    transform: none !important;
+    /* bỏ scale hoặc effect hover */
 }

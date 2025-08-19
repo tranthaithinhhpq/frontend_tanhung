@@ -114,7 +114,7 @@ const NewsList = () => {
         <div className="container my-4">
             <h3>Tin tức</h3>
 
-            <Row className="mb-3">
+            <Row className="mb-4">
                 <Col md={4}>
 
                     <Form.Control as="select" value={category} onChange={handleCategoryChange}>
@@ -139,28 +139,45 @@ const NewsList = () => {
 
             {/* Tin unique - layout ngang */}
             {latestNews && (
-                <Row className="mb-4 align-items-stretch">
-                    <Col md={6}>
-                        <Card className="h-100 border-0">
+                <Card
+                    className="news-card mb-4 cursor-pointer border-0 no-hover "
+                    onClick={() => history.push(`/news/${latestNews.id}`)}
+                >
+                    <Row className="g-0 align-items-stretch">
+                        {/* Ảnh tin */}
+                        <Col md={6}>
                             <Card.Img
                                 src={latestNews.image ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${latestNews.image}`) : '/default-news.jpg'}
                                 alt={latestNews.title}
                                 className="w-100 h-100"
-                                style={{ objectFit: 'cover', borderRadius: '8px' }}
+                                style={{ objectFit: 'cover', borderRadius: 0, height: '100%' }}
                             />
-                        </Card>
-                    </Col>
-                    <Col md={6} className="d-flex flex-column justify-content-center">
-                        <h2 className="fw-bold">{latestNews.title}</h2>
-                        <p className="text-muted">
-                            Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString()}
-                        </p>
-                        <p>{latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...</p>
-                        <Button variant="primary" onClick={() => history.push(`/news/${latestNews.id}`)} className="mt-2 align-self-start">
-                            Xem chi tiết
-                        </Button>
-                    </Col>
-                </Row>
+                        </Col>
+
+                        {/* Nội dung tin */}
+                        <Col md={6} className="d-flex flex-column justify-content-center p-3">
+                            <Card.Body className="p-0">
+                                <Card.Title as="h2" className="fw-bold">{latestNews.title}</Card.Title>
+                                <Card.Text className="text-muted mb-2">
+                                    Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString()}
+                                </Card.Text>
+                                <Card.Text>
+                                    {latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
+                                </Card.Text>
+                                <Button
+                                    variant="primary"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // tránh kích hoạt onClick của Card
+                                        history.push(`/news/${latestNews.id}`);
+                                    }}
+                                    className="mt-2 align-self-start"
+                                >
+                                    Xem chi tiết
+                                </Button>
+                            </Card.Body>
+                        </Col>
+                    </Row>
+                </Card>
             )}
 
             {/* Nổi bật */}
@@ -170,7 +187,11 @@ const NewsList = () => {
                     <Row>
                         {highlightNews.map(item => (
                             <Col md={4} key={item.id} className="mb-4">
-                                <Card className="news-card">
+                                <Card
+                                    className="news-card cursor-pointer"
+                                    onClick={() => history.push(`/news/${item.id}`)}
+                                    style={{ cursor: 'pointer' }} // đảm bảo con trỏ chuột thay đổi
+                                >
                                     <Card.Img
                                         src={item.image ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`) : '/default-news.jpg'}
                                         alt={item.title}
@@ -180,7 +201,6 @@ const NewsList = () => {
                                         <Card.Text className="date">
                                             <small className="text-muted">{new Date(item.createdAt).toLocaleDateString()}</small>
                                         </Card.Text>
-                                        <Button onClick={() => history.push(`/news/${item.id}`)}>Xem chi tiết</Button>
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -196,7 +216,11 @@ const NewsList = () => {
                     <Row>
                         {popularNews.map(item => (
                             <Col md={4} key={item.id} className="mb-4">
-                                <Card className="news-card small">
+                                <Card
+                                    className="news-card cursor-pointer"
+                                    onClick={() => history.push(`/news/${item.id}`)}
+                                    style={{ cursor: 'pointer' }} // đảm bảo con trỏ chuột thay đổi
+                                >
                                     <Card.Img
                                         src={item.image ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`) : '/default-news.jpg'}
                                         alt={item.title}
@@ -206,7 +230,7 @@ const NewsList = () => {
                                         <Card.Text className="date">
                                             <small className="text-muted">{new Date(item.createdAt).toLocaleDateString()}</small>
                                         </Card.Text>
-                                        <Button size="sm" onClick={() => history.push(`/news/${item.id}`)}>Chi tiết</Button>
+
                                     </Card.Body>
                                 </Card>
                             </Col>
