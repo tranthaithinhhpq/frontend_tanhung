@@ -60,10 +60,11 @@ const SpecialtyTable = () => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>STT</th>
+                        <th>Sắp xếp</th>
                         <th>Ảnh (4x3)</th>
                         <th>Tên chuyên khoa</th>
                         <th>Mô tả</th>
+                        <th>Cho đặt khám ?</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -82,6 +83,9 @@ const SpecialtyTable = () => {
                                 </td>
                                 <td className="align-middle">{sp.name}</td>
                                 <td className="align-middle">{sp.description}</td>
+                                <td className="align-middle">
+                                    {sp.isSelectable ? "Có" : "Không"}
+                                </td>
                                 <td className="align-middle">
                                     <i
                                         className="fa fa-pencil edit"

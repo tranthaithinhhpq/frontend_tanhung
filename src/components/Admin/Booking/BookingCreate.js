@@ -28,13 +28,35 @@ const BookingCreate = () => {
 
 
     // Load specialties
+    // useEffect(() => {
+    //     axios.get('/api/v1/specialty/read').then(res => {
+    //         if (res.EC === 0) {
+    //             setSpecialties(res.DT.map(s => ({ value: s.id, label: s.name })));
+    //         }
+    //     });
+    // }, []);
+
+    // Load specialties
     useEffect(() => {
         axios.get('/api/v1/specialty/read').then(res => {
             if (res.EC === 0) {
-                setSpecialties(res.DT.map(s => ({ value: s.id, label: s.name })));
+                const list = Array.isArray(res.DT) ? res.DT : [];
+                // Chỉ lấy chuyên khoa cho phép đặt lịch
+                const allowed = list.filter(s =>
+                    s?.isSelectable === true || s?.isSelectable === 1 || s?.isSelectable === '1'
+                );
+
+                setSpecialties(
+                    allowed.map(s => ({
+                        value: s.id,
+                        label: s.name,
+                        meta: { isSelectable: s.isSelectable } // giữ lại để validate khi submit
+                    }))
+                );
             }
         });
     }, []);
+
 
     // Load doctors và dịch vụ theo specialty
     useEffect(() => {
@@ -139,6 +161,10 @@ const BookingCreate = () => {
             toast.error("Vui lòng chọn chuyên khoa");
             return;
         }
+        if (!selectedSpecialty.meta?.isSelectable) {
+            toast.error("Chuyên khoa này không cho phép đặt lịch");
+            return;
+        }
 
         if (!selectedDoctor) {
             toast.error("Vui lòng chọn bác sĩ");
@@ -213,8 +239,15 @@ const BookingCreate = () => {
                 <input className="form-control" value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} />
             </div>
 
-            <div className="mb-3"><label>Chuyên khoa</label>
-                <Select options={specialties} value={selectedSpecialty} onChange={setSelectedSpecialty} />
+            <div className="mb-3">
+                <label>Chuyên khoa</label>
+                <Select
+                    options={specialties}
+                    value={selectedSpecialty}
+                    onChange={setSelectedSpecialty}
+                    placeholder={specialties.length ? "Chọn chuyên khoa" : "Không có chuyên khoa cho phép đặt lịch"}
+                    isDisabled={!specialties.length}
+                />
             </div>
 
             <div className="mb-3"><label>Bác sĩ</label>

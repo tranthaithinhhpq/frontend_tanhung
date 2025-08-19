@@ -1,4 +1,3 @@
-
 // src/components/Admin/NewsFormHtmlOnly.js
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
@@ -11,15 +10,18 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080"
 
 const NewsCreate = ({ editData }) => {
     const [title, setTitle] = useState(editData?.title || "");
+
     const [content, setContent] = useState(editData?.content || "");
+    const [type, setType] = useState(editData?.type || "none");
     const [previewMode, setPreviewMode] = useState(false);
     const [group, setGroup] = useState(editData?.NewsCategory?.group || "news");
-    const [order, setOrder] = useState(editData?.order || 0);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [status, setStatus] = useState(editData?.status || "draft");
     const [image, setImage] = useState(null);
-    const [previewImg, setPreviewImg] = useState(editData?.image ? `${BACKEND_URL}/${editData.image}` : "");
+    const [previewImg, setPreviewImg] = useState(
+        editData?.image ? `${BACKEND_URL}/${editData.image}` : ""
+    );
 
     // ✅ Fetch danh mục khi group thay đổi hoặc lần đầu load
     useEffect(() => {
@@ -56,15 +58,15 @@ const NewsCreate = ({ editData }) => {
         formData.append("content", content);
         formData.append("categoryId", selectedCategory.value);
         formData.append("status", status);
-        formData.append("order", order);
+        formData.append("type", type);
         formData.append("group", group);
         if (image) formData.append("image", image);
+
 
         try {
             const res = editData
                 ? await axios.put(`/api/v1/admin/edit/${editData.id}`, formData)
                 : await axios.post("/api/v1/admin/news/create", formData);
-
 
             res.EC === 0
                 ? toast.success(res.EM || "Lưu bài viết thành công")
@@ -83,7 +85,11 @@ const NewsCreate = ({ editData }) => {
                 <Col md={previewMode ? 6 : 12}>
                     <div className="mb-3">
                         <label>Tiêu đề</label>
-                        <input className="form-control" value={title} onChange={e => setTitle(e.target.value)} />
+                        <input
+                            className="form-control"
+                            value={title}
+                            onChange={e => setTitle(e.target.value)}
+                        />
                     </div>
 
                     <div className="mb-3">
@@ -112,14 +118,31 @@ const NewsCreate = ({ editData }) => {
                         />
                     </div>
 
+
+
                     <div className="mb-3">
-                        <label>Thứ tự</label>
-                        <input className="form-control" value={order} onChange={e => setOrder(e.target.value)} />
+                        <label>Thứ hạng</label>
+                        <select
+                            className="form-control"
+                            value={type}
+                            onChange={e => setType(e.target.value)}
+                        >
+                            <option value="">-- Chọn thứ hạng --</option>
+                            <option value="highlight">Nổi bật</option>
+                            <option value="none">Không</option>
+                        </select>
                     </div>
+
+
+
 
                     <div className="mb-3">
                         <label>Trạng thái</label>
-                        <select className="form-control" value={status} onChange={e => setStatus(e.target.value)}>
+                        <select
+                            className="form-control"
+                            value={status}
+                            onChange={e => setStatus(e.target.value)}
+                        >
                             <option value="draft">Nháp</option>
                             <option value="published">Công khai</option>
                         </select>
@@ -135,13 +158,23 @@ const NewsCreate = ({ editData }) => {
                                 setPreviewImg(URL.createObjectURL(e.target.files[0]));
                             }}
                         />
-                        {previewImg && <img src={previewImg} alt="preview" style={{ maxHeight: 150, marginTop: 10 }} />}
+                        {previewImg && (
+                            <img
+                                src={previewImg}
+                                alt="preview"
+                                style={{ maxHeight: 150, marginTop: 10 }}
+                            />
+                        )}
                     </div>
 
                     <CustomHtmlEditor value={content} onChange={setContent} />
 
                     <div className="mt-3">
-                        <Button variant="secondary" className="me-2" onClick={() => setPreviewMode(!previewMode)}>
+                        <Button
+                            variant="secondary"
+                            className="me-2"
+                            onClick={() => setPreviewMode(!previewMode)}
+                        >
                             {previewMode ? "Ẩn Preview" : "Fast Preview"}
                         </Button>
                         <Button variant="primary" onClick={handleSubmit}>
@@ -155,10 +188,24 @@ const NewsCreate = ({ editData }) => {
                         <Card className="h-100 overflow-auto">
                             <Card.Body>
                                 <h2>{title || "(Tiêu đề xem trước)"}</h2>
-                                <p><strong>Nhóm:</strong> {group === "medicine" ? "Thông tin thuốc" : "Tin tức"}</p>
-                                <p><strong>Loại tin tức:</strong> {selectedCategory?.label || "(Chưa chọn)"}</p>
-                                <p><strong>Trạng thái:</strong> {status === "draft" ? "Nháp" : "Công khai"}</p>
-                                <p><strong>Tag:</strong> {order}</p>
+                                <p>
+                                    <strong>Nhóm:</strong>{" "}
+                                    {group === "medicine" ? "Thông tin thuốc" : "Tin tức"}
+                                </p>
+                                <p>
+                                    <strong>Loại tin tức:</strong>{" "}
+                                    {selectedCategory?.label || "(Chưa chọn)"}
+                                </p>
+                                <p>
+                                    <strong>Trạng thái:</strong>{" "}
+                                    {status === "draft" ? "Nháp" : "Công khai"}
+                                </p>
+                                <p>
+                                    <strong>Thứ hạng:</strong>{" "}
+                                    {type === "highlight"
+                                        ? "Nổi bật"
+                                        : "Không"}
+                                </p>
                                 {previewImg && (
                                     <img
                                         src={previewImg}
@@ -166,7 +213,10 @@ const NewsCreate = ({ editData }) => {
                                         style={{ maxWidth: "100%", marginBottom: 10 }}
                                     />
                                 )}
-                                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: content }} />
+                                <div
+                                    className="ql-editor"
+                                    dangerouslySetInnerHTML={{ __html: content }}
+                                />
                             </Card.Body>
                         </Card>
                     </Col>

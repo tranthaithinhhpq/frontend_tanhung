@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form, InputGroup } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import axios from '../../../setup/axios';
 import ReactPaginate from 'react-paginate';
 import { useHistory } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-// (Đặt cạnh các import khác)
 import Select from 'react-select';
-
-
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -23,6 +20,7 @@ const NewsTable = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [loadingCategories, setLoadingCategories] = useState(false);
+
     const categoryOptions = categories.map(c => ({
         value: c.id,
         label: c.name
@@ -32,7 +30,6 @@ const NewsTable = () => {
         try {
             setLoadingCategories(true);
             const res = await axios.get('/api/v1/newscategory/list');
-            // Kỳ vọng res có dạng { EC: 0, DT: [...] }
             if (res.EC === 0) {
                 setCategories(res.DT || []);
             } else {
@@ -46,12 +43,9 @@ const NewsTable = () => {
         }
     };
 
-    // Gọi 1 lần khi mount
     useEffect(() => {
         fetchCategories();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
 
     const openDeleteModal = (article) => {
         setSelectedArticle(article);
@@ -80,11 +74,11 @@ const NewsTable = () => {
     };
 
     const handleChangeCategory = (option) => {
-        setSelectedCategory(option); // useEffect ở Block 6 sẽ tự fetch lại
+        setSelectedCategory(option);
     };
 
     const clearCategory = () => {
-        setSelectedCategory(null); // cũng sẽ tự fetch lại
+        setSelectedCategory(null);
     };
 
     useEffect(() => {
@@ -97,7 +91,6 @@ const NewsTable = () => {
         fetchArticles(currentPage);
     }, [currentPage]);
 
-    // (Đặt trong component NewsTable) — thay thế hàm fetchArticles cũ
     const fetchArticles = async (page = currentPage) => {
         try {
             const params = new URLSearchParams({
@@ -150,6 +143,7 @@ const NewsTable = () => {
                     Xóa lọc
                 </Button>
             </div>
+
             <Table bordered hover>
                 <thead>
                     <tr>
@@ -159,14 +153,15 @@ const NewsTable = () => {
                         <th>Trạng thái</th>
                         <th>Nhóm</th>
                         <th>Danh mục</th>
-                        <th>Thứ tự</th>
+                        <th>thứ hạng</th>
                         <th>Hành động</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     {articles.length === 0 ? (
                         <tr>
-                            <td colSpan={8} className="text-center">Không có dữ liệu</td>
+                            <td colSpan={7} className="text-center">Không có dữ liệu</td>
                         </tr>
                     ) : (
                         articles.map((item, idx) => (
@@ -176,21 +171,16 @@ const NewsTable = () => {
                                     <img src={`${BACKEND_URL}${item.image}`} alt="news" style={{ width: 100 }} />
                                 </td>
                                 <td>{item.title}</td>
-
-                                {/* ✅ fix status string */}
                                 <td>{item.status === 'published' ? 'Hiển thị' : 'Ẩn'}</td>
                                 <td>{item.category?.group || 'N/A'}</td>
                                 <td>{item.category?.name || 'N/A'}</td>
-                                {/* ✅ hiển thị tag */}
-                                <td>{item.order || 0}</td>
+                                <td>{item.type === 'highlight' ? 'Nổi bật' : 'Không'}</td>
                                 <td>
                                     <i
-                                        variant="warning"
                                         className="fa fa-pencil edit"
                                         onClick={() => history.push(`/admin/news/edit/${item.id}`)}
                                     ></i>
                                     <i
-                                        variant="danger"
                                         className="fa fa-trash-o delete"
                                         onClick={() => openDeleteModal(item)}
                                     ></i>
@@ -223,6 +213,7 @@ const NewsTable = () => {
                     forcePage={currentPage - 1}
                 />
             )}
+
             <Modal show={showModal} onHide={closeDeleteModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Xác nhận xóa</Modal.Title>
@@ -235,7 +226,6 @@ const NewsTable = () => {
                     <Button variant="danger" onClick={confirmDelete}>Xóa</Button>
                 </Modal.Footer>
             </Modal>
-
         </div>
     );
 };

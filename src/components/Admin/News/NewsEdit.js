@@ -16,11 +16,9 @@ const buildImageUrl = (rawPath) => {
 const NewsEdit = () => {
     const { id } = useParams();
     const history = useHistory();
-
+    const [type, setType] = useState("");
     const [title, setTitle] = useState("");
-
     const [content, setContent] = useState("");
-    const [order, setOrder] = useState("");
     const [status, setStatus] = useState("draft");
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -45,7 +43,7 @@ const NewsEdit = () => {
                 setTitle(data.title);
                 setContent(data.content);
                 setStatus(data.status || "draft");
-                setOrder(data.order || "");
+                setType(data.type || "N/A");
                 const currentGroup = data.category?.group || "news";
                 setGroup(currentGroup);
                 const catId = data.categoryId;
@@ -62,7 +60,6 @@ const NewsEdit = () => {
             toast.error("Lỗi khi tải bài viết");
         }
     };
-
 
     const fetchCategories = async (catId, groupParam) => {
         try {
@@ -85,7 +82,6 @@ const NewsEdit = () => {
             toast.error("Lỗi khi tải danh mục");
         }
     };
-
 
     useEffect(() => {
         const quill = quillRef.current?.getEditor();
@@ -143,9 +139,9 @@ const NewsEdit = () => {
         formData.append("title", title);
         formData.append("content", content);
         formData.append("group", group);
-        formData.append("order", order);
         formData.append("categoryId", selectedCategory.value);
         formData.append("status", status);
+        formData.append("type", type);
         if (image) formData.append("image", image);
 
         try {
@@ -172,16 +168,6 @@ const NewsEdit = () => {
                             className="form-control"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label>Thứ tự (Order)</label>
-                        <input
-                            className="form-control"
-                            value={order}
-                            onChange={(e) => setOrder(e.target.value)}
-                            placeholder="Nhập order, ví dụ: 1 hoặc featured"
                         />
                     </div>
 
@@ -221,6 +207,19 @@ const NewsEdit = () => {
                         >
                             <option value="draft">Nháp</option>
                             <option value="published">Công khai</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-3">
+                        <label>Thứ hạng</label>
+                        <select
+                            className="form-control"
+                            value={type}
+                            onChange={e => setType(e.target.value)}
+                        >
+                            <option value="">-- Chọn thứ hạng --</option>
+                            <option value="highlight">Nổi bật</option>
+                            <option value="none">Không</option>
                         </select>
                     </div>
 
@@ -277,7 +276,12 @@ const NewsEdit = () => {
                                 <p><strong>Nhóm:</strong> {group === "news" ? "Tin tức" : "Thông tin thuốc"}</p>
                                 <p><strong>Loại:</strong> {selectedCategory?.label || "Chưa chọn"}</p>
                                 <p><strong>Trạng thái:</strong> {status === "draft" ? "Nháp" : "Công khai"}</p>
-                                <p><strong>Order:</strong> {order || "Chưa đặt"}</p>
+                                <p>
+                                    <strong>Thứ hạng:</strong>{" "}
+                                    {type === "hightlight"
+                                        ? "Nổi bật"
+                                        : "Không"}
+                                </p>
                                 {previewImg && (
                                     <img
                                         src={previewImg}

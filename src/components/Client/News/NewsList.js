@@ -137,17 +137,13 @@ const NewsList = () => {
                 </Col>
             </Row>
 
-            {/* Tin mới nhất - layout ngang */}
+            {/* Tin unique - layout ngang */}
             {latestNews && (
                 <Row className="mb-4 align-items-stretch">
                     <Col md={6}>
                         <Card className="h-100 border-0">
                             <Card.Img
-                                src={
-                                    latestNews.image
-                                        ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${latestNews.image}`)
-                                        : '/default-news.jpg'
-                                }
+                                src={latestNews.image ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${latestNews.image}`) : '/default-news.jpg'}
                                 alt={latestNews.title}
                                 className="w-100 h-100"
                                 style={{ objectFit: 'cover', borderRadius: '8px' }}
@@ -159,14 +155,8 @@ const NewsList = () => {
                         <p className="text-muted">
                             Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString()}
                         </p>
-                        <p>
-                            {latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
-                        </p>
-                        <Button
-                            variant="primary"
-                            onClick={() => history.push(`/news/${latestNews.id}`)}
-                            className="mt-2 align-self-start"
-                        >
+                        <p>{latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...</p>
+                        <Button variant="primary" onClick={() => history.push(`/news/${latestNews.id}`)} className="mt-2 align-self-start">
                             Xem chi tiết
                         </Button>
                     </Col>
@@ -182,19 +172,13 @@ const NewsList = () => {
                             <Col md={4} key={item.id} className="mb-4">
                                 <Card className="news-card">
                                     <Card.Img
-                                        src={
-                                            item.image
-                                                ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
-                                                : '/default-news.jpg'
-                                        }
+                                        src={item.image ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`) : '/default-news.jpg'}
                                         alt={item.title}
                                     />
                                     <Card.Body>
                                         <Card.Title className="title">{item.title}</Card.Title>
                                         <Card.Text className="date">
-                                            <small className="text-muted">
-                                                {new Date(item.createdAt).toLocaleDateString()}
-                                            </small>
+                                            <small className="text-muted">{new Date(item.createdAt).toLocaleDateString()}</small>
                                         </Card.Text>
                                         <Button onClick={() => history.push(`/news/${item.id}`)}>Xem chi tiết</Button>
                                     </Card.Body>
@@ -214,19 +198,13 @@ const NewsList = () => {
                             <Col md={4} key={item.id} className="mb-4">
                                 <Card className="news-card small">
                                     <Card.Img
-                                        src={
-                                            item.image
-                                                ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
-                                                : '/default-news.jpg'
-                                        }
+                                        src={item.image ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`) : '/default-news.jpg'}
                                         alt={item.title}
                                     />
                                     <Card.Body>
                                         <Card.Title className="title small">{item.title}</Card.Title>
                                         <Card.Text className="date">
-                                            <small className="text-muted">
-                                                {new Date(item.createdAt).toLocaleDateString()}
-                                            </small>
+                                            <small className="text-muted">{new Date(item.createdAt).toLocaleDateString()}</small>
                                         </Card.Text>
                                         <Button size="sm" onClick={() => history.push(`/news/${item.id}`)}>Chi tiết</Button>
                                     </Card.Body>
