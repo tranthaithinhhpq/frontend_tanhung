@@ -7,6 +7,7 @@ import { getDegree } from '../../../services/degreeService';
 import { getPosition } from '../../../services/positionService';
 import { createDoctorInfo } from '../../../services/doctorService';
 import CustomHtmlEditor from '../../Common/CustomHtmlEditor';
+import { useHistory } from 'react-router-dom';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
@@ -21,6 +22,7 @@ const DoctorCreate = () => {
     const [specialtyOptions, setSpecialtyOptions] = useState([]);
     const [degreeOptions, setDegreeOptions] = useState([]);
     const [positionOptions, setPositionOptions] = useState([]);
+    const history = useHistory();
 
     const [selectedSpecialty, setSelectedSpecialty] = useState(null);
     const [selectedDegree, setSelectedDegree] = useState(null);
@@ -42,16 +44,14 @@ const DoctorCreate = () => {
                     getPosition()
                 ]);
 
-                console.log("👉 specialtyRes:", spRes);
-                console.log("👉 degreeRes:", degRes);
-                console.log("👉 positionRes:", posRes);
+
 
                 if (spRes && spRes.EC === 0 && Array.isArray(spRes.DT)) {
                     const options = spRes.DT.map(sp => ({
                         value: sp.id,
                         label: sp.name
                     }));
-                    console.log("👉 specialtyOptions:", options);
+
                     setSpecialtyOptions(options);
                 } else {
                     toast.error(spRes?.EM || "Không lấy được chuyên khoa");
@@ -121,6 +121,7 @@ const DoctorCreate = () => {
                 setContent('');
                 setSelectedFile(null);
                 setPreviewImg('');
+                history.push('/admin/doctor')
             } else {
                 toast.error(res.EM || 'Có lỗi khi tạo bác sĩ');
             }

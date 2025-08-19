@@ -8,6 +8,7 @@ import { getSpecialty } from "../../../services/specialtyService";
 import { getDegree } from "../../../services/degreeService";
 import { getPosition } from "../../../services/positionService";
 import CustomHtmlEditor from '../../Common/CustomHtmlEditor';
+import { useHistory } from 'react-router-dom';
 
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
@@ -20,7 +21,7 @@ const buildImgSrc = (raw) => {
 
 const DoctorEdit = () => {
     const { doctorId } = useParams();  // Đồng bộ với AppRoutes.js
-
+    const history = useHistory();
     const [content, setContent] = useState("");
     const [doctorName, setDoctorName] = useState("");
     const [specialtyOptions, setSpecialtyOptions] = useState([]);
@@ -116,6 +117,7 @@ const DoctorEdit = () => {
             const res = await updateDoctorInfo(doctorId, formData);
             if (res.EC === 0) {
                 toast.success("Cập nhật thành công");
+                history.push('/admin/doctor')
             } else {
                 toast.error(res.EM || "Lỗi cập nhật");
             }

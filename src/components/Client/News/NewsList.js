@@ -43,6 +43,7 @@ const NewsList = () => {
             if (res.EC === 0) {
                 setNews(res.DT.news);
                 setPagination(res.DT.pagination);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
             console.log("Backend nhận: ", {
@@ -88,6 +89,8 @@ const NewsList = () => {
 
 
 
+
+
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const catIdFromUrl = queryParams.get('categoryId');
@@ -97,6 +100,7 @@ const NewsList = () => {
         setCategory(categoryValue);        // Cập nhật filter theo URL
         fetchCategories();                 // Lấy danh mục
         fetchNews(1, categoryValue, keyword);  // Lấy dữ liệu theo category từ URL
+
     }, [location.search]); // chạy lại mỗi khi URL search (query string) thay đổi
 
     const handleSearch = () => fetchNews(1);

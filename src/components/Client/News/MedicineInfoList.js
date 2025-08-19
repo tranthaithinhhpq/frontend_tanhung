@@ -75,12 +75,14 @@ const MedicineInfoList = () => {
         <div className="container my-4">
             <h3>Thông tin thuốc</h3>
 
-            {/* filter */}
-            <Row className="mb-3">
+            {/* Filter */}
+            <Row className="mb-4">
                 <Col md={4}>
                     <Form.Control as="select" value={category} onChange={handleCategoryChange}>
                         <option value="">Tất cả thông tin thuốc</option>
-                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                        {categories.map(c => (
+                            <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
                     </Form.Control>
                 </Col>
                 <Col md={4}>
@@ -96,46 +98,62 @@ const MedicineInfoList = () => {
                 </Col>
             </Row>
 
-            {/* bài mới nhất - layout ngang */}
+            {/* Latest Article - Horizontal Layout */}
             {latestArticle && (
-                <Row className="mb-4 align-items-stretch">
-                    <Col md={6}>
-                        <Card className="h-100 border-0">
+                <Card
+                    className="news-card mb-4 cursor-pointer border-0 no-hover"
+                    onClick={() => history.push(`/news/${latestArticle.id}`)}
+                >
+                    <Row className="g-0 align-items-stretch">
+                        {/* Image */}
+                        <Col md={6}>
                             <Card.Img
                                 src={latestArticle.image
                                     ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${latestArticle.image}`)
                                     : '/default-news.jpg'}
                                 alt={latestArticle.title}
                                 className="w-100 h-100"
-                                style={{ objectFit: 'cover', borderRadius: '8px' }}
+                                style={{ objectFit: 'cover', borderRadius: 0, height: '100%' }}
                             />
-                        </Card>
-                    </Col>
-                    <Col md={6} className="d-flex flex-column justify-content-center">
-                        <h2 className="fw-bold">{latestArticle.title}</h2>
-                        <p className="text-muted">
-                            Ngày đăng: {new Date(latestArticle.createdAt).toLocaleDateString()}
-                        </p>
-                        <p>{latestArticle.content.replace(/<[^>]+>/g, '').substring(0, 300)}...</p>
-                        <Button
-                            variant="primary"
-                            onClick={() => history.push(`/news/${latestArticle.id}`)}
-                            className="mt-2 align-self-start"
-                        >
-                            Xem chi tiết
-                        </Button>
-                    </Col>
-                </Row>
+                        </Col>
+
+                        {/* Article Content */}
+                        <Col md={6} className="d-flex flex-column justify-content-center p-3">
+                            <Card.Body className="p-0">
+                                <Card.Title as="h2" className="fw-bold">{latestArticle.title}</Card.Title>
+                                <Card.Text className="text-muted mb-2">
+                                    Ngày đăng: {new Date(latestArticle.createdAt).toLocaleDateString()}
+                                </Card.Text>
+                                <Card.Text>
+                                    {latestArticle.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
+                                </Card.Text>
+                                <Button
+                                    variant="primary"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // prevent triggering the onClick of Card
+                                        history.push(`/news/${latestArticle.id}`);
+                                    }}
+                                    className="mt-2 align-self-start"
+                                >
+                                    Xem chi tiết
+                                </Button>
+                            </Card.Body>
+                        </Col>
+                    </Row>
+                </Card>
             )}
 
-            {/* Nổi bật */}
+            {/* Highlighted Articles */}
             {highlightArticles.length > 0 && (
                 <>
                     <h4 className="mb-3">Nổi bật</h4>
                     <Row>
                         {highlightArticles.map(item => (
                             <Col md={4} key={item.id} className="mb-4">
-                                <Card className="news-card h-100">
+                                <Card
+                                    className="news-card cursor-pointer"
+                                    onClick={() => history.push(`/news/${item.id}`)}
+                                >
                                     <Card.Img
                                         src={item.image
                                             ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
@@ -143,13 +161,11 @@ const MedicineInfoList = () => {
                                         alt={item.title}
                                     />
                                     <Card.Body>
-                                        <Card.Title>{item.title}</Card.Title>
+                                        <Card.Title className="title">{item.title}</Card.Title>
                                         <Card.Text className="text-muted">
                                             {new Date(item.createdAt).toLocaleDateString()}
                                         </Card.Text>
-                                        <Button onClick={() => history.push(`/news/${item.id}`)}>
-                                            Xem chi tiết
-                                        </Button>
+
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -158,14 +174,17 @@ const MedicineInfoList = () => {
                 </>
             )}
 
-            {/* Phổ biến */}
+            {/* Popular Articles */}
             {popularArticles.length > 0 && (
                 <>
                     <h4 className="mb-3">Phổ biến</h4>
                     <Row>
                         {popularArticles.map(item => (
                             <Col md={4} key={item.id} className="mb-4">
-                                <Card className="news-card small h-100">
+                                <Card
+                                    className="news-card cursor-pointer"
+                                    onClick={() => history.push(`/news/${item.id}`)}
+                                >
                                     <Card.Img
                                         src={item.image
                                             ? encodeURI(`${process.env.REACT_APP_BACKEND_URL}${item.image}`)
@@ -177,9 +196,7 @@ const MedicineInfoList = () => {
                                         <Card.Text className="text-muted">
                                             {new Date(item.createdAt).toLocaleDateString()}
                                         </Card.Text>
-                                        <Button size="sm" onClick={() => history.push(`/news/${item.id}`)}>
-                                            Chi tiết
-                                        </Button>
+
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -188,7 +205,7 @@ const MedicineInfoList = () => {
                 </>
             )}
 
-            {/* pagination */}
+            {/* Pagination */}
             <Pagination>
                 <Pagination.Prev disabled={pagination.page === 1} onClick={() => fetchArticles(pagination.page - 1)} />
                 {paginationItems}
@@ -199,6 +216,7 @@ const MedicineInfoList = () => {
             </Pagination>
         </div>
     );
+
 };
 
 export default MedicineInfoList;

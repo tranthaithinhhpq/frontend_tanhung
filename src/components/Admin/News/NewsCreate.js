@@ -5,6 +5,7 @@ import axios from "../../../setup/axios";
 import { toast } from "react-toastify";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import CustomHtmlEditor from "../../Common/CustomHtmlEditor";
+import { useHistory } from 'react-router-dom';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
@@ -19,6 +20,7 @@ const NewsCreate = ({ editData }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [status, setStatus] = useState(editData?.status || "draft");
     const [image, setImage] = useState(null);
+    const history = useHistory();
     const [previewImg, setPreviewImg] = useState(
         editData?.image ? `${BACKEND_URL}/${editData.image}` : ""
     );
@@ -68,9 +70,12 @@ const NewsCreate = ({ editData }) => {
                 ? await axios.put(`/api/v1/admin/edit/${editData.id}`, formData)
                 : await axios.post("/api/v1/admin/news/create", formData);
 
-            res.EC === 0
-                ? toast.success(res.EM || "Lưu bài viết thành công")
-                : toast.error(res.EM || "Lưu thất bại");
+            if (res.EC === 0) {
+                toast.success(res.EM || "Lưu bài viết thành công");
+                history.push('/admin/news');
+            } else {
+                toast.error(res.EM || "Lưu thất bại");
+            }
 
         } catch (err) {
             console.error(err);

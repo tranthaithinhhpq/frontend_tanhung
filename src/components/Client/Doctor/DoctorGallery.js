@@ -62,7 +62,10 @@ const DoctorGallery = () => {
         fetchDoctors();
     }, [search, filters, page]);
 
-    const handlePageChange = (selected) => setPage(selected.selected);
+    const handlePageChange = (selected) => {
+        setPage(selected.selected);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // cuộn về đầu mượt mà
+    };
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
     const buildImgSrc = (raw) => (!raw ? '' : raw.startsWith('http') ? raw : `${BACKEND_URL}${raw}`);
