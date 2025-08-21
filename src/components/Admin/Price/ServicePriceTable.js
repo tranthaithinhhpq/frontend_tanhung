@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import axios from '../../../setup/axios';
@@ -9,13 +9,20 @@ import '../../Admin/Doctor/Doctor.scss';
 import * as XLSX from 'xlsx';
 
 const ServicePriceTable = () => {
+
+    // 1) STATE trước
     const [servicePrices, setServicePrices] = useState([]);
     const [specialties, setSpecialties] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [limit] = useState(10);
     const [totalPage, setTotalPage] = useState(0);
+    const [allGroups, setAllGroups] = useState([]);
 
-
+    const [filters, setFilters] = useState({
+        names: [],
+        groups: [],
+        specialty: null,
+    });
 
     const [showModal, setShowModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -28,9 +35,48 @@ const ServicePriceTable = () => {
         isSelectable: false,
         specialtyId: null
     });
-
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+
+    // 2) Options dựa trên servicePrices
+    const nameOptions = useMemo(() => {
+        const set = new Set(servicePrices.map(s => s.name).filter(Boolean));
+        return Array.from(set).map(n => ({ value: n, label: n }));
+    }, [servicePrices]);
+
+    const groupOptions = useMemo(() => {
+        const set = new Set(servicePrices.map(s => s.group).filter(Boolean));
+        return Array.from(set).map(g => ({ value: g, label: g }));
+    }, [servicePrices]);
+
+    // 3) Lọc
+    const filteredServicePrices = useMemo(() => {
+        return servicePrices.filter(item => {
+            const passName =
+                filters.names.length === 0 ||
+                filters.names.some(n => n.value === item.name);
+
+            const passGroup =
+                filters.groups.length === 0 ||
+                filters.groups.some(g => g.value === item.group);
+
+            const passSpecialty =
+                !filters.specialty ||
+                item.specialtyId === filters.specialty.value;
+
+            return passName && passGroup && passSpecialty;
+        });
+    }, [servicePrices, filters]);
+
+    // 4) Phân trang dựa trên danh sách đã lọc
+    const pageCount = useMemo(() => {
+        return Math.ceil((filteredServicePrices.length || 0) / limit);
+    }, [filteredServicePrices, limit]);
+
+    const currentData = useMemo(() => {
+        const start = (currentPage - 1) * limit;
+        return filteredServicePrices.slice(start, start + limit);
+    }, [filteredServicePrices, currentPage, limit]);
 
     const fetchSpecialties = async () => {
         try {
@@ -44,17 +90,50 @@ const ServicePriceTable = () => {
         }
     };
 
+
+    const fetchAllGroups = async () => {
+        try {
+            // Gọi API để lấy tất cả nhóm
+            const res = await axios.get('/api/v1/service-price/groups');
+            if (res.EC === 0) {
+                const options = res.DT.map(group => ({ value: group, label: group }));
+                console.log("options ", options);
+                setAllGroups(options); // Lưu vào state
+            }
+        } catch (err) {
+            toast.error('Lỗi tải danh sách nhóm');
+        }
+    };
+
+
+
+
     const fetchServicePrices = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/v1/admin/service-price/read?page=${currentPage}&limit=${limit}`);
+            const params = new URLSearchParams({
+                page: currentPage.toString(),
+                limit: limit.toString(),
+            });
+
+            // Thêm categoryId vào params nếu có
+            if (filters.groups.length > 0) {
+                params.set('group', filters.groups.map(g => g.value).join(','));
+            }
+            if (filters.specialty?.value) {
+                params.set('specialtyId', filters.specialty.value);
+            }
+
+            const res = await axios.get(`/api/v1/admin/service-price/read?${params.toString()}`);
             if (res.EC === 0) {
-                setServicePrices(res.DT.rows || []); // an toàn hơn
+                setServicePrices(res.DT.rows || []);
                 setTotalPage(res.DT.totalPages);
+            } else {
+                toast.error('Lỗi tải dữ liệu');
             }
         } catch (err) {
             toast.error('Lỗi tải bảng giá');
         }
-    }, [currentPage, limit]);
+    }, [currentPage, limit, filters]);
 
 
     const handleExcelImport = async (e) => {
@@ -77,7 +156,8 @@ const ServicePriceTable = () => {
                     const name = row.name?.toString().trim();
                     const group = row.group?.toString().trim() || '';
                     const price = parseFloat(row.price);
-                    const priceInsurance = parseFloat(row.priceInsurance);
+                    const priceInsurance = parseFloat(row.priceInsurance) || 0.1;
+                    console.log("priceInsurance", priceInsurance)
                     const isSelectable = false;
                     const specialtyId = row.specialtyId ? parseInt(row.specialtyId, 10) : null;
 
@@ -87,7 +167,7 @@ const ServicePriceTable = () => {
                         continue;
                     }
 
-                    await axios.post('/api/v1/admin/service-price', {
+                    await axios.post('/api/v1/admin/service-price/create', {
                         name,
                         group,
                         price,
@@ -110,7 +190,14 @@ const ServicePriceTable = () => {
         reader.readAsArrayBuffer(file);
     };
 
+    useEffect(() => {
+        fetchAllGroups();  // Fetch all groups khi component load
+        // fetchServicePrices();  // Lấy dữ liệu bảng giá dịch vụ
+    }, []);
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters]);
 
 
     useEffect(() => {
@@ -118,8 +205,12 @@ const ServicePriceTable = () => {
         fetchServicePrices();
     }, [fetchServicePrices]);
 
+    useEffect(() => {
+        fetchServicePrices();  // Gọi lại API khi bộ lọc thay đổi
+    }, [filters, currentPage]);
+
     const handlePageClick = (event) => {
-        setCurrentPage(+event.selected + 1);
+        setCurrentPage(+event.selected + 1); // Thay đổi trang, gọi lại API dựa trên trang mới
     };
 
     const handleSave = async () => {
@@ -200,6 +291,48 @@ const ServicePriceTable = () => {
                 />
             </div>
 
+            <div className="d-flex flex-wrap gap-2 mb-3">
+                <div style={{ minWidth: 240, flex: 1 }}>
+                    <label className="form-label mb-1">Lọc theo tên</label>
+                    <Select
+                        options={nameOptions}
+                        value={filters.names}
+                        onChange={(vals) => setFilters(prev => ({ ...prev, names: vals || [] }))}
+                        isMulti
+                        isClearable
+                        placeholder="Chọn tên dịch vụ..."
+                    />
+                </div>
+
+                <div style={{ minWidth: 220, flex: 1 }}>
+                    <label className="form-label mb-1">Lọc theo nhóm</label>
+                    <Select
+                        options={allGroups}  // Dùng allGroups thay vì groupOptions
+                        value={filters.groups}
+                        onChange={(vals) => setFilters(prev => {
+                            const newFilters = { ...prev, groups: vals || [] };
+                            console.log("Updated filters:", newFilters);  // Kiểm tra giá trị filters
+                            return newFilters;
+                        })}
+                        isMulti
+                        isClearable
+                        placeholder="Chọn nhóm..."
+                    />
+
+                </div>
+
+                <div style={{ minWidth: 240, flex: 1 }}>
+                    <label className="form-label mb-1">Lọc theo chuyên khoa</label>
+                    <Select
+                        options={specialties}
+                        value={filters.specialty}
+                        onChange={(val) => setFilters(prev => ({ ...prev, specialty: val }))}
+                        isClearable
+                        placeholder="Chọn chuyên khoa..."
+                    />
+                </div>
+            </div>
+
 
             <Scrollbars autoHeight autoHeightMax={400} autoHide>
                 <Table striped bordered hover>
@@ -219,16 +352,13 @@ const ServicePriceTable = () => {
                             <tr key={item.id}>
                                 <td>{item.name}</td>
                                 <td>{item.group}</td>
-                                <td>{item.price}</td>
-                                <td>{item.priceInsurance}</td>
+                                <td>{item.price.toLocaleString()}</td>
+                                <td>{item.priceInsurance === 0.1 ? 0 : (item.priceInsurance || 0).toLocaleString()}</td>
                                 <td>{item.isSelectable ? 'Có' : 'Không'}</td>
-                                <td>{item.Specialty?.name || item.specialtyId}</td>
+                                <td>{item.Specialty}</td>
                                 <td>
-                                    <i
-                                        className="fa fa-pencil edit"
-                                        onClick={() => handleEdit(item)}
-                                    ></i>
-                                    <i className="fa fa-trash-o delete" size="sm" variant="danger" onClick={() => {
+                                    <i className="fa fa-pencil edit" onClick={() => handleEdit(item)}></i>
+                                    <i className="fa fa-trash-o delete" onClick={() => {
                                         setDeleteId(item.id);
                                         setShowConfirmModal(true);
                                     }}></i>

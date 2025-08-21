@@ -93,6 +93,7 @@ const ClientServicePriceTable = () => {
                             <th>Tên dịch vụ</th>
                             <th>Giá thường</th>
                             <th>Giá BHYT</th>
+                            <th>Mức chênh lệch</th>
 
                         </tr>
                     </thead>
@@ -100,8 +101,19 @@ const ClientServicePriceTable = () => {
                         {data.length > 0 ? data.map(item => (
                             <tr key={item.id}>
                                 <td>{item.name}</td>
-                                <td>{item.price.toLocaleString()}đ</td>
-                                <td>{item.priceInsurance ? `${item.priceInsurance.toLocaleString()}đ` : '-'}</td>
+                                <td>{item.price.toLocaleString()} VND</td>
+                                <td>
+                                    {item.priceInsurance === 0.1
+                                        ? '0 VND'
+                                        : item.priceInsurance
+                                            ? `${item.priceInsurance.toLocaleString()} VND`
+                                            : '-'}
+                                </td>
+                                <td>
+                                    {item.priceInsurance
+                                        ? `${Math.round(item.price - item.priceInsurance).toLocaleString()} VND`
+                                        : '-'}
+                                </td>
 
                             </tr>
                         )) : (
