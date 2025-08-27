@@ -65,7 +65,8 @@ const SpecialtyDetailPage = () => {
                             />
                             <Card.Body>
                                 <Card.Title>{doc.doctorName}</Card.Title>
-                                <Card.Text>{doc.Position?.name} - {doc.Degree?.name}</Card.Text>
+                                <Card.Text>Chức vụ: {doc.Position?.name} </Card.Text>
+                                <Card.Text>Học vị: {doc.Degree?.name} </Card.Text>
                                 <div className="d-flex justify-content-between">
                                     <Button variant="success" size="sm">Đặt lịch</Button>
                                     <Button

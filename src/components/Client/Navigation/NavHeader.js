@@ -356,8 +356,8 @@ const NavHeaderClient = () => {
                         {!(windowWidth >= 992 && windowWidth <= 1390) && (
                             <Link to="/" className="brand-link ms-1 me-1">
                                 <div className="brand-text">
-                                    <span className="brand-name-1">Bệnh viện Đa Khoa Tân Hưng</span>
-                                    <span className="brand-name-2">Tan Hung General Hospital</span>
+                                    <span className="brand-name-2">TAN HUNG GENERAL HOSPITAL</span>
+                                    <span className="brand-name-1">BỆNH VIỆN ĐA KHOA TÂN HƯNG</span>
                                 </div>
                             </Link>
                         )}

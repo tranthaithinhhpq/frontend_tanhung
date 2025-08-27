@@ -45,8 +45,7 @@ const NewsDetail = () => {
                     </div>
                     <div className="col-md-9">
                         <h2 className="fw-bold">{news.title}</h2>
-                        <p className="text-white mb-1">Loại tin: {news.NewsCategory?.name || 'N/A'}</p>
-                        <p className="text-white mb-1">Trạng thái: {news.status || 'N/A'}</p>
+                        <p className="text-white mb-1">Loại tin: {news.category?.name || 'N/A'}</p>
                         <p className="text-white">Ngày đăng: {new Date(news.createdAt).toLocaleDateString()}</p>
                     </div>
                 </div>
