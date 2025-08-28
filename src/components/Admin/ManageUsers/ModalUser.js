@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // icon mắt
 
 import {
     fetchGroupUser,
@@ -13,6 +14,8 @@ import {
 /* --------------------------------------------------
    Helpers
 -------------------------------------------------- */
+
+
 
 const BACKEND_URL =
     process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
@@ -40,6 +43,10 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
         group: '',
         image: ''
     };
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const [userData, setUserData] = useState(defaultUser);
     const [groupList, setGroupList] = useState([]);
@@ -136,6 +143,13 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
                 toast.error(res.EM);
                 if (res.DT) setInvalid((v) => ({ ...v, [res.DT]: true }));
             }
+
+            if (action === 'CREATE' && userData.password !== confirmPassword) {
+                toast.error("Passwords do not match");
+                return;
+            }
+
+
         } catch (e) {
             console.error(e);
             toast.error('Unexpected error!');
@@ -179,6 +193,11 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
                             />
                         </div>
 
+
+
+
+
+
                         <div className="col-sm-6 form-group">
                             <label>Phone number <span className="red">*</span></label>
                             <input
@@ -188,6 +207,27 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
                                 onChange={(e) => updateField(e.target.value, 'phone')}
                             />
                         </div>
+
+
+                        {action === 'CREATE' && (
+                            <div className="col-sm-6 form-group">
+                                <label>Password <span className="red">*</span></label>
+                                <div className="input-group">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className={invalid.password ? 'form-control is-invalid' : 'form-control'}
+                                        value={userData.password}
+                                        onChange={(e) => updateField(e.target.value, 'password')}
+                                    />
+                                    <span className="input-group-text" style={{ cursor: "pointer" }}
+                                        onClick={() => setShowPassword(!showPassword)}>
+                                        <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
+
 
                         {/* username & password */}
                         <div className="col-sm-6 form-group">
@@ -199,7 +239,7 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
                             />
                         </div>
 
-                        {action === 'CREATE' && (
+                        {/* {action === 'CREATE' && (
                             <div className="col-sm-6 form-group">
                                 <label>Password <span className="red">*</span></label>
                                 <input
@@ -209,7 +249,36 @@ const ModalUser = ({ action, dataModalUser, onHide, show }) => {
                                     onChange={(e) => updateField(e.target.value, 'password')}
                                 />
                             </div>
+                        )} */}
+
+
+                        {action === 'CREATE' && (
+                            <div className="col-sm-6 form-group">
+                                <label>Confirm Password <span className="red">*</span></label>
+                                <div className="input-group">
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        className={confirmPassword !== userData.password && confirmPassword !== ''
+                                            ? 'form-control is-invalid'
+                                            : 'form-control'}
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                    />
+                                    <span className="input-group-text" style={{ cursor: "pointer" }}
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                        <i className={`fa ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`} />
+                                    </span>
+                                    {confirmPassword !== userData.password && confirmPassword !== '' && (
+                                        <div className="invalid-feedback">Passwords do not match</div>
+                                    )}
+                                </div>
+                            </div>
                         )}
+
+
+
+
+
 
                         {/* address & sex */}
                         <div className="col-sm-6 form-group">

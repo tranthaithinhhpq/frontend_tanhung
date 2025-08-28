@@ -174,8 +174,8 @@ const BannerTable = () => {
                 <thead>
                     <tr>
                         <th>Tiêu đề</th>
-                        <th>Desktop(1920x600px)</th>
-                        <th>Mobile(750x500px)</th>
+                        <th>Desktop(1920 x 480px)</th>
+                        <th>Mobile(750 x 500px)</th>
                         <th>Sort</th>
                         <th>Hành động</th>
                     </tr>
