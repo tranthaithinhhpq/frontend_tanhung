@@ -125,8 +125,9 @@ const NavHeader = () => {
                                 Quản lý Lịch
                             </a>
                             <ul className="dropdown-menu">
-                                <li><Link className="dropdown-item" to="/admin/working-slot-template">Lịch làm việc bác sĩ</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/working-slot-template">Lịch bác sĩ cố định </Link></li>
                                 <li><Link className="dropdown-item" to="/admin/doctor-day-off">Lịch nghỉ bác sĩ</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/holiday">Tắt lịch khám theo ngày</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/booking">Đặt lịch khám</Link></li>
                             </ul>
                         </li>

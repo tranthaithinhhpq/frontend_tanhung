@@ -178,7 +178,7 @@ const GroupRole = () => {
                                                     className="form-check-label"
                                                     htmlFor={`list-role-${index}`}
                                                 >
-                                                    {item.url}
+                                                    {item.description}
                                                 </label>
                                             </div>
                                         );

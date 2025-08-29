@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
@@ -18,6 +14,9 @@ const DoctorDayOffTable = () => {
     const [doctors, setDoctors] = useState([]);
     const [filterDoctor, setFilterDoctor] = useState(null);
     const [filterDate, setFilterDate] = useState(null);
+
+    const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
+    const [bulkDeleteDate, setBulkDeleteDate] = useState(null);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit] = useState(10);
@@ -113,6 +112,43 @@ const DoctorDayOffTable = () => {
         }
     };
 
+    // const handleSubmit = async () => {
+    //     if (!selectedDoctor || !selectedDate) {
+    //         toast.error("Vui lòng chọn bác sĩ và ngày nghỉ");
+    //         return;
+    //     }
+
+    //     const date = selectedDate.getFullYear() + '-' +
+    //         String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' +
+    //         String(selectedDate.getDate()).padStart(2, '0');
+
+    //     const doctorId = selectedDoctor.value;
+    //     const slotIds = allDay ? slotOptions.map(s => s.value) : selectedSlots.map(s => s.value);
+
+    //     if (!allDay && slotIds.length === 0) {
+    //         toast.error("Vui lòng chọn khung giờ nghỉ");
+    //         return;
+    //     }
+
+    //     try {
+    //         await axios.post('/api/v1/admin/doctor-day-off/create', {
+    //             doctorId,
+    //             date,
+    //             slotId: slotIds,
+    //             isActive: false,
+    //             note
+    //         });
+
+    //         toast.success("Thêm mới thành công");
+    //         setShowModal(false);
+    //         fetchDayOffPaginate();
+    //     } catch (err) {
+    //         toast.error("Lỗi khi thêm lịch nghỉ");
+    //     }
+    // };
+
+
+
     const handleSubmit = async () => {
         if (!selectedDoctor || !selectedDate) {
             toast.error("Vui lòng chọn bác sĩ và ngày nghỉ");
@@ -123,6 +159,19 @@ const DoctorDayOffTable = () => {
             String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' +
             String(selectedDate.getDate()).padStart(2, '0');
 
+        if (selectedDoctor.value === 'all') {
+            try {
+                await axios.post('/api/v1/admin/doctor-day-off/day-off-all', { date });
+                toast.success("Đã đặt nghỉ toàn bộ bác sĩ trong ngày " + date);
+                setShowModal(false);
+                fetchDayOffPaginate();
+            } catch (err) {
+                toast.error("Lỗi khi thêm lịch nghỉ toàn bộ bác sĩ");
+            }
+            return;
+        }
+
+        // 🟢 case bác sĩ cụ thể
         const doctorId = selectedDoctor.value;
         const slotIds = allDay ? slotOptions.map(s => s.value) : selectedSlots.map(s => s.value);
 
@@ -147,6 +196,11 @@ const DoctorDayOffTable = () => {
             toast.error("Lỗi khi thêm lịch nghỉ");
         }
     };
+
+
+
+
+
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -194,6 +248,16 @@ const DoctorDayOffTable = () => {
                     />
                 </div>
                 <div className="col-md-4 text-end">
+                    <Button
+                        className="me-2"
+                        variant="danger"
+                        onClick={() => {
+                            setBulkDeleteDate(null);
+                            setShowBulkDeleteModal(true);
+                        }}
+                    >
+                        Xóa hàng loạt
+                    </Button>
                     <Button onClick={() => {
                         setShowModal(true);
                         setSelectedDoctor(null);
@@ -292,7 +356,7 @@ const DoctorDayOffTable = () => {
                             options={slotOptions}
                             value={selectedSlots}
                             onChange={setSelectedSlots}
-                            isDisabled={allDay} // ⬅️ dòng thêm để disable khi allDay = true
+                            isDisabled={allDay || selectedDoctor?.value === 'all'} // disable luôn nếu chọn tất cả bác sĩ
                         />
                     </Form.Group>
                     <Form.Group className="mb-3">
@@ -312,6 +376,53 @@ const DoctorDayOffTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Hủy</Button>
                     <Button variant="danger" onClick={confirmDelete}>Xóa</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showBulkDeleteModal} onHide={() => setShowBulkDeleteModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Xóa lịch nghỉ hàng loạt</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group>
+                        <Form.Label>Chọn ngày giới hạn</Form.Label>
+                        <DatePicker
+                            selected={bulkDeleteDate}
+                            onChange={setBulkDeleteDate}
+                            dateFormat="yyyy-MM-dd"
+                            className="form-control"
+                            placeholderText="Chọn ngày"
+                        />
+                    </Form.Group>
+                    <small className="text-muted">
+                        Tất cả lịch nghỉ của bác sĩ **trước ngày này** sẽ bị xóa.
+                    </small>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowBulkDeleteModal(false)}>Hủy</Button>
+                    <Button variant="danger" onClick={async () => {
+                        if (!bulkDeleteDate) {
+                            toast.error("Vui lòng chọn ngày giới hạn");
+                            return;
+                        }
+
+                        const dateStr = bulkDeleteDate.getFullYear() + '-' +
+                            String(bulkDeleteDate.getMonth() + 1).padStart(2, '0') + '-' +
+                            String(bulkDeleteDate.getDate()).padStart(2, '0');
+
+                        try {
+                            await axios.delete('/api/v1/admin/doctor-day-off/bulk-delete', {
+                                data: { date: dateStr }   // ⬅️ gửi ngày về server
+                            });
+                            toast.success("Đã xóa lịch nghỉ trước ngày " + dateStr);
+                            setShowBulkDeleteModal(false);
+                            fetchDayOffPaginate();
+                        } catch (err) {
+                            toast.error("Lỗi khi xóa hàng loạt");
+                        }
+                    }}>
+                        Xóa
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>

@@ -102,6 +102,11 @@ import WorkingSlotTemplateManagement from "../components/Admin/Doctor/WorkingSlo
 
 // MedicineInfoList
 import MedicineInfoList from "../components/Client/News/MedicineInfoList";
+import HolidayManagement from "../components/Admin/Holiday/HolidayManagement";
+
+
+
+
 
 
 
@@ -133,6 +138,10 @@ const AppRoutes = () => {
 
             {/* Admin - WorkingSlotTemplateManagement */}
             <PrivateRoutes path="/admin/working-slot-template" component={WorkingSlotTemplateManagement} />
+
+
+            {/* Admin - HolidayManagement */}
+            <PrivateRoutes path="/admin/holiday" component={HolidayManagement} />
 
             {/* Admin - ImageManager */}
             <PrivateRoutes path="/admin/image-manager" component={ImageManager} />
