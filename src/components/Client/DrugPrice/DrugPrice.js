@@ -63,6 +63,7 @@ const DrugPrice = () => {
                         <th>Đơn vị</th>
                         <th>Giá thường</th>
                         <th>Giá BHYT</th>
+                        <th>Mức chênh lệch</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,8 +74,32 @@ const DrugPrice = () => {
                             <td>{item.activeIngredient}</td>
                             <td>{item.concentration}</td>
                             <td>{item.unit}</td>
-                            <td>{item.price?.toLocaleString()}đ</td>
-                            <td>{item.insurancePrice?.toLocaleString()}đ</td>
+
+
+                            <td>
+                                {item.price === 0.1
+                                    ? '0 VND'
+                                    : item.price
+                                        ? `${item.price.toLocaleString()} VND`
+                                        : '-'}
+                            </td>
+
+
+
+                            <td>
+                                {item.insurancePrice === 0.1
+                                    ? '0 VND'
+                                    : item.insurancePrice
+                                        ? `${item.insurancePrice.toLocaleString()} VND`
+                                        : '-'}
+                            </td>
+                            <td>
+                                {item.insurancePrice
+                                    ? `${Math.round(item.price - item.insurancePrice).toLocaleString()} VND`
+                                    : '-'}
+                            </td>
+
+
                         </tr>
                     )) : (
                         <tr><td colSpan="7" className="text-center">Không có dữ liệu</td></tr>

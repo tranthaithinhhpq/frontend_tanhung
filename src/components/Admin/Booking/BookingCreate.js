@@ -17,6 +17,8 @@ const BookingCreate = () => {
     const [selectedSpecialty, setSelectedSpecialty] = useState(null);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
 
+    const [holidays, setHolidays] = useState([]);
+
     const [services, setServices] = useState([]);
     const [selectedService, setSelectedService] = useState(null);
 
@@ -37,6 +39,20 @@ const BookingCreate = () => {
     // }, []);
 
     // Load specialties
+
+
+    useEffect(() => {
+        axios.get('/api/v1/holiday/list')
+            .then(res => {
+                if (res.EC === 0) {
+                    // convert thành array Date object
+                    setHolidays(res.DT.map(h => new Date(h.date)));
+                }
+            })
+            .catch(err => console.error('❌ Lỗi load holiday:', err));
+    }, []);
+
+
     useEffect(() => {
         axios.get('/api/v1/specialty/read').then(res => {
             if (res.EC === 0) {
@@ -265,6 +281,7 @@ const BookingCreate = () => {
                     minDate={new Date()}
                     maxDate={new Date(new Date().setDate(new Date().getDate() + 30))}
                     includeDates={availableDates}
+                    excludeDates={holidays}
                     placeholderText="Chọn ngày khả dụng"
                     className="form-control"
                 />

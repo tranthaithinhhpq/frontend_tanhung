@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { format } from 'date-fns';
 
 const HolidayManagement = () => {
     const [holidays, setHolidays] = useState([]);
@@ -46,7 +47,7 @@ const HolidayManagement = () => {
         if (!form.date) return toast.error("Vui lòng chọn ngày");
 
         const payload = {
-            date: form.date.toISOString().split('T')[0], // format YYYY-MM-DD
+            date: format(form.date, 'yyyy-MM-dd'), // giữ đúng ngày local
             description: form.description
         };
 

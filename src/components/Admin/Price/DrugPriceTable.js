@@ -13,6 +13,8 @@ const DrugPriceTable = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [searchText, setSearchText] = useState('');
 
+    const [showGuideModal, setShowGuideModal] = useState(false);
+
     const [showModal, setShowModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
@@ -48,8 +50,9 @@ const DrugPriceTable = () => {
                         activeIngredient: row.activeIngredient?.toString().trim() || '',
                         concentration: row.concentration?.toString().trim() || '',
                         unit: row.unit?.toString().trim() || '',
-                        price: Number(row.price || 0),
-                        insurancePrice: Number(row.insurancePrice || 0)
+                        price: Number(row.price || 0.1),
+                        insurancePrice: Number(row.insurancePrice || 0.1)
+
                     };
 
                     // Kiểm tra bắt buộc
@@ -159,6 +162,10 @@ const DrugPriceTable = () => {
                         onChange={handleExcelImport}
                         style={{ display: 'none' }}
                     />
+
+                    <Button variant="info" onClick={() => setShowGuideModal(true)}>
+                        ❓ Hướng dẫn Import
+                    </Button>
                 </div>
                 <Form.Control
                     type="text"
@@ -191,8 +198,9 @@ const DrugPriceTable = () => {
                                 <td>{item.activeIngredient}</td>
                                 <td>{item.concentration}</td>
                                 <td>{item.unit}</td>
-                                <td>{item.price}</td>
-                                <td>{item.insurancePrice}</td>
+                                <td>{item.price === 0.1 ? 0 : (item.price || 0).toLocaleString()}</td>
+                                <td>{item.insurancePrice === 0.1 ? 0 : (item.insurancePrice || 0).toLocaleString()}</td>
+
                                 <td>
                                     <i className="fa fa-pencil edit" onClick={() => handleEdit(item)}></i>
                                     <i className="fa fa-trash-o delete" onClick={() => {
@@ -258,6 +266,75 @@ const DrugPriceTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Hủy</Button>
                     <Button variant="danger" onClick={handleDelete}>Xóa</Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal Hướng dẫn */}
+            <Modal show={showGuideModal} onHide={() => setShowGuideModal(false)} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Hướng dẫn sử dụng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h5>📌 Cách import bảng giá dịch vụ</h5>
+                    <p>👉 Lưu ý:</p>
+                    <ul>
+                        <li>File Excel cần có các cột <code>code, name, activeIngredient, concentration, unit, price, insurancePrice</code></li>
+                        <li>Ghi đúng chính tả, viết hoa, viết thường</li>
+                    </ul>
+                    <p>👉 Chú thích:</p>
+                    <ul>
+                        <li>code: Mã thuốc</li>
+                        <li>name: Tên thuốc</li>
+                        <li>activeIngredient: Hoạt chất</li>
+                        <li>concentration: Hàm lượng</li>
+                        <li>unit: Đơn vị</li>
+                        <li>price: Giá</li>
+                        <li>insurancePrice: Giá BHYT</li>
+
+
+                    </ul>
+                    <p>📊 Ví dụ file Excel:</p>
+
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                            <tr>
+                                <th>code</th>
+                                <th>name</th>
+                                <th>activeIngredient</th>
+                                <th>concentration</th>
+                                <th>unit</th>
+                                <th>price</th>
+                                <th>insurancePrice</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CA153</td>
+                                <td>Calci clorid 500mg/5ml (Vĩnh Phúc) </td>
+                                <td>Calci clorid</td>
+                                <td>500mg/5ml</td>
+                                <td>Ống</td>
+                                <td>1386</td>
+                                <td>1008</td>
+
+                            </tr>
+                            <tr>
+                                <td>HE09</td>
+                                <td>Heparin Injection BP 25000IU/5ml</td>
+                                <td>Heparin (natri)</td>
+                                <td>25,000UI/5ml</td>
+                                <td>Lọ</td>
+                                <td>214988</td>
+                                <td>105300</td>
+
+                            </tr>
+                        </tbody>
+                    </Table>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowGuideModal(false)}>Đóng</Button>
                 </Modal.Footer>
             </Modal>
         </div>

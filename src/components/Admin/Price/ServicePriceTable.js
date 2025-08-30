@@ -17,6 +17,7 @@ const ServicePriceTable = () => {
     const [limit] = useState(10);
     const [totalPage, setTotalPage] = useState(0);
     const [allGroups, setAllGroups] = useState([]);
+    const [showGuideModal, setShowGuideModal] = useState(false);
 
     const [filters, setFilters] = useState({
         names: [],
@@ -246,9 +247,6 @@ const ServicePriceTable = () => {
             specialtyId: specialties.length > 0
                 ? specialties.find(s => s.value === item.specialtyId) || null
                 : { value: item.specialtyId, label: '' }
-
-
-
         });
         setShowModal(true);
     };
@@ -289,6 +287,11 @@ const ServicePriceTable = () => {
                     onChange={handleExcelImport}
                     style={{ display: 'none' }}
                 />
+
+                {/* ✅ Nút hướng dẫn */}
+                <Button variant="info" onClick={() => setShowGuideModal(true)}>
+                    ❓ Hướng dẫn Import
+                </Button>
             </div>
 
             <div className="d-flex flex-wrap gap-2 mb-3">
@@ -461,6 +464,64 @@ const ServicePriceTable = () => {
                     <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Hủy</Button>
                     <Button variant="danger" onClick={handleDelete}>Xóa</Button>
 
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal Hướng dẫn */}
+            <Modal show={showGuideModal} onHide={() => setShowGuideModal(false)} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Hướng dẫn sử dụng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h5>📌 Cách import bảng giá dịch vụ</h5>
+                    <p>👉 Lưu ý:</p>
+                    <ul>
+                        <li>File Excel cần có các cột <code>name, group, price, priceInsurance</code></li>
+                        <li>Ghi đúng chính tả, viết hoa, viết thường</li>
+
+                    </ul>
+                    <p>👉 Chú thích:</p>
+                    <ul>
+                        <li>name: Tên dịch vụ</li>
+                        <li>group: Nhóm</li>
+                        <li>price: Giá</li>
+                        <li>priceInsurance: Giá bảo hiểm</li>
+
+
+                    </ul>
+                    <p>📊 Ví dụ file Excel:</p>
+
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>group</th>
+                                <th>price</th>
+                                <th>priceInsurance</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Khám da liễu</td>
+                                <td>CK</td>
+                                <td>1000000</td>
+                                <td>32000</td>
+
+                            </tr>
+                            <tr>
+                                <td>Khám mắt</td>
+                                <td>CK</td>
+                                <td>1000000</td>
+                                <td>32000</td>
+
+                            </tr>
+                        </tbody>
+                    </Table>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowGuideModal(false)}>Đóng</Button>
                 </Modal.Footer>
             </Modal>
         </div>
