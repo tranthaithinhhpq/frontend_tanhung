@@ -142,7 +142,7 @@ const BannerTable = () => {
             const res = await axios.post('/api/v1/admin/banner/delete', {
                 id: bannerToDelete.id,
                 imageDesktop: bannerToDelete.imageDesktop,
-                imageMobile: bannerToDelete.imageMobile,
+                imagePhone: bannerToDelete.imagePhone,
 
             });
             console.log("Delete response:", res);
