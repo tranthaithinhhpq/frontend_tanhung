@@ -353,7 +353,7 @@ const NavHeaderClient = () => {
                             </Navbar.Brand>
                         </Link>
 
-                        {!(windowWidth >= 992 && windowWidth <= 1390) && (
+                        {!(windowWidth >= 992 && windowWidth <= 1440) && (
                             <Link to="/" className="brand-link ms-1 me-1">
                                 <div className="brand-text">
                                     <span className="brand-name-2">TAN HUNG GENERAL HOSPITAL</span>
