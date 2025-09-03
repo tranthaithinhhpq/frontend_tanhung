@@ -157,6 +157,14 @@ const NewsEdit = () => {
         }
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            setPreviewImg(URL.createObjectURL(file));
+        }
+    };
+
     return (
         <div className="container my-4">
             <h3>Chỉnh sửa bài viết</h3>
@@ -228,10 +236,7 @@ const NewsEdit = () => {
                         <input
                             type="file"
                             className="form-control"
-                            onChange={(e) => {
-                                setImage(e.target.files[0]);
-                                setPreviewImg(URL.createObjectURL(e.target.files[0]));
-                            }}
+                            onChange={handleFileChange}
                         />
                         {previewImg && (
                             <img src={previewImg} alt="preview" style={{ maxHeight: 150, marginTop: 10 }} />

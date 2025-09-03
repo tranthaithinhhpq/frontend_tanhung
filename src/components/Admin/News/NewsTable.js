@@ -61,17 +61,20 @@ const NewsTable = () => {
         try {
             const res = await axios.delete(`/api/v1/admin/news/delete/${selectedArticle.id}`);
             if (res.EC === 0) {
-                toast.success('Xóa thành công');
+                toast.success(res.EM || 'Xóa thành công');
                 fetchArticles();
             } else {
-                toast.error("Lỗi khi tải dữ liệu");
-                console.error(res.EM);
+                toast.error(res.EM || "Lỗi khi xóa");
             }
         } catch (err) {
             console.error("Lỗi xóa bài viết", err);
+            toast.error("Lỗi server khi xóa");
         }
         closeDeleteModal();
     };
+
+
+
 
     const handleChangeCategory = (option) => {
         setSelectedCategory(option);
