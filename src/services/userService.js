@@ -62,7 +62,11 @@ const getUserAccount = () => {
 
 const logoutUser = () => {
     return axios.post("/api/v1/logout");
-}
+};
+
+const changePassword = (data) => {
+    return axios.post("/api/v1/user/change-password", data);
+};
 
 
 const getDoctor = () => {
@@ -78,5 +82,5 @@ const getDoctorInfoByUserId = (userId) => {
 
 export {
     registerNewUser, loginUser, fetchAllUser, deleteUser, fetchGroup, fetchGroupUser, createNewUser, updateCurrentUser, getUserAccount,
-    logoutUser, getDoctor, getDoctorInfoByUserId
+    logoutUser, getDoctor, getDoctorInfoByUserId, changePassword
 };

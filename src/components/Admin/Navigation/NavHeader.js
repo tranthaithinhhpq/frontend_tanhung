@@ -5,10 +5,15 @@ import { UserContext } from '../../../context/UserContext';
 import fallbackLogo from '../../../logo.png';
 import { logoutUser } from '../../../services/userService';
 import { toast } from 'react-toastify';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import axios from '../../../setup/axios';
 
+import { Modal, Form } from 'react-bootstrap';
+import { changePassword } from '../../../services/userService';
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+
+
 
 const NavHeader = () => {
     const { user, logoutContext } = useContext(UserContext);
@@ -16,6 +21,12 @@ const NavHeader = () => {
     const location = useLocation();
     const history = useHistory();
     const [logoImg, setLogoImg] = useState(null);
+
+    const [showPwdModal, setShowPwdModal] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         const fetchLogo = async () => {
@@ -40,6 +51,54 @@ const NavHeader = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+
+    const handleChangePassword = async () => {
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            toast.error("Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            toast.error("Mật khẩu mới và xác nhận không khớp");
+            return;
+        }
+
+        // try {
+        //     const res = await changePassword({
+        //         oldPassword,
+        //         newPassword
+        //     });
+        //     if (res.EC === 0) {
+        //         toast.success(res.EM || "Đổi mật khẩu thành công");
+        //         setShowPwdModal(false);
+        //         setOldPassword('');
+        //         setNewPassword('');
+        //         setConfirmPassword('');
+        //     } else {
+        //         toast.error(res.EM || "Đổi mật khẩu thất bại");
+        //     }
+        // } catch (err) {
+        //     console.error(err);
+        //     toast.error("Lỗi hệ thống");
+        // }
+
+        try {
+            const res = await changePassword({ oldPassword, newPassword });
+            if (res && res.EC === 0) {
+                toast.success(res.EM);
+                setShowPwdModal(false);
+                setOldPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+            } else {
+                // ✅ show luôn lỗi từ backend
+                toast.error(res?.EM || "Đổi mật khẩu thất bại");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error(err?.response?.data?.EM || "Lỗi hệ thống");
+        }
+    };
 
     const handleLogout = async () => {
         const data = await logoutUser();
@@ -177,7 +236,9 @@ const NavHeader = () => {
                                     <span>Welcome {user.account.username}!</span>
                                 </Nav.Item>
                                 <NavDropdown title="Settings" id="basic-nav-dropdown" className="no-hover">
-                                    <NavDropdown.Item>Change Password</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => setShowPwdModal(true)}>
+                                        Change Password
+                                    </NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item as="span" onClick={handleLogout} style={{ cursor: 'pointer' }}>
                                         Log out
@@ -192,7 +253,50 @@ const NavHeader = () => {
                     </Nav>
                 </div>
             </div>
+            <Modal show={showPwdModal} onHide={() => setShowPwdModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Đổi mật khẩu</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Mật khẩu hiện tại</Form.Label>
+                        <Form.Control
+                            type={showPassword ? "text" : "password"}
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Mật khẩu mới</Form.Label>
+                        <Form.Control
+                            type={showPassword ? "text" : "password"}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Nhập lại mật khẩu mới</Form.Label>
+                        <Form.Control
+                            type={showPassword ? "text" : "password"}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Check
+                        type="checkbox"
+                        label="Hiện mật khẩu"
+                        checked={showPassword}
+                        onChange={(e) => setShowPassword(e.target.checked)}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowPwdModal(false)}>Hủy</Button>
+                    <Button variant="primary" onClick={handleChangePassword}>Xác nhận</Button>
+                </Modal.Footer>
+            </Modal>
+
         </nav>
+
     );
 };
 
