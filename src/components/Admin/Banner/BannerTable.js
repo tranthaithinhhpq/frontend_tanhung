@@ -120,18 +120,36 @@ const BannerTable = () => {
 
     const handleImageDesktop = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setFileDesktop(file);
-            setPreviewDesktop(URL.createObjectURL(file));
+        if (!file) return;
+
+        const fileName = file.name;
+        const validRegex = /^[a-zA-Z0-9._-]+$/;
+
+        if (!validRegex.test(fileName)) {
+            toast.error("Tên file Desktop không hợp lệ! Chỉ cho phép chữ cái không dấu, số, gạch dưới (_), gạch ngang (-) và dấu chấm (.)");
+            e.target.value = ""; // reset input file
+            return;
         }
+
+        setFileDesktop(file);
+        setPreviewDesktop(URL.createObjectURL(file));
     };
 
     const handleImagePhone = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setFilePhone(file);
-            setPreviewPhone(URL.createObjectURL(file));
+        if (!file) return;
+
+        const fileName = file.name;
+        const validRegex = /^[a-zA-Z0-9._-]+$/;
+
+        if (!validRegex.test(fileName)) {
+            toast.error("Tên file Mobile không hợp lệ! Chỉ cho phép chữ cái không dấu, số, gạch dưới (_), gạch ngang (-) và dấu chấm (.)");
+            e.target.value = ""; // reset input file
+            return;
         }
+
+        setFilePhone(file);
+        setPreviewPhone(URL.createObjectURL(file));
     };
 
 

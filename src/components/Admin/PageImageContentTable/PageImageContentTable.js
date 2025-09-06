@@ -58,10 +58,21 @@ const PageImageContentTable = () => {
 
     const handleImage = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setFile(file);
-            setPreview(URL.createObjectURL(file));
+        if (!file) return;
+
+        const fileName = file.name;
+
+        // Regex: chỉ cho phép chữ cái không dấu, số, gạch dưới, gạch ngang và dấu chấm
+        const validRegex = /^[a-zA-Z0-9._-]+$/;
+
+        if (!validRegex.test(fileName)) {
+            toast.error("Tên file không hợp lệ! Chỉ cho phép chữ cái không dấu, số, gạch dưới (_), gạch ngang (-) và dấu chấm (.)");
+            e.target.value = ""; // reset input file
+            return;
         }
+
+        setFile(file);
+        setPreview(URL.createObjectURL(file));
     };
 
     const handleSave = async () => {

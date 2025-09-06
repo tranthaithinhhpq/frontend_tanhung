@@ -16,6 +16,7 @@ const ClientPage = () => {
         return encodeURI(`${BACKEND_URL}${imagePath}`);
     };
 
+
     useEffect(() => {
         const fetchPage = async () => {
             try {
@@ -34,7 +35,15 @@ const ClientPage = () => {
         };
 
         fetchPage();
+
+        // 👉 Cuộn lên đầu trang mượt mà khi slug thay đổi
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
     }, [slug]);
+
 
     if (loading) return <div className="client-page container py-5">Đang tải...</div>;
     if (error) return <div className="client-page container py-5 text-danger">{error}</div>;

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import Scrollbars from 'react-custom-scrollbars';
 import * as XLSX from 'xlsx';
+
 
 const DrugPriceTable = () => {
     const [drugs, setDrugs] = useState([]);
@@ -18,6 +19,7 @@ const DrugPriceTable = () => {
     const [showModal, setShowModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         code: '',
         name: '',
@@ -31,6 +33,7 @@ const DrugPriceTable = () => {
     const handleExcelImport = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        setLoading(true);
 
         const reader = new FileReader();
         reader.onload = async (evt) => {
@@ -76,6 +79,8 @@ const DrugPriceTable = () => {
             } catch (err) {
                 console.error('Lỗi đọc file:', err);
                 toast.error('Lỗi đọc file Excel');
+            } finally {
+                setLoading(false); // ⬅️ đóng modal chờ
             }
         };
 
@@ -336,6 +341,13 @@ const DrugPriceTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowGuideModal(false)}>Đóng</Button>
                 </Modal.Footer>
+            </Modal>
+
+            <Modal show={loading} backdrop="static" keyboard={false} centered>
+                <Modal.Body className="text-center">
+                    <Spinner animation="border" role="status" className="mb-2" />
+                    <p>⏳ Đang xử lý file Excel, vui lòng chờ...</p>
+                </Modal.Body>
             </Modal>
         </div>
     );

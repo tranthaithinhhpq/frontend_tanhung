@@ -153,7 +153,7 @@ const NewsCreate = ({ editData }) => {
                         </select>
                     </div>
 
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                         <label>Ảnh đại diện</label>
                         <input
                             type="file"
@@ -170,7 +170,41 @@ const NewsCreate = ({ editData }) => {
                                 style={{ maxHeight: 150, marginTop: 10 }}
                             />
                         )}
+                    </div> */}
+
+                    <div className="mb-3">
+                        <label>Ảnh đại diện</label>
+                        <input
+                            type="file"
+                            className="form-control"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
+
+                                const fileName = file.name;
+
+                                // Regex kiểm tra: chỉ cho phép chữ cái không dấu, số, gạch dưới, gạch ngang và dấu chấm
+                                const validRegex = /^[a-zA-Z0-9._-]+$/;
+
+                                if (!validRegex.test(fileName)) {
+                                    toast.error("Tên file không được chứa dấu hoặc khoảng trắng!");
+                                    e.target.value = ""; // reset input
+                                    return;
+                                }
+
+                                setImage(file);
+                                setPreviewImg(URL.createObjectURL(file));
+                            }}
+                        />
+                        {previewImg && (
+                            <img
+                                src={previewImg}
+                                alt="preview"
+                                style={{ maxHeight: 150, marginTop: 10 }}
+                            />
+                        )}
                     </div>
+
 
                     <CustomHtmlEditor value={content} onChange={setContent} />
 

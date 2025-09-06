@@ -44,6 +44,11 @@ const ClientServicePriceTable = () => {
 
     useEffect(() => {
         fetchSpecialties();
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // mượt mà
+        });
     }, []);
 
     useEffect(() => {

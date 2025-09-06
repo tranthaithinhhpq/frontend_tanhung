@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../../../setup/axios';
 import { Table } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -26,6 +26,12 @@ const BookingHistory = () => {
         }
     };
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // mượt mà
+        });
+    }, []);
     return (
         <div className="container mt-4">
             <h4>Lịch sử đặt khám</h4>

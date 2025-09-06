@@ -28,6 +28,13 @@ const DrugPrice = () => {
 
     useEffect(() => {
         fetchData();
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // mượt mà
+        });
+
+
     }, [fetchData]);
 
     const handleSearchChange = (e) => {

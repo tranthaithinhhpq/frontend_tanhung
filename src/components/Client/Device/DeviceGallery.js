@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import axios from '../../../setup/axios';
+import ReactPaginate from 'react-paginate';
 import '../../Admin/Doctor/Doctor.scss';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
 const DeviceGallery = () => {
     const [devices, setDevices] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 8; // số thiết bị mỗi trang
     const history = useHistory();
 
     useEffect(() => {
@@ -25,11 +28,23 @@ const DeviceGallery = () => {
         fetchDevices();
     }, []);
 
+    const offset = currentPage * itemsPerPage;
+    const currentItems = devices.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(devices.length / itemsPerPage);
+
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // cuộn mượt
+        });
+    };
+
     return (
         <div className="container py-4">
             <h2 className="mb-4">Danh sách trang thiết bị</h2>
             <Row>
-                {devices.map((device) => (
+                {currentItems.map((device) => (
                     <Col md={3} key={device.id} className="mb-4">
                         <Card
                             className="h-100 shadow-sm cursor-pointer"
@@ -48,6 +63,28 @@ const DeviceGallery = () => {
                     </Col>
                 ))}
             </Row>
+
+            <div className="d-flex justify-content-center mt-4">
+                <ReactPaginate
+                    previousLabel={"←"}
+                    nextLabel={"→"}
+                    breakLabel={"..."}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={3}
+                    onPageChange={handlePageClick}
+                    containerClassName={"pagination"}
+                    pageClassName={"page-item"}
+                    pageLinkClassName={"page-link"}
+                    previousClassName={"page-item"}
+                    previousLinkClassName={"page-link"}
+                    nextClassName={"page-item"}
+                    nextLinkClassName={"page-link"}
+                    breakClassName={"page-item"}
+                    breakLinkClassName={"page-link"}
+                    activeClassName={"active"}
+                />
+            </div>
         </div>
     );
 };

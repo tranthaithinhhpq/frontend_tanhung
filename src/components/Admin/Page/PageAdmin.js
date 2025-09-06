@@ -1,35 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Modal, Form } from 'react-bootstrap';
+import { Button, Table, Modal } from 'react-bootstrap';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 
 const PageAdmin = () => {
     const [pages, setPages] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [editMode, setEditMode] = useState(false);
-    const [currentPage, setCurrentPage] = useState(null);
+    const [currentPage, setCurrentPage] = useState(null); // bản ghi hiện tại khi xoá
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const [page, setPage] = useState(1);
+    const [limit] = useState(5);
+    const [totalPages, setTotalPages] = useState(0);
+
     const history = useHistory();
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
 
-    const [form, setForm] = useState({
-        slug: '',
-        title: '',
-        contentThumbnail: '',
-        videoYoutubeId: '',
-        status: true
-    });
-
     useEffect(() => {
         fetchPages();
-    }, []);
+    }, [page, limit]);
 
     const fetchPages = async () => {
         try {
-            const res = await axios.get('/api/v1/admin/page/read');
+            const res = await axios.get(`/api/v1/admin/page/read?page=${page}&limit=${limit}`);
             if (res.EC === 0) {
-                setPages(res.DT); // ← bạn phải gọi setPages
+                setPages(res.DT.rows || []);
+                setTotalPages(res.DT.totalPages);
             } else {
                 toast.error(res.EM);
             }
@@ -38,41 +35,24 @@ const PageAdmin = () => {
         }
     };
 
-
-    const handleSave = async () => {
-        try {
-            if (editMode) {
-                const res = await axios.put(`/api/v1/admin/page/update/${currentPage.id}`, form);
-                if (res?.EC === 0) {
-                    toast.success('Cập nhật thành công');
-                    fetchPages();
-                    setShowModal(false);
-                } else toast.error(res?.EM);
-            } else {
-                const res = await axios.post('/api/v1/admin/page/create', form);
-                if (res?.EC === 0) {
-                    toast.success('Tạo trang thành công');
-                    fetchPages();
-                    setShowModal(false);
-                } else toast.error(res?.EM);
-            }
-        } catch (err) {
-            console.error(err);
-            toast.error('Lỗi khi lưu trang');
-        }
+    const handlePageClick = (event) => {
+        setPage(event.selected + 1);
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Bạn có chắc muốn xoá?')) return;
+    const handleDelete = async () => {
+        if (!currentPage) return;
         try {
-            const res = await axios.delete(`/api/v1/admin/page/delete/${id}`);
-            if (res?.EC === 0) {
-                toast.success('Xoá thành công');
+            const res = await axios.delete(`/api/v1/admin/page/delete/${currentPage.id}`);
+            if (res.EC === 0) {
+                toast.success("Xóa thành công!");
                 fetchPages();
-            } else toast.error(res?.EM);
+            } else {
+                toast.error(res.EM || "Xóa thất bại");
+            }
         } catch (err) {
-            console.error(err);
-            toast.error('Lỗi khi xoá');
+            toast.error("Lỗi khi xoá dữ liệu");
+        } finally {
+            setShowDeleteModal(false);
         }
     };
 
@@ -98,8 +78,14 @@ const PageAdmin = () => {
                     {pages && pages.length > 0 ? (
                         pages.map((item, index) => (
                             <tr key={item.id}>
-                                <td>{index + 1}</td>
-                                <td><img src={`${BACKEND_URL}${item.image}`} alt="device" style={{ width: 60, height: 40, objectFit: 'cover' }} /></td>
+                                <td>{(page - 1) * limit + index + 1}</td>
+                                <td>
+                                    <img
+                                        src={`${BACKEND_URL}${item.image}`}
+                                        alt="page"
+                                        style={{ width: 60, height: 40, objectFit: 'cover' }}
+                                    />
+                                </td>
                                 <td>{item.slug}</td>
                                 <td>{item.title}</td>
                                 <td>{item.videoYoutubeId}</td>
@@ -126,78 +112,49 @@ const PageAdmin = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="6" className="text-center">Không có dữ liệu</td>
+                            <td colSpan="8" className="text-center">Không có dữ liệu</td>
                         </tr>
                     )}
                 </tbody>
             </Table>
 
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{editMode ? 'Cập nhật trang' : 'Tạo trang mới'}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Slug</Form.Label>
-                        <Form.Control value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Tiêu đề</Form.Label>
-                        <Form.Control value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Ảnh Thumbnail</Form.Label>
-                        <Form.Control value={form.contentThumbnail} onChange={e => setForm({ ...form, contentThumbnail: e.target.value })} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Youtube ID</Form.Label>
-                        <Form.Control value={form.videoYoutubeId} onChange={e => setForm({ ...form, videoYoutubeId: e.target.value })} />
-                    </Form.Group>
-                    <Form.Check
-                        type="checkbox"
-                        label="Hiển thị"
-                        checked={form.status}
-                        onChange={() => setForm({ ...form, status: !form.status })}
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Hủy
-                    </Button>
-                    <Button variant="primary" onClick={handleSave}>
-                        Lưu
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {totalPages > 1 && (
+                <ReactPaginate
+                    previousLabel="<"
+                    nextLabel=">"
+                    breakLabel="..."
+                    pageCount={totalPages}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={3}
+                    onPageChange={handlePageClick}
+                    containerClassName="pagination justify-content-center"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link"
+                    activeClassName="active"
+                    forcePage={page - 1}
+                />
+            )}
 
+            {/* Modal xoá */}
             <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Xác nhận xoá</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Bạn có chắc muốn xoá trang: <strong>{currentPage?.title}</strong>?
+                    Bạn có chắc chắn muốn xoá trang: <strong>{currentPage?.title}</strong> ?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
                         Hủy
                     </Button>
-                    <Button
-                        variant="danger"
-                        onClick={async () => {
-                            try {
-                                const res = await axios.delete(`/api/v1/admin/page/delete/${currentPage?.id}`);
-                                if (res?.EC === 0) {
-                                    toast.success('Xoá thành công');
-                                    fetchPages();
-                                } else toast.error(res?.EM);
-                            } catch (err) {
-                                toast.error('Lỗi khi xoá');
-                            } finally {
-                                setShowDeleteModal(false);
-                            }
-                        }}
-                    >
-                        Xác nhận xoá
+                    <Button variant="danger" onClick={handleDelete}>
+                        Xóa
                     </Button>
                 </Modal.Footer>
             </Modal>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 
@@ -11,10 +11,33 @@ const QuestionForm = () => {
         questionContent: ''
     });
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, []);
+
     const handleSubmit = async () => {
         if (!form.fullName || !form.email || !form.questionTitle || !form.questionContent) {
             toast.error("Vui lòng điền đầy đủ các trường bắt buộc");
             return;
+        }
+
+        // ✅ Kiểm tra định dạng email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email.trim())) {
+            toast.error("Email không hợp lệ");
+            return;
+        }
+
+        // ✅ Kiểm tra định dạng số điện thoại (nếu có nhập)
+        if (form.phoneNumber.trim()) {
+            const phoneRegex = /^(0|\+84)[0-9]{9}$/;
+            if (!phoneRegex.test(form.phoneNumber.trim())) {
+                toast.error("Số điện thoại không hợp lệ (bắt đầu bằng 0 hoặc +84, có 10 số)");
+                return;
+            }
         }
 
         try {
@@ -63,9 +86,18 @@ const QuestionForm = () => {
             <div className="mb-3">
                 <label>Số điện thoại</label>
                 <input
+                    type="tel"
                     className="form-control"
                     value={form.phoneNumber}
-                    onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        // ✅ Chỉ cho nhập số
+                        if (/^\d*$/.test(value)) {
+                            setForm({ ...form, phoneNumber: value });
+                        }
+                    }}
+                    maxLength={15} // giới hạn số ký tự
+                    placeholder="Nhập số điện thoại"
                 />
             </div>
 

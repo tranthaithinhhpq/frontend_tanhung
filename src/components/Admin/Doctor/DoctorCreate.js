@@ -89,11 +89,23 @@ const DoctorCreate = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setSelectedFile(file);
-            setPreviewImg(URL.createObjectURL(file));
+        if (!file) return;
+
+        const fileName = file.name;
+
+        // Regex: chỉ cho phép chữ không dấu, số, gạch dưới, gạch ngang, dấu chấm
+        const validRegex = /^[a-zA-Z0-9._-]+$/;
+
+        if (!validRegex.test(fileName)) {
+            toast.error("Tên file không hợp lệ! Chỉ cho phép chữ không dấu, số, gạch dưới (_), gạch ngang (-), và dấu chấm (.)");
+            e.target.value = ""; // reset input file
+            return;
         }
+
+        setSelectedFile(file);
+        setPreviewImg(URL.createObjectURL(file));
     };
+
 
     const handleSubmit = async () => {
         if (!username || !selectedSpecialty || !selectedDegree || !selectedPosition || !selectedFile) {

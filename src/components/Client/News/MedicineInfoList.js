@@ -22,6 +22,10 @@ const MedicineInfoList = () => {
 
         fetchCategories();
         fetchArticles(1, parsedCatId, keyword);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // mượt mà
+        });
     }, [location.search]); // eslint-disable-line
 
     const fetchCategories = async () => {

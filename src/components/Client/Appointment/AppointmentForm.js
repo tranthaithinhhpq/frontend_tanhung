@@ -1,5 +1,3 @@
-
-
 // ✅ FRONTEND - AppointmentForm.js
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
@@ -9,6 +7,14 @@ import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import moment from 'moment';
+import { Modal, Spinner } from 'react-bootstrap'; // ⬅️ thêm
+
+
+
+
+
+
+
 
 const AppointmentForm = () => {
     const [form, setForm] = useState({
@@ -29,6 +35,7 @@ const AppointmentForm = () => {
 
     const [services, setServices] = useState([]);
     const [selectedService, setSelectedService] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     // Load specialties (lọc chỉ những chuyên khoa cho phép đặt lịch)
     useEffect(() => {
@@ -49,6 +56,14 @@ const AppointmentForm = () => {
                 }
             })
             .catch(err => console.error('❌ Lỗi load specialty:', err));
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // mượt mà
+        });
+
+
     }, []);
 
     useEffect(() => {
@@ -173,7 +188,6 @@ const AppointmentForm = () => {
         }
 
         if (!selectedSpecialty) return toast.error('Vui lòng chọn chuyên khoa');
-        // ✅ Guard: đảm bảo chỉ chuyên khoa cho phép
         if (!selectedSpecialty.meta?.isSelectable) {
             return toast.error('Chuyên khoa này hiện không cho phép đặt lịch. Vui lòng chọn chuyên khoa khác.');
         }
@@ -197,6 +211,7 @@ const AppointmentForm = () => {
         };
 
         try {
+            setLoading(true); // ⬅️ bật modal chờ
             const res = await axios.post('/api/v1/booking/create', data);
             if (res.EC === 0) {
                 toast.success('Đặt lịch thành công');
@@ -213,6 +228,8 @@ const AppointmentForm = () => {
         } catch (err) {
             console.error('❌ Lỗi gửi lịch hẹn:', err);
             toast.error('Lỗi khi gửi yêu cầu đặt lịch');
+        } finally {
+            setLoading(false); // ⬅️ tắt modal chờ
         }
     };
 
@@ -227,7 +244,20 @@ const AppointmentForm = () => {
 
             <div className="mb-3">
                 <label>Số điện thoại</label>
-                <input className="form-control" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+                <input
+                    type="tel"
+                    className="form-control"
+                    value={form.phone}
+                    onChange={e => {
+                        const value = e.target.value;
+                        // Chỉ cho nhập số
+                        if (/^\d*$/.test(value)) {
+                            setForm({ ...form, phone: value });
+                        }
+                    }}
+                    maxLength={15} // Giới hạn độ dài (VD: 15 số)
+                    placeholder="Nhập số điện thoại"
+                />
             </div>
 
             <div className="mb-3">
@@ -313,6 +343,13 @@ const AppointmentForm = () => {
             </div>
 
             <button className="btn btn-primary" onClick={handleSubmit}>Đặt lịch</button>
+
+            <Modal show={loading} backdrop="static" keyboard={false} centered>
+                <Modal.Body className="text-center">
+                    <Spinner animation="border" role="status" className="mb-2" />
+                    <p>⏳ Xin chờ, hệ thống đang xử lý đặt lịch...</p>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };

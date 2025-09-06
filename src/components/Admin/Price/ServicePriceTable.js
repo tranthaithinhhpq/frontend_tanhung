@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Modal, Form, Spinner } from 'react-bootstrap';
 import Select from 'react-select';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
@@ -18,6 +18,7 @@ const ServicePriceTable = () => {
     const [totalPage, setTotalPage] = useState(0);
     const [allGroups, setAllGroups] = useState([]);
     const [showGuideModal, setShowGuideModal] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [filters, setFilters] = useState({
         names: [],
@@ -140,6 +141,7 @@ const ServicePriceTable = () => {
     const handleExcelImport = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+        setLoading(true);
 
         const reader = new FileReader();
         reader.onload = async (evt) => {
@@ -185,6 +187,8 @@ const ServicePriceTable = () => {
             } catch (err) {
                 console.error(err);
                 toast.error("Lỗi import file Excel");
+            } finally {
+                setLoading(false); // ⬅️ đóng modal chờ
             }
         };
 
@@ -523,6 +527,13 @@ const ServicePriceTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowGuideModal(false)}>Đóng</Button>
                 </Modal.Footer>
+            </Modal>
+
+            <Modal show={loading} backdrop="static" keyboard={false} centered>
+                <Modal.Body className="text-center">
+                    <Spinner animation="border" role="status" className="mb-2" />
+                    <p>⏳ Đang xử lý file Excel, vui lòng chờ...</p>
+                </Modal.Body>
             </Modal>
         </div>
     );
