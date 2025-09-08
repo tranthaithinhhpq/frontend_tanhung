@@ -11,6 +11,9 @@ const CustomHtmlEditor = ({ value, onChange }) => {
     const pdfInputRef = useRef(null);
     const isLocalChangeRef = useRef(false);
 
+    const [showCodeModal, setShowCodeModal] = useState(false);
+    const [htmlCode, setHtmlCode] = useState("");
+
     const [useOuterScroll, setUseOuterScroll] = useState(true);
 
     // --- thêm state ---
@@ -341,6 +344,10 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                 <Button size="sm" onClick={() => alignLastImage("left")}>Ảnh trái</Button>
                 <Button size="sm" onClick={() => alignLastImage("center")}>Ảnh giữa</Button>
                 <Button size="sm" onClick={() => alignLastImage("right")}>Ảnh phải</Button>
+                <Button size="sm" onClick={() => {
+                    setHtmlCode(editorRef.current.innerHTML);
+                    setShowCodeModal(true);
+                }}>Code</Button>
             </div>
 
             <Scrollbars style={{ height: 400, width: '100%' }} autoHide>
@@ -402,6 +409,39 @@ const CustomHtmlEditor = ({ value, onChange }) => {
                         formatTables(true); // PHẢI: giữ logic + có thanh cuộn
                     }}>
                         Phải
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showCodeModal} onHide={() => setShowCodeModal(false)} centered size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Chỉnh sửa HTML</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Control
+                        as="textarea"
+                        rows={15}
+                        value={htmlCode}
+                        onChange={(e) => setHtmlCode(e.target.value)}
+                        style={{ fontFamily: "monospace" }}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowCodeModal(false)}>
+                        Hủy
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={() => {
+                            if (editorRef.current) {
+                                editorRef.current.innerHTML = htmlCode;
+                                isLocalChangeRef.current = true;
+                                onChange(htmlCode);
+                            }
+                            setShowCodeModal(false);
+                        }}
+                    >
+                        Lưu
                     </Button>
                 </Modal.Footer>
             </Modal>
