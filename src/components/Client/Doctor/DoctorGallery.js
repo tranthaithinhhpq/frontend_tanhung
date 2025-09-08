@@ -80,38 +80,97 @@ const DoctorGallery = () => {
             {doctors.length === 0 ? (
                 <div className="text-center">Không có bác sĩ nào phù hợp</div>
             ) : (
+                // <Row>
+                //     {doctors.map((doc) => (
+                //         <Col key={doc.id} lg={3} md={4} sm={6} xs={12} className="mb-4">
+                //             <Card className="h-100">
+
+                //                 <Card.Img variant="top" src={buildImgSrc(doc.image)} className="doctor-card-img" />
+                //                 <Card.Body>
+
+                //                     <Card.Title>{doc.doctorName}</Card.Title>
+                //                     <Card.Subtitle className="mb-2 text-muted">
+                //                         {doc.Position?.name || 'N/A'} | {doc.Degree?.name || 'N/A'}
+                //                     </Card.Subtitle>
+                //                     <Card.Text>
+                //                         <strong>Chuyên khoa:</strong> {doc.Specialty?.name || 'N/A'}
+                //                     </Card.Text>
+
+
+                //                     <div className="d-flex justify-content-center px-2">
+                //                         <div className="d-flex w-100 " style={{ maxWidth: "100%" }}>
+                //                             <button
+                //                                 className="btn btn-outline-primary btn-sm flex-fill me-2"
+                //                                 onClick={() => window.location.href = `/doctor/detail/${doc.id}`}
+                //                             >
+                //                                 Chi tiết
+                //                             </button>
+                //                             <button
+                //                                 className="btn btn-success btn-sm flex-fill"
+                //                                 onClick={() => window.location.href = `/booking/${doc.id}`}
+                //                             >
+                //                                 Đặt lịch
+                //                             </button>
+                //                         </div>
+                //                     </div>
+
+
+
+                //                 </Card.Body>
+                //             </Card>
+                //         </Col>
+                //     ))}
+                // </Row>
+
                 <Row>
                     {doctors.map((doc) => (
                         <Col key={doc.id} lg={3} md={4} sm={6} xs={12} className="mb-4">
                             <Card className="h-100">
-                                <Card.Img variant="top" src={buildImgSrc(doc.image)} className="doctor-card-img" />
-                                <Card.Body>
-                                    <Card.Title>{doc.doctorName}</Card.Title>
-                                    <Card.Subtitle className="mb-2 text-muted">
-                                        {doc.Position?.name || 'N/A'} | {doc.Degree?.name || 'N/A'}
-                                    </Card.Subtitle>
-                                    <Card.Text>
-                                        <strong>Chuyên khoa:</strong> {doc.Specialty?.name || 'N/A'}
-                                    </Card.Text>
-                                    <div className="d-flex justify-content-between mt-3">
-                                        <button
-                                            className="btn btn-outline-primary btn-sm"
-                                            onClick={() => window.location.href = `/doctor/detail/${doc.id}`}
-                                        >
-                                            Xem chi tiết
-                                        </button>
-                                        <button
-                                            className="btn btn-success btn-sm"
-                                            onClick={() => window.location.href = `/booking/${doc.id}`}
-                                        >
-                                            Đặt lịch khám
-                                        </button>
+                                <Card.Img
+                                    variant="top"
+                                    src={buildImgSrc(doc.image)}
+                                    className="doctor-card-img"
+                                />
+
+                                {/* Dùng flex-column để đẩy nút xuống bottom */}
+                                <Card.Body className="d-flex flex-column">
+                                    <div>
+                                        <Card.Title>{doc.doctorName}</Card.Title>
+                                        <Card.Subtitle className="mb-2 text-muted">
+                                            {doc.Position?.name || "N/A"} | {doc.Degree?.name || "N/A"}
+                                        </Card.Subtitle>
+                                        <Card.Text>
+                                            <strong>Chuyên khoa:</strong> {doc.Specialty?.name || "N/A"}
+                                        </Card.Text>
+                                    </div>
+
+                                    {/* mt-auto sẽ đẩy nút xuống đáy */}
+                                    <div className="d-flex justify-content-center px-2 mt-auto">
+                                        <div className="d-flex w-100">
+                                            <button
+                                                className="btn btn-outline-primary btn-sm flex-fill me-2"
+                                                onClick={() =>
+                                                    (window.location.href = `/doctor/detail/${doc.id}`)
+                                                }
+                                            >
+                                                Chi tiết
+                                            </button>
+                                            <button
+                                                className="btn btn-success btn-sm flex-fill"
+                                                onClick={() => (window.location.href = `/booking/${doc.id}`)}
+                                            >
+                                                Đặt lịch
+                                            </button>
+                                        </div>
                                     </div>
                                 </Card.Body>
                             </Card>
                         </Col>
                     ))}
                 </Row>
+
+
+
             )}
 
             {totalPages > 1 && (

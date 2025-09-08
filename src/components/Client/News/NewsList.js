@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../../setup/axios';
-import { Card, Button, Row, Col, Form, Pagination } from 'react-bootstrap';
+import { Card, Button, Row, Col, Form, Pagination, InputGroup } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import './NewsList.scss';
+import { FaSearch } from "react-icons/fa";
 
 
 const NewsList = () => {
@@ -128,7 +129,7 @@ const NewsList = () => {
                         ))}
                     </Form.Control>
                 </Col>
-                <Col md={4}>
+                {/* <Col md={4}>
                     <Form.Control
                         type="text"
                         placeholder="Tìm kiếm tiêu đề, nội dung"
@@ -138,6 +139,20 @@ const NewsList = () => {
                 </Col>
                 <Col md={4}>
                     <Button onClick={handleSearch}>Tìm kiếm</Button>
+                </Col> */}
+
+                <Col md={8}>
+                    <InputGroup>
+                        <Form.Control
+                            type="text"
+                            placeholder="Tìm kiếm tiêu đề, nội dung"
+                            value={keyword}
+                            onChange={e => setKeyword(e.target.value)}
+                        />
+                        <Button variant="dark" onClick={handleSearch}>
+                            <FaSearch />
+                        </Button>
+                    </InputGroup>
                 </Col>
             </Row>
 
