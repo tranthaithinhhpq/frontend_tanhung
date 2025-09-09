@@ -23,16 +23,18 @@ const MedicineInfoList = () => {
 
         fetchCategories();
         fetchArticles(1, parsedCatId, keyword);
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth' // mượt mà
-        });
+
+
     }, [location.search]); // eslint-disable-line
+
 
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/api/v1/news-categories-nav', { params: { group: 'medicine' } });
-            if (res.EC === 0) setCategories(res.DT);
+            if (res.EC === 0) {
+                setCategories(res.DT);
+
+            }
         } catch (err) { console.error(err); }
     };
 
@@ -50,6 +52,7 @@ const MedicineInfoList = () => {
             if (res.EC === 0) {
                 setArticles(res.DT.news);
                 setPagination(res.DT.pagination);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         } catch (err) { console.error(err); }
     };
