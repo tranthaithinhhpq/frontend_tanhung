@@ -534,6 +534,28 @@ const NavHeaderClient = () => {
                                         ))}
                                     </ul>
                                 </li>
+
+                                {/* Tuyển dụng */}
+                                <li className="nav-item dropdown">
+                                    <Link
+                                        className="nav-link nav-link-small"
+                                        href="#"
+                                        role="button"
+                                        {...(windowWidth < 992
+                                            ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                            : {})}
+                                        to="/tam-nhin-va-su-menh"
+                                    >
+                                        Tuyển dụng <span className="dropdown-icon"></span>
+                                    </Link>
+                                    <ul className="dropdown-menu">
+                                        <li><Link className="dropdown-child" to="/recruitment">Ứng tyển</Link></li>
+
+                                        {aboutPages.map((page) => (
+                                            <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>
+                                        ))}
+                                    </ul>
+                                </li>
                             </ul>
 
 

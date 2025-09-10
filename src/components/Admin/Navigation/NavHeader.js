@@ -159,7 +159,7 @@ const NavHeader = () => {
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Tài khoản & Phân quyền
+                                Tài khoản
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/users">Tài khoản</Link></li>
@@ -181,7 +181,7 @@ const NavHeader = () => {
 
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Quản lý Lịch
+                                Lịch
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/working-slot-template">Lịch bác sĩ cố định </Link></li>
@@ -225,6 +225,16 @@ const NavHeader = () => {
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/device">Trang thiết bị</Link></li>
                                 <li><Link className="dropdown-item" to="/admin/specialty">Chuyên khoa</Link></li>
+                            </ul>
+                        </li>
+
+                        <li className="nav-item dropdown">
+                            <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                tuyển dụng
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li><Link className="dropdown-item" to="/admin/recruitment">Vị trí tuyển dụng</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/specialty">Danh sách ứng viên</Link></li>
                             </ul>
                         </li>
                     </ul>

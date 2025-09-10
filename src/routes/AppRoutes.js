@@ -103,6 +103,11 @@ import WorkingSlotTemplateManagement from "../components/Admin/Doctor/WorkingSlo
 // MedicineInfoList
 import MedicineInfoList from "../components/Client/News/MedicineInfoList";
 import HolidayManagement from "../components/Admin/Holiday/HolidayManagement";
+// RecruitmentTable
+import RecruitmentTable from "../components/Admin/RecruitmentTable/RecruitmentTable";
+import RecruitmentList from "../components/Client/RecruitmentList/RecruitmentList";
+
+
 
 
 
@@ -128,6 +133,11 @@ const AppRoutes = () => {
 
     return (
         <Switch>
+
+            {/* Admin - recruitment*/}
+            <PrivateRoutes path="/admin/recruitment" component={RecruitmentTable} />
+
+
             {/* Admin - Private routes */}
             <PrivateRoutes path="/admin/users" component={Users} />
             <PrivateRoutes path="/admin/projects" component={Project} />
@@ -207,12 +217,15 @@ const AppRoutes = () => {
             <PrivateRoutes path="/admin/page-new" exact component={PageCreate} />
             <PrivateRoutes path="/admin/page/edit/:id" exact component={PageEdit} />
 
+            {/* DegreeManagement Admin */}
+            <PrivateRoutes path="/admin/degree" exact component={DegreeManagement} />
+
             {/* Public Admin */}
             <Route path="/admin/login" component={Login} />
             {/* <Route path="/admin/register" component={Register} /> */}
 
-            {/* DegreeManagement Admin */}
-            <Route path="/admin/degree" component={DegreeManagement} />
+
+
 
 
 
@@ -236,6 +249,7 @@ const AppRoutes = () => {
 
             {/* News client */}
             <Route path="/medicine-info" component={MedicineInfoList} />
+            <Route path="/recruitment" component={RecruitmentList} />
 
 
 
@@ -257,7 +271,9 @@ const AppRoutes = () => {
             {/* Page client */}
             <Route path="/:slug" exact component={ClientPage} />
 
-            {/* Booking Client */}
+            {/* RecruitmentList */}
+            <Route path="/recruitment" exact component={RecruitmentList} />
+
 
 
 
