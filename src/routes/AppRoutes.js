@@ -107,6 +107,11 @@ import HolidayManagement from "../components/Admin/Holiday/HolidayManagement";
 import RecruitmentTable from "../components/Admin/RecruitmentTable/RecruitmentTable";
 import RecruitmentList from "../components/Client/RecruitmentList/RecruitmentList";
 
+// ApplicationTable
+import ApplicationTable from "../components/Admin/ApplicationTable/ApplicationTable";
+
+
+
 
 
 
@@ -148,6 +153,11 @@ const AppRoutes = () => {
 
             {/* Admin - WorkingSlotTemplateManagement */}
             <PrivateRoutes path="/admin/working-slot-template" component={WorkingSlotTemplateManagement} />
+
+
+
+            {/* Admin - ApplicationTable */}
+            <PrivateRoutes path="/admin/application" component={ApplicationTable} />
 
 
             {/* Admin - HolidayManagement */}

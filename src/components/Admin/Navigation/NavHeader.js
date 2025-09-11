@@ -230,11 +230,11 @@ const NavHeader = () => {
 
                         <li className="nav-item dropdown">
                             <a href="#" className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                tuyển dụng
+                                Tuyển dụng
                             </a>
                             <ul className="dropdown-menu">
                                 <li><Link className="dropdown-item" to="/admin/recruitment">Vị trí tuyển dụng</Link></li>
-                                <li><Link className="dropdown-item" to="/admin/specialty">Danh sách ứng viên</Link></li>
+                                <li><Link className="dropdown-item" to="/admin/application">Danh sách ứng viên</Link></li>
                             </ul>
                         </li>
                     </ul>
