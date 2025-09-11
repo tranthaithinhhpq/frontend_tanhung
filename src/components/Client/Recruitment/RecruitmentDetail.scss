@@ -1,0 +1,24 @@
+.job-detail-box {
+    background: #f8fcff; // xanh nhạt
+    border: 1px solid #cce5ff; // viền xanh nhạt
+    border-radius: 8px; // bo góc
+    padding: 20px;
+    margin-top: 20px;
+
+    h5 {
+        font-weight: 600;
+        color: #0056b3; // xanh đậm
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    hr {
+        border: none; // bỏ mặc định
+        border-top: 1px solid #000; // gạch ngang màu đen
+        margin: 20px 0;
+    }
+}

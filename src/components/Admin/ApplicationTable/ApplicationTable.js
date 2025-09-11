@@ -135,7 +135,7 @@ const ApplicationTable = () => {
                             <td>{item.Recruitment?.title || "N/A"}</td>
                             <td>
                                 {item.cvFile
-                                    ? <a href={`${process.env.REACT_APP_BACKEND_URL}/images/${item.cvFile}`} target="_blank" rel="noreferrer">Xem CV</a>
+                                    ? <a href={`${process.env.REACT_APP_BACKEND_URL}${item.cvFile}`} target="_blank" rel="noreferrer">Xem CV</a>
                                     : 'N/A'}
                             </td>
                             <td>{item.status}</td>

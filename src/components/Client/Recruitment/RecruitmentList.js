@@ -5,13 +5,17 @@ import { Card, Button, Row, Col, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import axios from '../../../setup/axios';
 import { toast } from 'react-toastify';
+import { useHistory } from "react-router-dom";
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+
 
 const RecruitmentList = () => {
     const [recruitments, setRecruitments] = useState([]);
     const [specialties, setSpecialties] = useState([]);
     const [selectedSpecialty, setSelectedSpecialty] = useState(null);
+    const history = useHistory();
 
     // Lấy danh sách tin tuyển dụng
     const fetchRecruitments = async (specialtyId = null) => {
@@ -87,13 +91,14 @@ const RecruitmentList = () => {
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title>{item.title}</Card.Title>
                                     <Card.Text>
-                                        <strong>Deadline:</strong> {item.deadline || 'Không có'}
+                                        <strong>Hạn nộp:</strong> {item.deadline || 'Không có'}
                                     </Card.Text>
                                     <div className="mt-auto">
                                         <Button
                                             variant={expired ? 'secondary' : 'primary'}
                                             disabled={expired}
-                                            onClick={() => !expired && (window.location.href = `/recruitment/${item.id}`)}
+                                            onClick={() => history.push(`/recruitment/${item.id}`)}
+
                                         >
                                             {expired ? 'Đang tạm dừng' : 'Chi tiết'}
                                         </Button>

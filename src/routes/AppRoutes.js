@@ -105,10 +105,12 @@ import MedicineInfoList from "../components/Client/News/MedicineInfoList";
 import HolidayManagement from "../components/Admin/Holiday/HolidayManagement";
 // RecruitmentTable
 import RecruitmentTable from "../components/Admin/RecruitmentTable/RecruitmentTable";
-import RecruitmentList from "../components/Client/RecruitmentList/RecruitmentList";
+import RecruitmentList from "../components/Client/Recruitment/RecruitmentList";
 
 // ApplicationTable
 import ApplicationTable from "../components/Admin/ApplicationTable/ApplicationTable";
+import RecruitmentDetail from "../components/Client/Recruitment/RecruitmentDetail";
+
 
 
 
@@ -259,7 +261,12 @@ const AppRoutes = () => {
 
             {/* News client */}
             <Route path="/medicine-info" component={MedicineInfoList} />
-            <Route path="/recruitment" component={RecruitmentList} />
+            <Route path="/recruitment" exact component={RecruitmentList} />
+
+
+
+            {/* RecruitmentDetail */}
+            <Route path="/recruitment/:id" component={RecruitmentDetail} />
 
 
 
