@@ -10,12 +10,10 @@ import * as XLSX from 'xlsx';
 const DrugPriceTable = () => {
     const [drugs, setDrugs] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit] = useState(10);
+    const [limit] = useState(20);
     const [totalPage, setTotalPage] = useState(0);
     const [searchText, setSearchText] = useState('');
-
     const [showGuideModal, setShowGuideModal] = useState(false);
-
     const [showModal, setShowModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [editId, setEditId] = useState(null);

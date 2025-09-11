@@ -80,7 +80,7 @@ li:hover .dropdown-icon::after {
 }
 
 // Desktop ≥1200px
-@media screen and (min-width: 991.88px) {
+@media screen and (min-width: 1200px) {
     .navbar-brand {
         margin-right: 0 !important;
     }
@@ -191,7 +191,7 @@ li:hover .dropdown-icon::after {
 }
 
 // Mobile/Tablet <1200px
-@media screen and (max-width: 991.88px) {
+@media screen and (max-width: 1199.98px) {
     .navbar-brand {
         margin-right: 0 !important;
     }

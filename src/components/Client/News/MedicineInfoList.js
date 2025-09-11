@@ -132,7 +132,10 @@ const MedicineInfoList = () => {
                             <Card.Body className="p-0">
                                 <Card.Title as="h2" className="fw-bold">{latestArticle.title}</Card.Title>
                                 <Card.Text className="text-muted mb-2">
-                                    Ngày đăng: {new Date(latestArticle.createdAt).toLocaleDateString()}
+                                    Ngày đăng: {new Date(latestArticle.createdAt).toLocaleDateString('vi-VN')} - {new Date(latestArticle.createdAt).toLocaleTimeString('vi-VN', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}
                                 </Card.Text>
                                 <Card.Text>
                                     {latestArticle.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
@@ -173,7 +176,10 @@ const MedicineInfoList = () => {
                                     <Card.Body>
                                         <Card.Title className="title">{item.title}</Card.Title>
                                         <Card.Text className="text-muted">
-                                            {new Date(item.createdAt).toLocaleDateString()}
+                                            {new Date(item.createdAt).toLocaleDateString('vi-VN')} - {new Date(item.createdAt).toLocaleTimeString('vi-VN', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
                                         </Card.Text>
 
                                     </Card.Body>
@@ -204,7 +210,10 @@ const MedicineInfoList = () => {
                                     <Card.Body>
                                         <Card.Title className="title small">{item.title}</Card.Title>
                                         <Card.Text className="text-muted">
-                                            {new Date(item.createdAt).toLocaleDateString()}
+                                            {new Date(item.createdAt).toLocaleDateString('vi-VN')} - {new Date(item.createdAt).toLocaleTimeString('vi-VN', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
                                         </Card.Text>
 
                                     </Card.Body>

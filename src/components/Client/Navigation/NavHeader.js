@@ -345,7 +345,7 @@ const NavHeaderClient = () => {
                     )}
 
 
-                <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar">
+                <nav className="navbar navbar-expand-xl navbar-light bg-white custom-navbar">
                     <div className="container-fluid">
                         <Link className="navbar-brand fw-bold logo" to="/">
                             <Navbar.Brand as={Link} to="/">
@@ -353,7 +353,7 @@ const NavHeaderClient = () => {
                             </Navbar.Brand>
                         </Link>
 
-                        {!(windowWidth >= 992 && windowWidth <= 1440) && (
+                        {!(windowWidth >= 1200 && windowWidth <= 1560) && (
                             <Link to="/" className="brand-link ms-1 me-1">
                                 <div className="brand-text">
                                     <span className="brand-name-2">TAN HUNG GENERAL HOSPITAL</span>
@@ -561,7 +561,7 @@ const NavHeaderClient = () => {
 
                             {/* Search */}
                             <div className="d-flex align-items-center">
-                                {windowWidth >= 1200 || showSearch ? (
+                                {windowWidth >= 1300 || showSearch ? (
                                     <form className="d-flex" onSubmit={handleSearch}>
 
                                         <input

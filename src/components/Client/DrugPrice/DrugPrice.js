@@ -9,7 +9,7 @@ const DrugPrice = () => {
     const [searchText, setSearchText] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit] = useState(10);
+    const [limit] = useState(20);
 
     const fetchData = useCallback(async () => {
         let url = `/api/v1/client/medicine?page=${currentPage}&limit=${limit}`;

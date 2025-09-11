@@ -178,7 +178,10 @@ const NewsList = () => {
                             <Card.Body className="p-0">
                                 <Card.Title as="h2" className="fw-bold">{latestNews.title}</Card.Title>
                                 <Card.Text className="text-muted mb-2">
-                                    Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString()}
+                                    Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString('vi-VN')} - {new Date(latestNews.createdAt).toLocaleTimeString('vi-VN', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}
                                 </Card.Text>
                                 <Card.Text>
                                     {latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
@@ -218,7 +221,12 @@ const NewsList = () => {
                                     <Card.Body>
                                         <Card.Title className="title">{item.title}</Card.Title>
                                         <Card.Text className="date">
-                                            <small className="text-muted">{new Date(item.createdAt).toLocaleDateString()}</small>
+                                            <small className="text-muted">
+                                                {new Date(item.createdAt).toLocaleDateString('vi-VN')} - {new Date(item.createdAt).toLocaleTimeString('vi-VN', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </small>
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -247,7 +255,12 @@ const NewsList = () => {
                                     <Card.Body>
                                         <Card.Title className="title small">{item.title}</Card.Title>
                                         <Card.Text className="date">
-                                            <small className="text-muted">{new Date(item.createdAt).toLocaleDateString()}</small>
+                                            <small className="text-muted">
+                                                {new Date(item.createdAt).toLocaleDateString('vi-VN')} - {new Date(item.createdAt).toLocaleTimeString('vi-VN', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </small>
                                         </Card.Text>
 
                                     </Card.Body>
