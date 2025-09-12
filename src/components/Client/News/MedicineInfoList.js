@@ -140,6 +140,30 @@ const MedicineInfoList = () => {
                                 <Card.Text>
                                     {latestArticle.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
                                 </Card.Text>
+
+                                {/* ✅ Thông tin tác giả */}
+                                {latestArticle.author && (
+                                    <div className="d-flex align-items-center mb-2">
+                                        <img
+                                            src={
+                                                latestArticle.author.image
+                                                    ? `${process.env.REACT_APP_BACKEND_URL}${latestArticle.author.image}`
+                                                    : "/default-avatar.png"
+                                            }
+                                            alt={latestArticle.author.username}
+                                            style={{
+                                                width: 32,
+                                                height: 32,
+                                                borderRadius: "50%",
+                                                objectFit: "cover",
+                                                marginRight: 8
+                                            }}
+                                        />
+                                        <small className="text-muted">{latestArticle.author.username}</small>
+                                    </div>
+                                )}
+
+
                                 <Button
                                     variant="primary"
                                     onClick={(e) => {
@@ -182,6 +206,28 @@ const MedicineInfoList = () => {
                                             })}
                                         </Card.Text>
 
+                                        {/* ✅ Thông tin tác giả */}
+                                        {item.author && (
+                                            <div className="d-flex align-items-center mb-2">
+                                                <img
+                                                    src={
+                                                        item.author.image
+                                                            ? `${process.env.REACT_APP_BACKEND_URL}${item.author.image}`
+                                                            : "/default-avatar.png"
+                                                    }
+                                                    alt={item.author.username}
+                                                    style={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        marginRight: 6
+                                                    }}
+                                                />
+                                                <small className="text-muted">{item.author.username}</small>
+                                            </div>
+                                        )}
+
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -215,6 +261,28 @@ const MedicineInfoList = () => {
                                                 minute: '2-digit'
                                             })}
                                         </Card.Text>
+
+                                        {/* ✅ Thông tin tác giả */}
+                                        {item.author && (
+                                            <div className="d-flex align-items-center mb-2">
+                                                <img
+                                                    src={
+                                                        item.author.image
+                                                            ? `${process.env.REACT_APP_BACKEND_URL}${item.author.image}`
+                                                            : "/default-avatar.png"
+                                                    }
+                                                    alt={item.author.username}
+                                                    style={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        marginRight: 6
+                                                    }}
+                                                />
+                                                <small className="text-muted">{item.author.username}</small>
+                                            </div>
+                                        )}
 
                                     </Card.Body>
                                 </Card>

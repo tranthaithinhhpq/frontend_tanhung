@@ -177,15 +177,40 @@ const NewsList = () => {
                         <Col md={6} className="d-flex flex-column justify-content-center p-3">
                             <Card.Body className="p-0">
                                 <Card.Title as="h2" className="fw-bold">{latestNews.title}</Card.Title>
+
+
+
+                                <Card.Text>
+                                    {latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
+                                </Card.Text>
                                 <Card.Text className="text-muted mb-2">
                                     Ngày đăng: {new Date(latestNews.createdAt).toLocaleDateString('vi-VN')} - {new Date(latestNews.createdAt).toLocaleTimeString('vi-VN', {
                                         hour: '2-digit',
                                         minute: '2-digit'
                                     })}
                                 </Card.Text>
-                                <Card.Text>
-                                    {latestNews.content.replace(/<[^>]+>/g, '').substring(0, 300)}...
-                                </Card.Text>
+
+                                {/* ✅ Tác giả */}
+                                {latestNews.author && (
+                                    <div className="d-flex align-items-center mb-2">
+                                        <img
+                                            src={
+                                                latestNews.author.image
+                                                    ? `${process.env.REACT_APP_BACKEND_URL}${latestNews.author.image}`
+                                                    : "/default-avatar.png"
+                                            }
+                                            alt={latestNews.author.username}
+                                            style={{
+                                                width: 32,
+                                                height: 32,
+                                                borderRadius: "50%",
+                                                objectFit: "cover",
+                                                marginRight: 8,
+                                            }}
+                                        />
+                                        <small className="text-muted">{latestNews.author.username}</small>
+                                    </div>
+                                )}
                                 <Button
                                     variant="primary"
                                     onClick={(e) => {
@@ -228,6 +253,28 @@ const NewsList = () => {
                                                 })}
                                             </small>
                                         </Card.Text>
+
+                                        {item.author && (
+                                            <div className="d-flex align-items-center mb-2">
+                                                <img
+                                                    src={
+                                                        item.author.image
+                                                            ? `${process.env.REACT_APP_BACKEND_URL}${item.author.image}`
+                                                            : "/default-avatar.png"
+                                                    }
+                                                    alt={item.author.username}
+                                                    style={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        marginRight: 6,
+                                                    }}
+                                                />
+                                                <small className="text-muted">{item.author.username}</small>
+                                            </div>
+                                        )}
+
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -262,6 +309,28 @@ const NewsList = () => {
                                                 })}
                                             </small>
                                         </Card.Text>
+
+                                        {item.author && (
+                                            <div className="d-flex align-items-center mb-2">
+                                                <img
+                                                    src={
+                                                        item.author.image
+                                                            ? `${process.env.REACT_APP_BACKEND_URL}${item.author.image}`
+                                                            : "/default-avatar.png"
+                                                    }
+                                                    alt={item.author.username}
+                                                    style={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        marginRight: 6,
+                                                    }}
+                                                />
+                                                <small className="text-muted">{item.author.username}</small>
+                                            </div>
+                                        )}
+
 
                                     </Card.Body>
                                 </Card>
