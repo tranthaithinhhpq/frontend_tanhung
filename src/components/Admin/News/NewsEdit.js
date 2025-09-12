@@ -24,10 +24,11 @@ const NewsEdit = () => {
     const [categories, setCategories] = useState([]);
     const [image, setImage] = useState(null);
     const [previewImg, setPreviewImg] = useState("");
-    const [editorMode, setEditorMode] = useState("quill");
     const [previewMode, setPreviewMode] = useState(false);
     const quillRef = useRef(null);
     const [group, setGroup] = useState("news");
+    const [authors, setAuthors] = useState([]);
+    const [selectedAuthor, setSelectedAuthor] = useState(null);
 
     useEffect(() => {
         fetchArticle();
@@ -40,17 +41,35 @@ const NewsEdit = () => {
 
             if (res.EC === 0) {
                 const data = res.DT;
-                setTitle(data.title);
-                setContent(data.content);
+
+                // set thông tin cơ bản
+                setTitle(data.title || "");
+                setContent(data.content || "");
                 setStatus(data.status || "draft");
-                setType(data.type || "N/A");
+                setType(data.type || "");
+
+                // nhóm + danh mục
                 const currentGroup = data.category?.group || "news";
                 setGroup(currentGroup);
                 const catId = data.categoryId;
                 await fetchCategories(catId, currentGroup);
 
+                // ảnh preview
                 if (data.image) {
                     setPreviewImg(buildImageUrl(data.image));
+                } else {
+                    setPreviewImg("");
+                }
+
+                // tác giả
+                if (data.author) {
+                    setSelectedAuthor({
+                        value: data.author.id,
+                        label: data.author.username,
+                        image: data.author.image
+                    });
+                } else {
+                    setSelectedAuthor(null);
                 }
             } else {
                 toast.error("Không tìm thấy bài viết");
@@ -60,6 +79,7 @@ const NewsEdit = () => {
             toast.error("Lỗi khi tải bài viết");
         }
     };
+
 
     const fetchCategories = async (catId, groupParam) => {
         try {
@@ -116,6 +136,27 @@ const NewsEdit = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const fetchAuthors = async () => {
+            try {
+                const res = await axios.get("/api/v1/client/users");
+                if (res.EC === 0) {
+                    const options = res.DT.map(u => ({
+                        value: u.id,
+                        label: u.username,
+                        image: u.image
+                    }));
+                    setAuthors(options);
+                }
+            } catch {
+                toast.error("Lỗi tải danh sách tác giả");
+            }
+        };
+
+        fetchAuthors();
+    }, []);
+
+
     const uploadAndInsertImage = async (file, quill) => {
         const formData = new FormData();
         formData.append("image", file);
@@ -130,7 +171,7 @@ const NewsEdit = () => {
     };
 
     const handleUpdate = async () => {
-        if (!title || !content || !selectedCategory) {
+        if (!title || !content || !selectedCategory || !selectedAuthor) {
             toast.error("Vui lòng nhập đầy đủ thông tin");
             return;
         }
@@ -140,6 +181,7 @@ const NewsEdit = () => {
         formData.append("content", content);
         formData.append("group", group);
         formData.append("categoryId", selectedCategory.value);
+        formData.append("authorId", selectedAuthor.value); // ✅ thêm tác giả
         formData.append("status", status);
         formData.append("type", type);
         if (image) formData.append("image", image);
@@ -157,13 +199,8 @@ const NewsEdit = () => {
         }
     };
 
-    // const handleFileChange = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setImage(file);
-    //         setPreviewImg(URL.createObjectURL(file));
-    //     }
-    // };
+
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -252,6 +289,17 @@ const NewsEdit = () => {
                     </div>
 
                     <div className="mb-3">
+                        <label>Tác giả</label>
+                        <Select
+                            options={authors}
+                            value={selectedAuthor}
+                            onChange={setSelectedAuthor}
+                            placeholder="Chọn tác giả"
+                        />
+                    </div>
+
+
+                    <div className="mb-3">
                         <label>Ảnh đại diện</label>
                         <input
                             type="file"
@@ -306,6 +354,10 @@ const NewsEdit = () => {
                                     {type === "hightlight"
                                         ? "Nổi bật"
                                         : "Không"}
+                                </p>
+                                <p>
+                                    <strong>Tác giả:</strong>{" "}
+                                    {selectedAuthor?.label || "(Chưa chọn)"}
                                 </p>
                                 {previewImg && (
                                     <img

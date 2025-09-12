@@ -17,6 +17,7 @@ const NavHeaderClient = () => {
     const [clientPages, setClientPages] = useState([]);
     const [contactPages, setContactPages] = useState([]);
     const [pricePages, setPricePages] = useState([]);
+    const [recruitmentPages, setRecruitmentPages] = useState([]);
     const [logoImg, setLogoImg] = useState(null);
     const [topbarContent, setTopbarContent] = useState({ phone: '', emergency: '', address: '' });
     const [newsCategories, setNewsCategories] = useState([]);
@@ -127,6 +128,8 @@ const NavHeaderClient = () => {
         fetchPagesBySection('client', setClientPages);
         fetchPagesBySection('contact', setContactPages);
         fetchPagesBySection('price', setPricePages);
+        fetchPagesBySection('recruitment', setRecruitmentPages);
+
         fetchLogo();
     }, []);
 
@@ -382,7 +385,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/tam-nhin-va-su-menh"
@@ -405,7 +408,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/quyen-va-trach-nhiem"
@@ -427,7 +430,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/news"
@@ -451,7 +454,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/medicine-info"
@@ -476,7 +479,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/booking"
@@ -497,7 +500,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/service-prices"
@@ -520,7 +523,7 @@ const NavHeaderClient = () => {
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/question"
@@ -535,13 +538,13 @@ const NavHeaderClient = () => {
                                     </ul>
                                 </li>
 
-                                {/* Tuyển dụng */}
+                                {/* Tuyển dụng
                                 <li className="nav-item dropdown">
                                     <Link
                                         className="nav-link nav-link-small"
                                         href="#"
                                         role="button"
-                                        {...(windowWidth < 992
+                                        {...(windowWidth < 1200
                                             ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
                                             : {})}
                                         to="/tam-nhin-va-su-menh"
@@ -555,7 +558,32 @@ const NavHeaderClient = () => {
                                             <li key={page.slug}><Link className="dropdown-child" to={`/${page.slug}`}>{page.title}</Link></li>
                                         ))}
                                     </ul>
+                                </li> */}
+
+                                {/* Tuyển dụng */}
+                                <li className="nav-item dropdown">
+                                    <Link
+                                        className="nav-link nav-link-small"
+                                        role="button"
+                                        {...(windowWidth < 1200
+                                            ? { 'data-bs-toggle': 'dropdown', 'aria-expanded': false }
+                                            : {})}
+                                        to="/recruitment"
+                                    >
+                                        Tuyển dụng <span className="dropdown-icon"></span>
+                                    </Link>
+                                    <ul className="dropdown-menu">
+                                        <li><Link className="dropdown-child" to="/recruitment">Ứng tuyển</Link></li>
+                                        {recruitmentPages.map((page) => (
+                                            <li key={page.slug}>
+                                                <Link className="dropdown-child" to={`/${page.slug}`}>
+                                                    {page.title}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </li>
+
                             </ul>
 
 

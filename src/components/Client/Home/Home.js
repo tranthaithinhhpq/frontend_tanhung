@@ -107,7 +107,7 @@ const HomeClient = () => {
                     </div>
 
                     <div className="col-12 col-sm-6 col-lg-3">
-                        <Link to="/booking" className="text-decoration-none text-dark">
+                        <Link to="/specialties" className="text-decoration-none text-dark">
                             <div className="service-card text-center p-4 h-100">
                                 <div className="icon specialty">
                                     <i className="bi bi-hospital fs-2"></i>

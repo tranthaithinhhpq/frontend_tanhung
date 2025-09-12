@@ -10,8 +10,10 @@ import { useHistory } from 'react-router-dom';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
 const NewsCreate = ({ editData }) => {
-    const [title, setTitle] = useState(editData?.title || "");
+    const [authors, setAuthors] = useState([]);
+    const [selectedAuthor, setSelectedAuthor] = useState(null);
 
+    const [title, setTitle] = useState(editData?.title || "");
     const [content, setContent] = useState(editData?.content || "");
     const [type, setType] = useState(editData?.type || "none");
     const [previewMode, setPreviewMode] = useState(false);
@@ -49,8 +51,34 @@ const NewsCreate = ({ editData }) => {
         fetchCategories();
     }, [group]);
 
+    useEffect(() => {
+        const fetchAuthors = async () => {
+            try {
+                const res = await axios.get("/api/v1/client/users");
+                if (res.EC === 0) {
+                    const options = res.DT.map(u => ({
+                        value: u.id,
+                        label: u.username,
+                        image: u.image
+                    }));
+                    setAuthors(options);
+
+                    if (editData?.authorId) {
+                        const matched = options.find(o => o.value === editData.authorId);
+                        setSelectedAuthor(matched || null);
+                    }
+                }
+            } catch {
+                toast.error("Lỗi tải danh sách tác giả");
+            }
+        };
+
+        fetchAuthors();
+    }, []);
+
+
     const handleSubmit = async () => {
-        if (!title || !content || !selectedCategory) {
+        if (!title || !content || !selectedCategory || !selectedAuthor) {
             toast.error("Vui lòng điền đầy đủ thông tin");
             return;
         }
@@ -59,11 +87,11 @@ const NewsCreate = ({ editData }) => {
         formData.append("title", title);
         formData.append("content", content);
         formData.append("categoryId", selectedCategory.value);
+        formData.append("authorId", selectedAuthor.value); // ✅ thêm tác giả
         formData.append("status", status);
         formData.append("type", type);
         formData.append("group", group);
         if (image) formData.append("image", image);
-
 
         try {
             const res = editData
@@ -76,12 +104,12 @@ const NewsCreate = ({ editData }) => {
             } else {
                 toast.error(res.EM || "Lưu thất bại");
             }
-
         } catch (err) {
             console.error(err);
             toast.error("Lỗi khi gửi dữ liệu");
         }
     };
+
 
     return (
         <div className="container my-4">
@@ -137,6 +165,17 @@ const NewsCreate = ({ editData }) => {
                             <option value="none">Không</option>
                         </select>
                     </div>
+
+                    <div className="mb-3">
+                        <label>Tác giả</label>
+                        <Select
+                            options={authors}
+                            value={selectedAuthor}
+                            onChange={setSelectedAuthor}
+                            placeholder="Chọn tác giả"
+                        />
+                    </div>
+
 
 
 

@@ -126,6 +126,7 @@ const PageEdit = () => {
                             <option value="client">Khách hàng</option>
                             <option value="contact">Liên hệ</option>
                             <option value="price">Bảng giá</option>
+                            <option value="recruitment">Tuyển dụng</option>
                         </Form.Select>
                     </Form.Group>
 
