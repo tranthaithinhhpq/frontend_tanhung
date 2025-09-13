@@ -11,6 +11,7 @@ const RecruitmentDetail = () => {
     const { id } = useParams();
     const [recruitment, setRecruitment] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
         fullName: "",
@@ -19,6 +20,31 @@ const RecruitmentDetail = () => {
         coverLetter: "",
     });
     const [cvFile, setCvFile] = useState(null);
+
+    const validateForm = () => {
+        let newErrors = {};
+
+        if (!formData.fullName.trim()) {
+            newErrors.fullName = "Họ tên là bắt buộc";
+        }
+        if (!formData.email.trim()) {
+            newErrors.email = "Email là bắt buộc";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = "Email không hợp lệ";
+        }
+        if (!formData.phone.trim()) {
+            newErrors.phone = "Số điện thoại là bắt buộc";
+        } else if (!/^[0-9]+$/.test(formData.phone)) {
+            newErrors.phone = "Chỉ được nhập số";
+        }
+        if (!formData.coverLetter.trim()) {
+            newErrors.coverLetter = "Thư xin việc là bắt buộc";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // true nếu không có lỗi
+    };
+
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
@@ -35,6 +61,8 @@ const RecruitmentDetail = () => {
     }, [id]);
 
     const handleApply = async () => {
+        if (!validateForm()) return; // Nếu lỗi thì không submit
+
         try {
             const form = new FormData();
             form.append("recruitmentId", id);
@@ -53,6 +81,7 @@ const RecruitmentDetail = () => {
                 setShowModal(false);
                 setFormData({ fullName: "", email: "", phone: "", coverLetter: "" });
                 setCvFile(null);
+                setErrors({});
             } else {
                 toast.error(res.EM);
             }
@@ -61,6 +90,7 @@ const RecruitmentDetail = () => {
             toast.error("Lỗi khi ứng tuyển");
         }
     };
+
 
     if (!recruitment) return <p className="text-center mt-5">Đang tải...</p>;
 
@@ -105,36 +135,6 @@ const RecruitmentDetail = () => {
                     </div>
                 </Col>
 
-                {/* Cột phải: Box ứng tuyển */}
-                {/* <Col md={4}>
-                    <div className="p-3 border rounded shadow-sm sticky-top" style={{ top: "80px" }}>
-                        <Button
-                            variant={recruitment.status === "OPEN" ? "primary" : "secondary"}
-                            size="lg"
-                            className="w-100"
-                            disabled={recruitment.status !== "OPEN"}
-                            onClick={() => setShowModal(true)}
-                        >
-                            {recruitment.status === "OPEN" ? "Ứng tuyển ngay" : "Đang tạm dừng"}
-                        </Button>
-
-                        <div className="mt-3">
-                            <p className="mb-1"><b>Hồ sơ ứng tuyển:</b></p>
-                            <small>
-                                HR sẽ nhận trực tiếp hồ sơ thông qua hệ thống ngay khi hoàn tất ứng tuyển. Ứng viên vui lòng không liên hệ qua email và số điện thoại.
-
-                            </small>
-                            <p className="mb-1"><b>Thông tin liên hệ:</b></p>
-                            <small>
-                                email: nhansu@benhvientanhung.com
-
-                            </small>
-
-
-
-                        </div>
-                    </div>
-                </Col> */}
 
                 <Col md={4}>
                     <div
@@ -172,27 +172,38 @@ const RecruitmentDetail = () => {
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Label>Họ tên</Form.Label>
+                            <Form.Label>{"Họ tên (*)"}</Form.Label>
                             <Form.Control
                                 value={formData.fullName}
                                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                isInvalid={!!errors.fullName}
                             />
+                            <Form.Control.Feedback type="invalid">{errors.fullName}</Form.Control.Feedback>
                         </Form.Group>
+
                         <Form.Group className="mb-3">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>{"Email (*)"}</Form.Label>
                             <Form.Control
                                 type="email"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                isInvalid={!!errors.email}
                             />
+                            <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                         </Form.Group>
+
                         <Form.Group className="mb-3">
-                            <Form.Label>Số điện thoại</Form.Label>
+                            <Form.Label>{"Số điện thoại (*)"}</Form.Label>
                             <Form.Control
                                 value={formData.phone}
                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                isInvalid={!!errors.phone}
                             />
+                            <Form.Control.Feedback type="invalid">{errors.phone}</Form.Control.Feedback>
                         </Form.Group>
+
+
+
                         <Form.Group className="mb-3">
                             <Form.Label>CV (PDF/DOCX)</Form.Label>
                             <Form.Control
@@ -202,13 +213,15 @@ const RecruitmentDetail = () => {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Thư xin việc</Form.Label>
+                            <Form.Label>{"Thư xin việc (*)"}</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows={3}
                                 value={formData.coverLetter}
                                 onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })}
+                                isInvalid={!!errors.coverLetter}
                             />
+                            <Form.Control.Feedback type="invalid">{errors.coverLetter}</Form.Control.Feedback>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

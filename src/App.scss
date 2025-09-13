@@ -77,3 +77,9 @@ footer {
 .modal-backdrop {
     z-index: 9998 !important;
 }
+
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    min-height: 100vh; // chiếm toàn bộ chiều cao màn hình để căn giữa
+}

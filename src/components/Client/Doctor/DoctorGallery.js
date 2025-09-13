@@ -52,10 +52,20 @@ const DoctorGallery = () => {
             axios.get('/api/v1/specialty/read'),
             axios.get('/api/v1/position/read')
         ]);
-        setDegreeOptions(dRes.DT.map(d => ({ value: d.id, label: d.name })));
-        setSpecialtyOptions(sRes.DT.map(s => ({ value: s.id, label: s.name })));
-        setPositionOptions(pRes.DT.map(p => ({ value: p.id, label: p.name })));
 
+        setDegreeOptions(
+            dRes.DT.map(d => ({ value: d.id, label: d.name }))
+        );
+
+        setSpecialtyOptions(
+            sRes.DT
+                .filter(s => s.isSelectable === 1 || s.isSelectable === true) // lọc theo isSelectable
+                .map(s => ({ value: s.id, label: s.name }))
+        );
+
+        setPositionOptions(
+            pRes.DT.map(p => ({ value: p.id, label: p.name }))
+        );
     };
 
     useEffect(() => {

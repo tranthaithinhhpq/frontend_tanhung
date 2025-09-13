@@ -16,15 +16,39 @@ const DeviceEdit = () => {
     const [previewMode, setPreviewMode] = useState(false);
     const history = useHistory();
 
+    // useEffect(() => {
+    //     axios.get('/api/v1/admin/device/update').then(res => {
+    //         const device = res.DT.find(x => x.id === +id);
+    //         if (device) {
+    //             setForm(device);
+    //             setPreviewImg(`${BACKEND_URL}${device.image}`);
+    //         }
+    //     });
+    // }, [id]);
+
+
     useEffect(() => {
-        axios.get('/api/v1/admin/device/update').then(res => {
-            const device = res.DT.find(x => x.id === +id);
-            if (device) {
-                setForm(device);
-                setPreviewImg(`${BACKEND_URL}${device.image}`);
+        const fetchDevice = async () => {
+            try {
+                const res = await axios.get(`/api/v1/admin/device/update/${id}`);
+                if (res.EC === 0 && res.DT) {
+                    setForm(res.DT);
+                    if (res.DT.image) {
+                        setPreviewImg(`${BACKEND_URL}${res.DT.image}`);
+                    }
+                } else {
+                    toast.error(res.EM || "Không tìm thấy thiết bị");
+                }
+            } catch (err) {
+                console.error("fetchDevice error:", err);
+                toast.error("Lỗi tải dữ liệu thiết bị");
             }
-        });
+        };
+        fetchDevice();
     }, [id]);
+
+
+
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];

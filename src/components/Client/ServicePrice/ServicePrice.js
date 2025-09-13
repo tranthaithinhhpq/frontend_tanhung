@@ -18,7 +18,11 @@ const ClientServicePriceTable = () => {
         try {
             const res = await axios.get('/api/v1/specialty/read');
             if (res.EC === 0) {
-                const options = res.DT.map(sp => ({ value: sp.id, label: sp.name }));
+                // Lọc chuyên khoa có isSelectable = 1 hoặc true
+                const options = res.DT
+                    .filter(sp => sp.isSelectable === 1 || sp.isSelectable === true)
+                    .map(sp => ({ value: sp.id, label: sp.name }));
+
                 setSpecialties(options);
             }
         } catch {

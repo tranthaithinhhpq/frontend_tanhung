@@ -9,6 +9,8 @@ const ApplicationTable = () => {
     const [applications, setApplications] = useState([]);
     const [recruitments, setRecruitments] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showCoverModal, setShowCoverModal] = useState(false);
+    const [currentCoverLetter, setCurrentCoverLetter] = useState('');
     const [formData, setFormData] = useState({
         id: null,
         recruitmentId: null,
@@ -122,6 +124,7 @@ const ApplicationTable = () => {
                         <th>SĐT</th>
                         <th>Vị trí</th>
                         <th>CV</th>
+                        <th>Thư xin việc</th>
                         <th>Status</th>
                         <th>Hành động</th>
                     </tr>
@@ -137,6 +140,20 @@ const ApplicationTable = () => {
                                 {item.cvFile
                                     ? <a href={`${process.env.REACT_APP_BACKEND_URL}${item.cvFile}`} target="_blank" rel="noreferrer">Xem CV</a>
                                     : 'N/A'}
+                            </td>
+                            <td>
+                                {item.coverLetter ? (
+                                    <Button
+                                        variant="info"
+                                        size="sm"
+                                        onClick={() => {
+                                            setCurrentCoverLetter(item.coverLetter);
+                                            setShowCoverModal(true);
+                                        }}
+                                    >
+                                        Xem
+                                    </Button>
+                                ) : 'N/A'}
                             </td>
                             <td>{item.status}</td>
                             <td>
@@ -213,6 +230,20 @@ const ApplicationTable = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>Hủy</Button>
                     <Button variant="primary" onClick={handleSave}>Lưu</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showCoverModal} onHide={() => setShowCoverModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Thư xin việc</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p style={{ whiteSpace: 'pre-line' }}>{currentCoverLetter}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowCoverModal(false)}>
+                        Đóng
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </div>
